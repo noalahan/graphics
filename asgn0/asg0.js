@@ -10,9 +10,6 @@ function main() {
 
   // get the rendering context for 2DCG
   ctx = canvas.getContext("2d");
-
-  const v1 = new Vector3([2.25, 2.25, 0]);
-  drawVector(v1, "red");
 }
 
 /**
@@ -35,6 +32,9 @@ function drawVector(v, color) {
   ctx.stroke();
 }
 
+/**
+ * Processes input data into vectors to be drawn
+ */
 function handleDrawEvent() {
   var vect = document.getElementById("form");
   let x = vect.elements[0].value;
@@ -49,3 +49,5 @@ function handleDrawEvent() {
   drawVector(v1, "red");
   drawVector(v2, "blue");
 }
+
+
