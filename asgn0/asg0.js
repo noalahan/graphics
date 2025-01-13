@@ -11,10 +11,6 @@ function main() {
   // get the rendering context for 2DCG
   ctx = canvas.getContext("2d");
 
-  // draw the rectangle
-  //ctx.fillStyle = "rgba(0, 0, 0, 1.0)"; // sets color to blue
-  //ctx.fillRect(0, 0, 400, 400); // fill rect with color
-
   const v1 = new Vector3([2.25, 2.25, 0]);
   drawVector(v1, "red");
 }
@@ -40,11 +36,16 @@ function drawVector(v, color) {
 }
 
 function handleDrawEvent() {
-  var vect = document.getElementById("v1");
+  var vect = document.getElementById("form");
   let x = vect.elements[0].value;
   let y = vect.elements[1].value;
   const v1 = new Vector3([x, y, 0]);
 
+  x = vect.elements[2].value;
+  y = vect.elements[3].value;
+  const v2 = new Vector3([x, y, 0]);
+
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawVector(v1, "red");
+  drawVector(v2, "blue");
 }
