@@ -54,6 +54,73 @@ function handleDrawEvent() {
   drawVector(v2, "blue");
 }
 
+/**
+ * Uses input vectors and their dot product to calculate the angle between them
+ * @param {Vector3} v1 First vector
+ * @param {Vector3} v2 Second vector
+ * @returns angle between the two vectors
+ */
+function angleBetween(v1, v2) {
+  let dot = Vector3.dot(v1, v2);
+  let m1 = v1.magnitude();
+  let m2 = v2.magnitude();
+
+  // get angle and convert it to degreen
+  let angle = Math.acos(dot / m1 / m2);
+  angle *= 180 / Math.PI;
+  return angle;
+}
+
+/**
+ * Calculates the area of the triangle formed by the vectors
+ * @param {Vector3} v1 First vector
+ * @param {Vector3} v2 Second vector
+ * @returns area
+ */
+function areaTriangle(v1, v2) {
+  let v3 = Vector3.cross(v1, v2);
+  return v3.magnitude() / 2;
+}
+
+/**
+ * Runs the correct function
+ * @param {string} op operation to be performed
+ * @param {Vector3} v1 First vector
+ * @param {Vector3} v2 Second vector
+ * @param {int} s Scalar (for mult and div)
+ */
+function operate(op, v1, v2, s) {
+  if (op == "add") {
+    v1.add(v2);
+    drawVector(v1, "green");
+  } else if (op == "sub") {
+    v1.sub(v2);
+    drawVector(v1, "green");
+  } else if (op == "mul") {
+    v1.mul(s);
+    v2.mul(s);
+    drawVector(v1, "green");
+    drawVector(v2, "green");
+  } else if (op == "div") {
+    v1.div(s);
+    v2.div(s);
+    drawVector(v1, "green");
+    drawVector(v2, "green");
+  } else if (op == "mag") {
+    console.log("Magnitude v1: " + v1.magnitude());
+    console.log("Magnitude v2: " + v2.magnitude());
+  } else if (op == "nor") {
+    v1.normalize();
+    v2.normalize();
+    drawVector(v1, "green");
+    drawVector(v2, "green");
+  } else if (op == "ang") {
+    console.log("Angle: " + angleBetween(v1, v2));
+  } else if (op == "area") {
+    console.log("Area of the triangle: " + areaTriangle(v1, v2));
+  }
+}
+
 function handleDrawOperationEvent() {
   // get vectors
   var vect = document.getElementById("vect_form");
@@ -75,29 +142,5 @@ function handleDrawOperationEvent() {
   let s = ops.elements[1].value;
 
   // do operation
-  if (operation == "add") {
-    v1.add(v2);
-    drawVector(v1, "green");
-  } else if (operation == "sub") {
-    v1.sub(v2);
-    drawVector(v1, "green");
-  } else if (operation == "mul") {
-    v1.mul(s);
-    v2.mul(s);
-    drawVector(v1, "green");
-    drawVector(v2, "green");
-  } else if (operation == "div") {
-    v1.div(s);
-    v2.div(s);
-    drawVector(v1, "green");
-    drawVector(v2, "green");
-  } else if (operation == "mag") {
-    console.log("Magnitude v1: " + v1.magnitude());
-    console.log("Magnitude v2: " + v2.magnitude());
-  } else if (operation == "nor") {
-    v1.normalize();
-    v2.normalize();
-    drawVector(v1, "green");
-    drawVector(v2, "green");
-  }
+  operate(operation, v1, v2, s);
 }
