@@ -61,20 +61,31 @@ function connectVariablesToGLSL() {
   }
 }
 
+const POINT = 0;
+const TRIANGLE = 1;
+
 let g_selectedColor = [1.0, 1.0, 1.0, 1.0];
 let g_selectedSize = 5;
+let g_selectedType = POINT;
 
 function addActionsForHtmlUI() {
-  // THIS DOESNT WORK
+  // Clear canvas
   document.getElementById("clear").onclick = function () {
     g_shapesList = [];
     renderAllShapes();
   };
 
-  // document.getElementById("sqr").onclick = function () {
-  //   g_selectedColor = [1.0, 0.0, 0.0, 1.0];
-  // };
+  document.getElementById("sqr").onclick = function () {
+    g_selectedType = POINT;
+  };
+  document.getElementById("tri").onclick = function () {
+    g_selectedType = TRIANGLE;
+  };
+  document.getElementById("cir").onclick = function () {
+    g_selectedType = CIRCLE;
+  };
 
+  // Color selector
   document.getElementById("r").addEventListener("mouseup", function () {
     g_selectedColor[0] = this.value / 100;
   });
@@ -85,6 +96,7 @@ function addActionsForHtmlUI() {
     g_selectedColor[2] = this.value / 100;
   });
 
+  // size selector
   document.getElementById("size").addEventListener("mouseup", function () {
     g_selectedSize = this.value;
   });
@@ -109,6 +121,8 @@ function main() {
 
   // Clear <canvas>
   gl.clear(gl.COLOR_BUFFER_BIT);
+
+  // drawTriangles([0,0.5, -0.5,-0.5,  0.5,-0.5]);
 }
 
 function convertCoordinatesEventToGL(ev) {
@@ -138,7 +152,14 @@ var g_shapesList = [];
 function click(ev) {
   [x, y] = convertCoordinatesEventToGL(ev);
 
-  let point = new Point();
+  let point;
+  if (g_selectedType == POINT){
+    point = new Point();
+  } else if (g_selectedType == TRIANGLE){
+    point = new Triangle();
+  } else {
+    point = new Circle();
+  }
   point.position = [x, y];
   point.color = g_selectedColor.slice();
   point.size = g_selectedSize;
@@ -146,3 +167,33 @@ function click(ev) {
 
   renderAllShapes();
 }
+
+// function drawTriangles(vertices) {
+//   // var vertices = new Float32Array([0, 0.5, -0.5, -0.5, 0.5, -0.5]);
+//   var n = 3; // The number of vertices
+
+//   // Create a buffer object
+//   var vertexBuffer = gl.createBuffer();
+//   if (!vertexBuffer) {
+//     console.log("Failed to create the buffer object");
+//     return -1;
+//   }
+
+//   // Bind the buffer object to target
+//   gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+//   // Write date into the buffer object
+//   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+
+//   var a_Position = gl.getAttribLocation(gl.program, "a_Position");
+//   if (a_Position < 0) {
+//     console.log("Failed to get the storage location of a_Position");
+//     return -1;
+//   }
+//   // Assign the buffer object to a_Position variable
+//   gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 0, 0);
+
+//   // Enable the assignment to a_Position variable
+//   gl.enableVertexAttribArray(a_Position);
+
+//   gl.drawArrays(gl.TRIANGLES, 0, n);
+// }
