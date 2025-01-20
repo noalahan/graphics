@@ -24,6 +24,7 @@ let u_Size;
 function setupWebGL() {
   // Retrieve <canvas> element
   canvas = document.getElementById("webgl");
+  // canvas.style.backgroundColor = "black";
 
   // Get the rendering context for WebGL
   gl = canvas.getContext("webgl", { perserveDrawingBuffer: true });
@@ -70,7 +71,9 @@ let g_selectedSize = 5;
 let g_selectedType = POINT;
 let g_selectedSeg = 10;
 
-let r = 255, g = 255, b = 255;
+let r = 255,
+  g = 255,
+  b = 255;
 function addActionsForHtmlUI() {
   // Clear canvas
   document.getElementById("clear").onclick = function () {
@@ -91,12 +94,21 @@ function addActionsForHtmlUI() {
 
   // Color selector
   document.getElementById("r").addEventListener("mouseup", function () {
+    r = (this.value / 100) * 255;
+    document.getElementById("color").style.backgroundColor =
+      "rgb(" + r + "," + g + "," + b + ")";
     g_selectedColor[0] = this.value / 100;
   });
   document.getElementById("g").addEventListener("mouseup", function () {
+    g = (this.value / 100) * 255;
+    document.getElementById("color").style.backgroundColor =
+      "rgb(" + r + "," + g + "," + b + ")";
     g_selectedColor[1] = this.value / 100;
   });
   document.getElementById("b").addEventListener("mouseup", function () {
+    b = (this.value / 100) * 255;
+    document.getElementById("color").style.backgroundColor =
+      "rgb(" + r + "," + g + "," + b + ")";
     g_selectedColor[2] = this.value / 100;
   });
 
@@ -108,7 +120,7 @@ function addActionsForHtmlUI() {
     g_selectedSeg = this.value;
   });
 
-  document.getElementById("draw").onclick = painting();
+  // document.getElementById("draw").onclick = painting();
 }
 
 function main() {
@@ -211,6 +223,7 @@ function draw(vertices) {
 
 let color;
 function painting() {
+  gl = canvas.getContext("webgl", { perserveDrawingBuffer: true });
   // background
   color = [169 / 255, 214 / 255, 232 / 255, 1.0];
   draw([-1, -1, 1, -1, 1, 1]);
@@ -242,7 +255,7 @@ function painting() {
   color = [134 / 255, 67 / 255, 9 / 255, 1.0];
   draw([0.5, 0.45, 0.375, 0.5, 0.4, 0.55]);
   draw([0.5, 0.45, 0.45, 0.58, 0.4, 0.55]);
-  draw([0.5, 0.45, 0.45, 0.58, 0.5, 0.6]);  //?
+  draw([0.5, 0.45, 0.45, 0.58, 0.5, 0.6]); //?
   draw([0.5, 0.45, 0.55, 0.6, 0.5, 0.6]);
   draw([0.5, 0.45, 0.55, 0.6, 0.6, 0.58]);
   draw([0.5, 0.45, 0.65, 0.55, 0.6, 0.58]);
@@ -254,13 +267,13 @@ function painting() {
 
   // goggles
   color = [58 / 255, 28 / 255, 4 / 255, 1.0];
-  draw([0.69, 0.43, 0.69, 0.49, 0.35, 0.45])
+  draw([0.69, 0.43, 0.69, 0.49, 0.35, 0.45]);
   color = [96 / 255, 48 / 255, 6 / 255, 1.0];
-  draw([0.6, 0.5, 0.69, 0.49, 0.6, 0.42])
-  draw([0.69, 0.43, 0.69, 0.49, 0.6, 0.42])
+  draw([0.6, 0.5, 0.69, 0.49, 0.6, 0.42]);
+  draw([0.69, 0.43, 0.69, 0.49, 0.6, 0.42]);
   color = [207 / 255, 232 / 255, 242 / 255, 1.0];
-  draw([0.61, 0.49, 0.68, 0.48, 0.61, 0.43])
-  draw([0.68, 0.44, 0.68, 0.48, 0.61, 0.43])
+  draw([0.61, 0.49, 0.68, 0.48, 0.61, 0.43]);
+  draw([0.68, 0.44, 0.68, 0.48, 0.61, 0.43]);
 
   // scarf
   color = [171 / 255, 52 / 255, 40 / 255, 1.0];

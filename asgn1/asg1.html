@@ -4,17 +4,21 @@
     <meta charset="utf-8" />
     <style>
       .color{
-        height: 50px;
-        width: 100px;
+        height: 100px;
+        width: 400px;
         background-color: rgb(255,255,255);
         border-style: solid;
         border-radius: 10px;
       }
     </style>
-    <title>Change a point color</title>
+    <title>CSE 160 Assignment 1</title>
   </head>
 
   <body onload="main()">
+    <h1>Assignment 1</h1>
+    <h3>CSE 160 Noa Lahan</h3>
+    <p>Chosen touch of awesomeness: color picker display! (box under rgb sliders) To make it easier to know what color you created before you draw it</p>
+
     <canvas id="webgl" width="400" height="400">
       Please use a browser that supports "canvas"
     </canvas>
@@ -39,7 +43,7 @@
       <input type="range" min="0" max="100" value="100" class="slider" id="b" />
       <br/>
       Color:
-      <div class = "color", id = "color" ></div>
+      <div class = "color" id = "color"></div>
     </p>
 
     Shape Size:
@@ -47,9 +51,11 @@
     (Circles) Segment Count:
     <input type="range" min="3" max="20" value="10" class="slider" id="seg" />
 
-    <br />
-    <br />
-    <input type="button" onclick="painting()" value="Draw" />
+    <p>
+      Click me to draw the picture below on the canvas: 
+      <input type="button" onclick="painting()" value="Draw" />
+    </p>
+    <img src="img.jpg" alt="Painting Sketch" width="400" height="400">
 
     <script src="../lib/webgl-utils.js"></script>
     <script src="../lib/webgl-debug.js"></script>
