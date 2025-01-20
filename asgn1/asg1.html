@@ -2,6 +2,15 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <style>
+      .color{
+        height: 50px;
+        width: 100px;
+        background-color: rgb(255,255,255);
+        border-style: solid;
+        border-radius: 10px;
+      }
+    </style>
     <title>Change a point color</title>
   </head>
 
@@ -28,12 +37,19 @@
       <input type="range" min="0" max="100" value="100" class="slider" id="g" />
       Blue
       <input type="range" min="0" max="100" value="100" class="slider" id="b" />
+      <br/>
+      Color:
+      <div class = "color", id = "color" ></div>
     </p>
 
     Shape Size:
     <input type="range" min="5" max="40" value="0" class="slider" id="size" />
     (Circles) Segment Count:
     <input type="range" min="3" max="20" value="10" class="slider" id="seg" />
+
+    <br />
+    <br />
+    <input type="button" onclick="painting()" value="Draw" />
 
     <script src="../lib/webgl-utils.js"></script>
     <script src="../lib/webgl-debug.js"></script>
