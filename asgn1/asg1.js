@@ -63,10 +63,12 @@ function connectVariablesToGLSL() {
 
 const POINT = 0;
 const TRIANGLE = 1;
+const CIRCLE = 2;
 
 let g_selectedColor = [1.0, 1.0, 1.0, 1.0];
 let g_selectedSize = 5;
 let g_selectedType = POINT;
+let g_selectedSeg = 10;
 
 function addActionsForHtmlUI() {
   // Clear canvas
@@ -75,6 +77,7 @@ function addActionsForHtmlUI() {
     renderAllShapes();
   };
 
+  // shape selector
   document.getElementById("sqr").onclick = function () {
     g_selectedType = POINT;
   };
@@ -99,6 +102,9 @@ function addActionsForHtmlUI() {
   // size selector
   document.getElementById("size").addEventListener("mouseup", function () {
     g_selectedSize = this.value;
+  });
+  document.getElementById("seg").addEventListener("mouseup", function () {
+    g_selectedSeg = this.value;
   });
 }
 
@@ -159,6 +165,7 @@ function click(ev) {
     point = new Triangle();
   } else {
     point = new Circle();
+    point.segments = g_selectedSeg;
   }
   point.position = [x, y];
   point.color = g_selectedColor.slice();
