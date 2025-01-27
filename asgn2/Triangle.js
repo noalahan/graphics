@@ -18,11 +18,11 @@ class Triangle {
 
     // Draw
     var d = this.size / 200.0;
-    drawTriangles([xy[0], xy[1], xy[0] + d, xy[1], xy[0], xy[1] + d]);
+    drawTriangle([xy[0], xy[1], xy[0] + d, xy[1], xy[0], xy[1] + d]);
   }
 }
 
-function drawTriangles(vertices) {
+function drawTriangle(vertices) {
   // var vertices = new Float32Array([0, 0.5, -0.5, -0.5, 0.5, -0.5]);
   var n = 3; // The number of vertices
 
@@ -48,7 +48,7 @@ function drawTriangles(vertices) {
   gl.drawArrays(gl.TRIANGLES, 0, n);
 }
 
-function drawTriangles3D(vertices) {
+function drawTriangle3D(vertices) {
   // var vertices = new Float32Array([0, 0.5, -0.5, -0.5, 0.5, -0.5]);
   var n = 3; // The number of vertices
 
