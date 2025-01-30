@@ -8,53 +8,38 @@
   <body onload="main()">
     <h1>Assignment 2</h1>
     <h3>CSE 160 Noa Lahan</h3>
-    <p>
-      Chosen touch of awesomeness: color picker display! (box under rgb sliders)
-      To make it easier to know what color you created before you draw it
-    </p>
-
+    
     <canvas id="webgl" width="400" height="400">
       Please use a browser that supports "canvas"
     </canvas>
 
-    <p></p>
-    <button type="button" id="clear">Clear Canvas</button>
-
     <p>
-      Drawing Mode:<br />
-      <button type="button" id="sqr">Squares</button>
-      <button type="button" id="tri">Triangles</button>
-      <button type="button" id="cir">Circles</button>
+      Yellow Animation:<br />
+      <button type="button" id="yon">On</button>
+      <button type="button" id="yoff">Off</button>
+    </p>
+    <p>
+      Pink Animation:<br />
+      <button type="button" id="pon">On</button>
+      <button type="button" id="poff">Off</button>
     </p>
 
+    <br />
+    Yellow
+    <input type="range" min="-45" max="45" value="0" class="slider" id="yellow" />
+    <br />
+    Pink
+    <input type="range" min="-45" max="45" value="0" class="slider" id="pink" />
     <br />
     Camera Angle
     <input type="range" min="0" max="270" value="5" class="slider" id="angle" />
     <br />
     <br />
 
-    <p>
-      Shape Color:<br />
-      Red
-      <input type="range" min="0" max="100" value="100" class="slider" id="r" />
-      Green
-      <input type="range" min="0" max="100" value="100" class="slider" id="g" />
-      Blue
-      <input type="range" min="0" max="100" value="100" class="slider" id="b" />
-    </p>
-
-    Shape Size:
-    <input type="range" min="5" max="40" value="0" class="slider" id="size" />
-    (Circles) Segment Count:
-    <input type="range" min="3" max="20" value="10" class="slider" id="seg" />
-
     <script src="../lib/webgl-utils.js"></script>
     <script src="../lib/webgl-debug.js"></script>
     <script src="../lib/cuon-utils.js"></script>
     <script src="../lib/cuon-matrix.js"></script>
-    <script src="Point.js"></script>
-    <script src="Triangle.js"></script>
-    <script src="Circle.js"></script>
     <script src="Cube.js"></script>
     <script src="asg2.js"></script>
   </body>
