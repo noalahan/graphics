@@ -81,7 +81,7 @@ function connectVariablesToGLSL() {
   gl.uniformMatrix4fv(u_ModelMatrix, false, identityM.elements);
 }
 
-let g_globalAngle = 0;
+let g_globalAngle = 80;
 let g_yellowAngle = 0;
 let g_pinkAngle = 0;
 let g_yellowAnim = false;
@@ -135,48 +135,52 @@ function updateAnim() {
     g_yellowAngle = 45 * Math.sin(g_seconds);
   }
   if (g_pinkAnim) {
-    g_pinkAngle = 45 * Math.sin(3*g_seconds);
+    g_pinkAngle = 45 * Math.sin(3 * g_seconds);
   }
 }
 
 // draw every shape on canvas
 function renderAllShapes() {
   // pass the matrix to u_ModelMatrix attribute
-  var globalRotMat = new Matrix4().rotate(g_globalAngle, 0, 1, 0);
+  var globalRotMat = new Matrix4().rotate(g_globalAngle, 1, 0, 0);
   gl.uniformMatrix4fv(u_GlobalRotateMatrix, false, globalRotMat.elements);
 
   // Clear <canvas>
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   gl.clear(gl.COLOR_BUFFER_BIT);
 
+  var sphere = new Sphere();
+  sphere.color = [1, 0, 0, 1];
+  sphere.render();
+
   // draw the body cube
-  var red = new Cube();
-  red.color = [1.0, 0.0, 0.0, 1.0];
-  red.matrix.setTranslate(-0.25, -0.75, 0.0);
-  red.matrix.rotate(-5, 1, 0, 0);
-  red.matrix.scale(0.5, 0.3, 0.5);
-  red.render();
+  var body = new Cube();
+  body.color = [0.874, 0.878, 0.886, 1.0];
+  body.matrix.setTranslate(-0.5, -0.5, -0.5);
+  // body.matrix.rotate(20, 1, 0, 0);
+  body.matrix.scale(1, 0.5, 1);
+  // body.render();
 
-  // draw left arm
-  var yellow = new Cube();
-  yellow.color = [1, 1, 0, 1];
-  yellow.matrix.setTranslate(0, -0.5, 0.0);
-  yellow.matrix.rotate(-5, 1, 0, 0);
-  yellow.matrix.rotate(-g_yellowAngle, 0, 0, 1);
-  var yellowCoordinates = new Matrix4(yellow.matrix);
-  yellow.matrix.scale(0.25, 0.7, 0.5);
-  yellow.matrix.translate(-0.5, 0, 0);
-  yellow.render();
+  // // draw left arm
+  // var yellow = new Cube();
+  // yellow.color = [1, 1, 0, 1];
+  // yellow.matrix.setTranslate(0, -0.5, 0.0);
+  // yellow.matrix.rotate(-5, 1, 0, 0);
+  // yellow.matrix.rotate(-g_yellowAngle, 0, 0, 1);
+  // var yellowCoordinates = new Matrix4(yellow.matrix);
+  // yellow.matrix.scale(0.25, 0.7, 0.5);
+  // yellow.matrix.translate(-0.5, 0, 0);
+  // yellow.render();
 
-  // test box
-  var pink = new Cube();
-  pink.color = [1, 0, 1, 1];
-  pink.matrix = yellowCoordinates;
-  pink.matrix.translate(0, 0.65, 0);
-  pink.matrix.rotate(-g_pinkAngle, 0, 0, 1);
-  pink.matrix.scale(0.3, 0.3, 0.3);
-  pink.matrix.translate(-0.5, 0, -0.00005);
-  pink.render();
+  // // test box
+  // var pink = new Cube();
+  // pink.color = [1, 0, 1, 1];
+  // pink.matrix = yellowCoordinates;
+  // pink.matrix.translate(0, 0.65, 0);
+  // pink.matrix.rotate(-g_pinkAngle, 0, 0, 1);
+  // pink.matrix.scale(0.3, 0.3, 0.3);
+  // pink.matrix.translate(-0.5, 0, -0.00005);
+  // pink.render();
 }
 
 var g_startTime = performance.now() / 1000.0;
