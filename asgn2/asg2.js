@@ -81,7 +81,7 @@ function connectVariablesToGLSL() {
   gl.uniformMatrix4fv(u_ModelMatrix, false, identityM.elements);
 }
 
-let g_globalAngle = 80;
+let g_globalAngle = 90;
 let g_yellowAngle = 0;
 let g_pinkAngle = 0;
 let g_yellowAnim = false;
@@ -142,24 +142,86 @@ function updateAnim() {
 // draw every shape on canvas
 function renderAllShapes() {
   // pass the matrix to u_ModelMatrix attribute
-  var globalRotMat = new Matrix4().rotate(g_globalAngle, 1, 0, 0);
+  var globalRotMat = new Matrix4().rotate(g_globalAngle, 0, 1, 0);
   gl.uniformMatrix4fv(u_GlobalRotateMatrix, false, globalRotMat.elements);
 
   // Clear <canvas>
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   gl.clear(gl.COLOR_BUFFER_BIT);
 
-  var sphere = new Sphere();
-  sphere.color = [1, 0, 0, 1];
-  sphere.render();
+  // head
+  var head = new Sphere();
+  head.color = [1, 0, 0, 1];
+  head.matrix.setTranslate(0, 0.47, -0.34);
+  head.matrix.scale(0.9, 0.9, 0.75);
+  head.matrix.rotate(45, 0, 1, 0);
+  head.render();
 
-  // draw the body cube
-  var body = new Cube();
-  body.color = [0.874, 0.878, 0.886, 1.0];
-  body.matrix.setTranslate(-0.5, -0.5, -0.5);
-  // body.matrix.rotate(20, 1, 0, 0);
-  body.matrix.scale(1, 0.5, 1);
-  // body.render();
+  // eyes
+  var lEye = new Sphere();
+  lEye.color = [1, 1, 1, 1];
+  lEye.matrix.rotate(15, 0, 1, 1);
+  lEye.matrix.translate(0.375, 0.48, -0.3);
+  lEye.matrix.scale(0.1, 0.25, 0.25);
+  lEye.render();
+
+  var rEye = new Sphere();
+  rEye.color = [1, 1, 1, 1];
+  rEye.matrix.rotate(-15, 0, 1, 1);
+  rEye.matrix.translate(-0.375, 0.48, -0.3);
+  rEye.matrix.scale(0.1, 0.25, 0.25);
+  rEye.render();
+
+  var lPupil = new Sphere();
+  lPupil.color = [0, 0, 1, 1];
+  lPupil.matrix = lEye.matrix;
+  lPupil.matrix.translate(0.18, 0, 0);
+  lPupil.matrix.scale(0.5, 0.5, 0.5);
+  lPupil.render();
+
+  var rPupil = new Sphere();
+  rPupil.color = [0, 0, 1, 1];
+  rPupil.matrix = rEye.matrix;
+  rPupil.matrix.translate(-0.18, 0, 0);
+  rPupil.matrix.scale(0.5, 0.5, 0.5);
+  rPupil.render();
+
+  var neck = new Cylinder();
+  neck.color = [0, 1, 0, 1];
+  neck.bottom = 0.8;
+  neck.top = 1.1;
+  neck.matrix.scale(0.9, 0.5, 1.2);
+  neck.matrix.translate(0, 0.8, -0.28);
+  neck.matrix.rotate(13, 1, 0, 0);
+  neck.matrix.scale(0.5, 0.6, 0.3);
+  neck.matrix.rotate(60, 1, 0, 0);
+  //neck.matrix.rotate(90, 1, 0, 0);
+  neck.render();
+
+  // body
+  var base = new Sphere();
+  base.color = [0.874, 0.878, 0.886, 1];
+  base.matrix.setTranslate(0, -0.25, 0);
+  //base.matrix.rotate(g_yellowAngle, 1, 0, 0);
+  var baseCoor = new Matrix4(base.matrix);
+  base.matrix.scale(1.55, 1, 2);
+  base.render();
+
+  var chest = new Sphere();
+  chest.color = [0.874, 0.878, 0.886, 1];
+  chest.matrix = baseCoor;
+  chest.matrix.translate(0, 0.1, -0.25);
+  chest.matrix.rotate(-25, 1, 0, 0);
+  chest.matrix.scale(1.6, 1.3, 1.3);
+  chest.render();
+
+  var back = new Cube();
+  back.color = [1, 1, 0, 1];
+  back.matrix = baseCoor;
+  back.matrix.translate(-0.25, 0, 0.5);
+  back.matrix.rotate(-30, 1, 0, 0);
+  back.matrix.scale(0.5, 0.5, 0.1);
+  back.render();
 
   // // draw left arm
   // var yellow = new Cube();
