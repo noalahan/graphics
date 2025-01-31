@@ -168,6 +168,16 @@ function renderAllShapes() {
   let chestCoor = new Matrix4(chest.matrix);
   chest.render();
 
+  var upperChest = new Sphere();
+  upperChest.color = [0.874, 0.878, 0.886, 1];
+  upperChest.matrix = new Matrix4(chestCoor);
+  upperChest.matrix.rotate(-g_pinkAngle * 0.9, 1, 0, 0);
+  upperChest.matrix.translate(0, 0.04, 0.03);
+  upperChest.matrix.scale(0.9, 1.05, 0.9);
+  upperChest.matrix.rotate(10, 1, 0, 0);
+  upperChest.matrix.rotate(20, 0, 1, 0);
+  upperChest.render();
+
   var back = new Cube();
   back.color = [0.874, 0.878, 0.886, 1];
   back.top = 0.8;
@@ -176,16 +186,6 @@ function renderAllShapes() {
   back.matrix.rotate(-40, 1, 0, 0);
   back.matrix.scale(0.4, 0.5, 0.1);
   back.render();
-
-  var neckBack = new Cube();
-  neckBack.color = [0.874, 0.878, 0.886, 1];
-  neckBack.top = 0.3;
-  neckBack.matrix = new Matrix4(baseCoor);
-  neckBack.matrix.rotate(-g_pinkAngle, 1, 0, 0);
-  neckBack.matrix.translate(0, 0.15, 0.17);
-  neckBack.matrix.rotate(-20, 1, 0, 0);
-  neckBack.matrix.scale(0.3, 0.2, 0.1);
-  neckBack.render();
 
   var tailBase = new Sphere();
   tailBase.color = [0.874, 0.878, 0.886, 1];
@@ -205,51 +205,54 @@ function renderAllShapes() {
   tail.render();
   tailBase.render();
 
-
   // neck
   let z = -0.1;
   chestCoor.translate(0, 0, z);
 
   var pink = new Cylinder();
-  pink.color = [1, 0, 1, 1];
+  pink.color = [0.631, 0.259, 0.624, 1];
   pink.bottom = 0.7;
   pink.top = 1.1;
   pink.matrix = new Matrix4(chestCoor);
   pink.matrix.rotate(-g_pinkAngle, 1, 0, 0);
   let neckCoor = new Matrix4(pink.matrix);
-  pink.matrix.translate(0, 0.25, 0.01-z);
+  pink.matrix.translate(0, 0.25, 0.01 - z);
   pink.matrix.rotate(-20, 1, 0, 0);
   pink.matrix.scale(0.35, 0.2, 0.4);
   pink.matrix.rotate(120, 1, 0, 0);
   pink.render();
 
   var backPink = new Cylinder();
-  backPink.color = [0.7, 0, 0.7, 1];
+  backPink.color = [0.631, 0.259, 0.624, 1];
+  backPink.top = 0.9;
+  backPink.bottom = 1.05;
   backPink.matrix = new Matrix4(neckCoor);
-  backPink.matrix.translate(0, 0.25, 0.04);
-  backPink.matrix.rotate(-90, 1, 0, 0);
-  backPink.matrix.scale(0.4, 0.4, 0.1);
-  // backNeck.matrix.rotate(120, 1, 0, 0);
+  backPink.matrix.translate(0, 0.26, 0.19);
+  backPink.matrix.rotate(-85, 1, 0, 0);
+  backPink.matrix.scale(0.35, 0.3, 0.1);
   backPink.render();
 
   var green = new Cylinder();
-  green.color = [0.388, 0.541, 0.42, 1];
-  green.bottom = 0.8;
-  green.top = 1.1;
-  green.matrix.scale(0.9, 0.5, 1.2);
-  green.matrix.translate(0, 0.8, -0.29);
-  green.matrix.rotate(10, 1, 0, 0);
-  green.matrix.scale(0.5, 0.7, 0.28);
-  green.matrix.rotate(60, 1, 0, 0);
-  // green.matrix.rotate(90, 1, 0, 0);
-  green.render();
+  green.color = [0, 1, 0, 1];
 
-  // // head
-  // var head = new Sphere();
-  // head.color = [0.333, 0.372, 0.404, 1];
-  // head.matrix.setTranslate(0, 0.47, -0.34);
-  // head.matrix.scale(0.9, 0.9, 0.75);
-  // head.matrix.rotate(45, 0, 1, 0);
+  var greenc = new Cylinder();
+  greenc.color = [0.314, 0.541, 0.357, 1];
+  greenc.bottom = 0.8;
+  greenc.top = 1.1;
+  greenc.matrix.scale(0.9, 0.5, 1.2);
+  greenc.matrix.translate(0, 0.8, -0.29);
+  greenc.matrix.rotate(10, 1, 0, 0);
+  greenc.matrix.scale(0.5, 0.7, 0.28);
+  greenc.matrix.rotate(60, 1, 0, 0);
+  // greenc.matrix.rotate(90, 1, 0, 0);
+  greenc.render();
+
+  // head
+  var head = new Sphere();
+  head.color = [0.333, 0.372, 0.404, 1];
+  head.matrix.setTranslate(0, 0.47, -0.34);
+  head.matrix.scale(0.9, 0.9, 0.75);
+  head.matrix.rotate(45, 0, 1, 0);
   // head.render();
 
   // // eyes
