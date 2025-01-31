@@ -123,8 +123,8 @@ function main() {
   addActionsForHtmlUI();
 
   // Specify the color for clearing <canvas>
-  // gl.clearColor(0.4, 0.7, 1, 1.0);
-  gl.clearColor(0, 0, 0, 1.0);
+  gl.clearColor(0.4, 0.7, 1, 1.0);
+  // gl.clearColor(0, 0, 0, 1.0);
 
   // Render
   // renderAllShapes();
@@ -193,6 +193,7 @@ function renderAllShapes() {
   tailBase.matrix.translate(0, -0.29, 0.49);
   tailBase.matrix.rotate(50, 1, 0, 0);
   tailBase.matrix.scale(0.85, 0.25, 0.51);
+  tailBase.render();
 
   var tail = new Cube();
   tail.color = [0.031, 0.063, 0.075, 1];
@@ -203,7 +204,6 @@ function renderAllShapes() {
   tail.matrix.scale(0.3, 0.2, 0.08);
   tail.matrix.rotate(30, 1, 0, 0);
   tail.render();
-  tailBase.render();
 
   // neck
   let z = -0.1;
@@ -233,19 +233,16 @@ function renderAllShapes() {
   backPink.render();
 
   var green = new Cylinder();
-  green.color = [0, 1, 0, 1];
-
-  var greenc = new Cylinder();
-  greenc.color = [0.314, 0.541, 0.357, 1];
-  greenc.bottom = 0.8;
-  greenc.top = 1.1;
-  greenc.matrix.scale(0.9, 0.5, 1.2);
-  greenc.matrix.translate(0, 0.8, -0.29);
-  greenc.matrix.rotate(10, 1, 0, 0);
-  greenc.matrix.scale(0.5, 0.7, 0.28);
-  greenc.matrix.rotate(60, 1, 0, 0);
-  // greenc.matrix.rotate(90, 1, 0, 0);
-  greenc.render();
+  // green.color = [0.314, 0.541, 0.357, 1];
+  green.color = [0.271, 0.588, 0.329, 1];
+  green.bottom = 0.8;
+  green.top = 1.1;
+  green.matrix = new Matrix4(neckCoor);
+  green.matrix.translate(0, 0.4, 0.2);
+  green.matrix.rotate(-20, 1, 0, 0);
+  green.matrix.scale(0.29, 0.2, 0.35);
+  green.matrix.rotate(120, 1, 0, 0);
+  green.render();
 
   // head
   var head = new Sphere();
@@ -253,7 +250,7 @@ function renderAllShapes() {
   head.matrix.setTranslate(0, 0.47, -0.34);
   head.matrix.scale(0.9, 0.9, 0.75);
   head.matrix.rotate(45, 0, 1, 0);
-  // head.render();
+  head.render();
 
   // // eyes
   // var lEye = new Sphere();
