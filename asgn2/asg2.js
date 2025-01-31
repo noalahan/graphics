@@ -150,9 +150,12 @@ function renderAllShapes() {
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   gl.clear(gl.COLOR_BUFFER_BIT);
 
+  // let bodyColor = [0.874, 0.878, 0.886, 1];
+  let bodyColor = [0.761, 0.776, 0.812, 1];
+
   // body
   var base = new Sphere();
-  base.color = [0.874, 0.878, 0.886, 1];
+  base.color = bodyColor
   base.matrix.setTranslate(0, -0.25, 0);
   base.matrix.rotate(g_yellowAngle, 1, 0, 0);
   let baseCoor = new Matrix4(base.matrix);
@@ -160,7 +163,7 @@ function renderAllShapes() {
   base.render();
 
   var chest = new Sphere();
-  chest.color = [0.874, 0.878, 0.886, 1];
+  chest.color = bodyColor
   chest.matrix = baseCoor;
   chest.matrix.translate(0, 0.1, -0.25);
   chest.matrix.rotate(-25, 1, 0, 0);
@@ -169,7 +172,7 @@ function renderAllShapes() {
   chest.render();
 
   var upperChest = new Sphere();
-  upperChest.color = [0.874, 0.878, 0.886, 1];
+  upperChest.color = bodyColor
   upperChest.matrix = new Matrix4(chestCoor);
   upperChest.matrix.rotate(-g_pinkAngle * 0.9, 1, 0, 0);
   upperChest.matrix.translate(0, 0.04, 0.03);
@@ -179,7 +182,7 @@ function renderAllShapes() {
   upperChest.render();
 
   var back = new Cube();
-  back.color = [0.874, 0.878, 0.886, 1];
+  back.color = bodyColor
   back.top = 0.8;
   back.matrix = new Matrix4(baseCoor);
   back.matrix.translate(0, -0.08, 0.33);
@@ -188,7 +191,7 @@ function renderAllShapes() {
   back.render();
 
   var tailBase = new Sphere();
-  tailBase.color = [0.874, 0.878, 0.886, 1];
+  tailBase.color = bodyColor
   tailBase.matrix = new Matrix4(baseCoor);
   tailBase.matrix.translate(0, -0.29, 0.49);
   tailBase.matrix.rotate(50, 1, 0, 0);
@@ -196,7 +199,7 @@ function renderAllShapes() {
   tailBase.render();
 
   var tail = new Cube();
-  tail.color = [0.031, 0.063, 0.075, 1];
+  tail.color = [7/255, 16/255, 19/255, 1];
   tail.matrix = new Matrix4(baseCoor);
   tail.top = 0.7;
   tail.matrix.translate(0, -0.37, 0.6);
@@ -247,39 +250,39 @@ function renderAllShapes() {
   // head
   var head = new Sphere();
   head.color = [0.333, 0.372, 0.404, 1];
-  head.matrix.setTranslate(0, 0.47, -0.34);
-  head.matrix.scale(0.9, 0.9, 0.75);
+  head.matrix.setTranslate(0, 0.47, -0.345);
+  head.matrix.scale(0.9, 0.9, 0.8);
   head.matrix.rotate(45, 0, 1, 0);
   head.render();
 
-  // // eyes
-  // var lEye = new Sphere();
-  // lEye.color = [0.99, 0.5, 0.357, 1];
-  // lEye.matrix.rotate(15, 0, 1, 1);
-  // lEye.matrix.translate(0.375, 0.48, -0.3);
-  // lEye.matrix.scale(0.1, 0.25, 0.25);
-  // lEye.render();
+  // eyes
+  var lEye = new Sphere();
+  lEye.color = [0.99, 0.5, 0.357, 1];
+  lEye.matrix.rotate(15, 0, 1, 1);
+  lEye.matrix.translate(0.375, 0.48, -0.3);
+  lEye.matrix.scale(0.1, 0.25, 0.25);
+  lEye.render();
 
-  // var rEye = new Sphere();
-  // rEye.color = [0.99, 0.5, 0.357, 1];
-  // rEye.matrix.rotate(-15, 0, 1, 1);
-  // rEye.matrix.translate(-0.375, 0.48, -0.3);
-  // rEye.matrix.scale(0.1, 0.25, 0.25);
-  // rEye.render();
+  var rEye = new Sphere();
+  rEye.color = [0.99, 0.5, 0.357, 1];
+  rEye.matrix.rotate(-15, 0, 1, 1);
+  rEye.matrix.translate(-0.375, 0.48, -0.3);
+  rEye.matrix.scale(0.1, 0.25, 0.25);
+  rEye.render();
 
-  // var lPupil = new Sphere();
-  // lPupil.color = [0.031, 0.063, 0.075, 1];
-  // lPupil.matrix = lEye.matrix;
-  // lPupil.matrix.translate(0.18, 0, 0);
-  // lPupil.matrix.scale(0.5, 0.5, 0.5);
-  // lPupil.render();
+  var lPupil = new Sphere();
+  lPupil.color = [0.031, 0.063, 0.075, 1];
+  lPupil.matrix = lEye.matrix;
+  lPupil.matrix.translate(0.18, 0, 0);
+  lPupil.matrix.scale(0.5, 0.5, 0.5);
+  lPupil.render();
 
-  // var rPupil = new Sphere();
-  // rPupil.color = [0.031, 0.063, 0.075, 1];
-  // rPupil.matrix = rEye.matrix;
-  // rPupil.matrix.translate(-0.18, 0, 0);
-  // rPupil.matrix.scale(0.5, 0.5, 0.5);
-  // rPupil.render();
+  var rPupil = new Sphere();
+  rPupil.color = [0.031, 0.063, 0.075, 1];
+  rPupil.matrix = rEye.matrix;
+  rPupil.matrix.translate(-0.18, 0, 0);
+  rPupil.matrix.scale(0.5, 0.5, 0.5);
+  rPupil.render();
 
   // // draw left arm
   // var yellow = new Cube();
