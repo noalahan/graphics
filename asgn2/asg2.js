@@ -123,7 +123,8 @@ function main() {
   addActionsForHtmlUI();
 
   // Specify the color for clearing <canvas>
-  gl.clearColor(0.4, 0.7, 1, 1.0);
+  // gl.clearColor(0.4, 0.7, 1, 1.0);
+  gl.clearColor(0, 0, 0, 1.0);
 
   // Render
   // renderAllShapes();
@@ -149,61 +150,12 @@ function renderAllShapes() {
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   gl.clear(gl.COLOR_BUFFER_BIT);
 
-  // head
-  var head = new Sphere();
-  head.color = [0.333, 0.372, 0.404, 1];
-  head.matrix.setTranslate(0, 0.47, -0.34);
-  head.matrix.scale(0.9, 0.9, 0.75);
-  head.matrix.rotate(45, 0, 1, 0);
-  head.render();
-
-  // eyes
-  var lEye = new Sphere();
-  lEye.color = [0.990, .5, 0.357, 1];
-  lEye.matrix.rotate(15, 0, 1, 1);
-  lEye.matrix.translate(0.375, 0.48, -0.3);
-  lEye.matrix.scale(0.1, 0.25, 0.25);
-  lEye.render();
-
-  var rEye = new Sphere();
-  rEye.color = [0.990, .5, 0.357, 1];
-  rEye.matrix.rotate(-15, 0, 1, 1);
-  rEye.matrix.translate(-0.375, 0.48, -0.3);
-  rEye.matrix.scale(0.1, 0.25, 0.25);
-  rEye.render();
-
-  var lPupil = new Sphere();
-  lPupil.color = [0.031, 0.063, 0.075, 1];
-  lPupil.matrix = lEye.matrix;
-  lPupil.matrix.translate(0.18, 0, 0);
-  lPupil.matrix.scale(0.5, 0.5, 0.5);
-  lPupil.render();
-
-  var rPupil = new Sphere();
-  rPupil.color = [0.031, 0.063, 0.075, 1];
-  rPupil.matrix = rEye.matrix;
-  rPupil.matrix.translate(-0.18, 0, 0);
-  rPupil.matrix.scale(0.5, 0.5, 0.5);
-  rPupil.render();
-
-  var neck = new Cylinder();
-  neck.color = [0.388, 0.541, 0.420, 1];
-  neck.bottom = 0.8;
-  neck.top = 1.1;
-  neck.matrix.scale(0.9, 0.5, 1.2);
-  neck.matrix.translate(0, 0.8, -0.29);
-  neck.matrix.rotate(10, 1, 0, 0);
-  neck.matrix.scale(0.5, 0.7, 0.28);
-  neck.matrix.rotate(60, 1, 0, 0);
-  // neck.matrix.rotate(90, 1, 0, 0);
-  neck.render();
-
   // body
   var base = new Sphere();
   base.color = [0.874, 0.878, 0.886, 1];
   base.matrix.setTranslate(0, -0.25, 0);
   base.matrix.rotate(g_yellowAngle, 1, 0, 0);
-  var baseCoor = new Matrix4(base.matrix);
+  let baseCoor = new Matrix4(base.matrix);
   base.matrix.scale(1.55, 1, 2);
   base.render();
 
@@ -213,29 +165,38 @@ function renderAllShapes() {
   chest.matrix.translate(0, 0.1, -0.25);
   chest.matrix.rotate(-25, 1, 0, 0);
   chest.matrix.scale(1.6, 1.3, 1.3);
+  let chestCoor = new Matrix4(chest.matrix);
   chest.render();
 
   var back = new Cube();
   back.color = [0.874, 0.878, 0.886, 1];
   back.top = 0.8;
-  back.matrix = baseCoor;
-  let tailCoor = new Matrix4(baseCoor);
+  back.matrix = new Matrix4(baseCoor);
   back.matrix.translate(0, -0.08, 0.33);
   back.matrix.rotate(-40, 1, 0, 0);
   back.matrix.scale(0.4, 0.5, 0.1);
   back.render();
 
+  var neckBack = new Cube();
+  neckBack.color = [0.874, 0.878, 0.886, 1];
+  neckBack.top = 0.3;
+  neckBack.matrix = new Matrix4(baseCoor);
+  neckBack.matrix.rotate(-g_pinkAngle, 1, 0, 0);
+  neckBack.matrix.translate(0, 0.15, 0.17);
+  neckBack.matrix.rotate(-20, 1, 0, 0);
+  neckBack.matrix.scale(0.3, 0.2, 0.1);
+  neckBack.render();
+
   var tailBase = new Sphere();
   tailBase.color = [0.874, 0.878, 0.886, 1];
-  tailBase.matrix = tailCoor;
-  let featherCoor = new Matrix4(tailCoor);
+  tailBase.matrix = new Matrix4(baseCoor);
   tailBase.matrix.translate(0, -0.29, 0.49);
   tailBase.matrix.rotate(50, 1, 0, 0);
   tailBase.matrix.scale(0.85, 0.25, 0.51);
 
   var tail = new Cube();
   tail.color = [0.031, 0.063, 0.075, 1];
-  tail.matrix = featherCoor;
+  tail.matrix = new Matrix4(baseCoor);
   tail.top = 0.7;
   tail.matrix.translate(0, -0.37, 0.6);
   tail.matrix.rotate(-70, 1, 0, 0);
@@ -243,6 +204,82 @@ function renderAllShapes() {
   tail.matrix.rotate(30, 1, 0, 0);
   tail.render();
   tailBase.render();
+
+
+  // neck
+  let z = -0.1;
+  chestCoor.translate(0, 0, z);
+
+  var pink = new Cylinder();
+  pink.color = [1, 0, 1, 1];
+  pink.bottom = 0.7;
+  pink.top = 1.1;
+  pink.matrix = new Matrix4(chestCoor);
+  pink.matrix.rotate(-g_pinkAngle, 1, 0, 0);
+  let neckCoor = new Matrix4(pink.matrix);
+  pink.matrix.translate(0, 0.25, 0.01-z);
+  pink.matrix.rotate(-20, 1, 0, 0);
+  pink.matrix.scale(0.35, 0.2, 0.4);
+  pink.matrix.rotate(120, 1, 0, 0);
+  pink.render();
+
+  var backPink = new Cylinder();
+  backPink.color = [0.7, 0, 0.7, 1];
+  backPink.matrix = new Matrix4(neckCoor);
+  backPink.matrix.translate(0, 0.25, 0.04);
+  backPink.matrix.rotate(-90, 1, 0, 0);
+  backPink.matrix.scale(0.4, 0.4, 0.1);
+  // backNeck.matrix.rotate(120, 1, 0, 0);
+  backPink.render();
+
+  var green = new Cylinder();
+  green.color = [0.388, 0.541, 0.42, 1];
+  green.bottom = 0.8;
+  green.top = 1.1;
+  green.matrix.scale(0.9, 0.5, 1.2);
+  green.matrix.translate(0, 0.8, -0.29);
+  green.matrix.rotate(10, 1, 0, 0);
+  green.matrix.scale(0.5, 0.7, 0.28);
+  green.matrix.rotate(60, 1, 0, 0);
+  // green.matrix.rotate(90, 1, 0, 0);
+  green.render();
+
+  // // head
+  // var head = new Sphere();
+  // head.color = [0.333, 0.372, 0.404, 1];
+  // head.matrix.setTranslate(0, 0.47, -0.34);
+  // head.matrix.scale(0.9, 0.9, 0.75);
+  // head.matrix.rotate(45, 0, 1, 0);
+  // head.render();
+
+  // // eyes
+  // var lEye = new Sphere();
+  // lEye.color = [0.99, 0.5, 0.357, 1];
+  // lEye.matrix.rotate(15, 0, 1, 1);
+  // lEye.matrix.translate(0.375, 0.48, -0.3);
+  // lEye.matrix.scale(0.1, 0.25, 0.25);
+  // lEye.render();
+
+  // var rEye = new Sphere();
+  // rEye.color = [0.99, 0.5, 0.357, 1];
+  // rEye.matrix.rotate(-15, 0, 1, 1);
+  // rEye.matrix.translate(-0.375, 0.48, -0.3);
+  // rEye.matrix.scale(0.1, 0.25, 0.25);
+  // rEye.render();
+
+  // var lPupil = new Sphere();
+  // lPupil.color = [0.031, 0.063, 0.075, 1];
+  // lPupil.matrix = lEye.matrix;
+  // lPupil.matrix.translate(0.18, 0, 0);
+  // lPupil.matrix.scale(0.5, 0.5, 0.5);
+  // lPupil.render();
+
+  // var rPupil = new Sphere();
+  // rPupil.color = [0.031, 0.063, 0.075, 1];
+  // rPupil.matrix = rEye.matrix;
+  // rPupil.matrix.translate(-0.18, 0, 0);
+  // rPupil.matrix.scale(0.5, 0.5, 0.5);
+  // rPupil.render();
 
   // // draw left arm
   // var yellow = new Cube();
