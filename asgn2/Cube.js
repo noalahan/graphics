@@ -3,6 +3,7 @@ class Cube {
     this.type = "cube";
     this.color = [1.0, 1.0, 1.0, 1.0];
     this.matrix = new Matrix4();
+    this.top = 1;
   }
 
   render() {
@@ -14,15 +15,11 @@ class Cube {
     // Pass the matrix to u_ModelMatrix attribute
     gl.uniformMatrix4fv(u_ModelMatrix, false, this.matrix.elements);
 
+    let a = this.top;
+
     // front of cube
-    drawTriangle3D([0, 0, 0, 1, 1, 0, 1, 0, 0]);
-    drawTriangle3D([0, 0, 0, 0, 1, 0, 1, 1, 0]);
-
-    // back of cube
-    drawTriangle3D([0, 0, 1, 1, 1, 1, 1, 0, 1]);
-    drawTriangle3D([0, 0, 1, 0, 1, 1, 1, 1, 1]);
-
-    // pass the color of a point to u_FragColor uniform variable
+    drawTriangle3D([-.5, -.5, -0.5, .5, -.5, -.5, .5*a, .5, -.5]);
+    drawTriangle3D([-.5, -.5, -0.5, -.5*a, .5, -.5, .5*a, .5, -.5]);
     gl.uniform4f(
       u_FragColor,
       rgba[0] * 0.9,
@@ -30,14 +27,27 @@ class Cube {
       rgba[2] * 0.9,
       rgba[3]
     );
+    // back of cube
+    drawTriangle3D([-.5, -.5, .5, .5, -.5, .5, .5*a, .5, .5]);
+    drawTriangle3D([-.5, -.5, .5, -.5*a, .5, .5, .5*a, .5, .5]);
+    
+    // pass the color of a point to u_FragColor uniform variable
+    gl.uniform4f(
+      u_FragColor,
+      rgba[0] * 0.7,
+      rgba[1] * 0.7,
+      rgba[2] * 0.7,
+      rgba[3]
+    );
 
     // top of cube
-    drawTriangle3D([0, 1, 0, 0, 1, 1, 1, 1, 1]);
-    drawTriangle3D([0, 1, 0, 1, 1, 1, 1, 1, 0]);
+    drawTriangle3D([0.5*a, .5, -.5, .5*a, .5, .5, -.5*a, .5, -.5]);
+    drawTriangle3D([-0.5*a, .5, .5, .5*a, .5, .5, -.5*a, .5, -.5]);
 
     // bottom of cube
-    drawTriangle3D([0, 0, 0, 0, 0, 1, 1, 0, 1]);
-    drawTriangle3D([0, 0, 0, 1, 0, 1, 1, 0, 0]);
+    drawTriangle3D([-.5, -.5, -.5, -.5, -.5, .5, .5, -.5, .5]);
+    drawTriangle3D([-.5, -.5, -.5, .5, -.5, -.5, .5, -.5, .5]);
+    
 
     // pass the color of a point to u_FragColor uniform variable
     gl.uniform4f(
@@ -49,12 +59,13 @@ class Cube {
     );
 
     // left of cube
-    drawTriangle3D([1, 0, 0, 1, 1, 0, 1, 1, 1]);
-    drawTriangle3D([1, 0, 0, 1, 1, 1, 1, 0, 1]);
+    drawTriangle3D([.5, -.5, -.5, .5, -.5, .5, .5*a, .5, .5]);
+    drawTriangle3D([.5, -.5, -.5, .5*a, .5, -.5, .5*a, .5, .5]);
 
     // right of cube
-    drawTriangle3D([0, 0, 0, 0, 1, 0, 0, 1, 1]);
-    drawTriangle3D([0, 0, 0, 0, 1, 1, 0, 0, 1]);
+    drawTriangle3D([-.5, -.5, -.5, -.5, -.5, .5, -.5*a, .5, .5]);
+    drawTriangle3D([-.5, -.5, -.5, -.5*a, .5, -.5, -.5*a, .5, .5]);
+
   }
 }
 

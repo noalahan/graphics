@@ -52,14 +52,6 @@ class Sphere {
     drawTriangle3D([-0.1, x, -0.1, 0.1, x, -0.1, 0.1, x, 0.1]);
     drawTriangle3D([-0.1, x, -0.1, -0.1, x, 0.1, 0.1, x, 0.1]);
 
-    // gl.uniform4f(
-    //   u_FragColor,
-    //   rgba[0] * 0.9,
-    //   (rgba[1] + 1) * 0.9,
-    //   rgba[2] * 0.9,
-    //   rgba[3]
-    // );
-
     drawTriangle3D([0.1, x, -0.1, 0.1, x, 0.1, x, 0.1, -0.1]);
     drawTriangle3D([x, 0.1, 0.1, 0.1, x, 0.1, x, 0.1, -0.1]);
     drawTriangle3D([-0.1, x, -0.1, -0.1, x, 0.1, -x, 0.1, -0.1]);
@@ -69,14 +61,6 @@ class Sphere {
     drawTriangle3D([0.1, 0.1, x, 0.1, x, 0.1, -0.1, 0.1, x]);
     drawTriangle3D([-0.1, x, -0.1, 0.1, x, -0.1, -0.1, 0.1, -x]);
     drawTriangle3D([0.1, 0.1, -x, 0.1, x, -0.1, -0.1, 0.1, -x]);
-
-    // gl.uniform4f(
-    //   u_FragColor,
-    //   rgba[0] * 0.8,
-    //   (rgba[1] + 1) * 0.8,
-    //   rgba[2] * 0.8,
-    //   rgba[3]
-    // );
 
     drawTriangle3D([0.1, 0.1, x, x, 0.1, 0.1, 0.1, x, 0.1]);
     drawTriangle3D([x, 0.1, -0.1, 0.1, 0.1, -x, 0.1, x, -0.1]);
@@ -94,14 +78,6 @@ class Sphere {
     // gl.uniform4f(u_FragColor, rgba[0], rgba[1], rgba[2] + 1, rgba[3]);
     drawTriangle3D([-0.1, -x, -0.1, 0.1, -x, -0.1, 0.1, -x, 0.1]);
     drawTriangle3D([-0.1, -x, -0.1, -0.1, -x, 0.1, 0.1, -x, 0.1]);
-
-    // gl.uniform4f(
-    //   u_FragColor,
-    //   rgba[0] * 0.9,
-    //   rgba[1] * 0.9,
-    //   (rgba[2] + 1) * 0.9,
-    //   rgba[3]
-    // );
 
     drawTriangle3D([0.1, -x, -0.1, 0.1, -x, 0.1, x, -0.1, -0.1]);
     drawTriangle3D([x, -0.1, 0.1, 0.1, -x, 0.1, x, -0.1, -0.1]);

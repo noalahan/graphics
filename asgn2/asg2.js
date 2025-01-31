@@ -191,18 +191,18 @@ function renderAllShapes() {
   neck.bottom = 0.8;
   neck.top = 1.1;
   neck.matrix.scale(0.9, 0.5, 1.2);
-  neck.matrix.translate(0, 0.8, -0.28);
-  neck.matrix.rotate(13, 1, 0, 0);
-  neck.matrix.scale(0.5, 0.6, 0.3);
+  neck.matrix.translate(0, 0.8, -0.29);
+  neck.matrix.rotate(10, 1, 0, 0);
+  neck.matrix.scale(0.5, 0.7, 0.28);
   neck.matrix.rotate(60, 1, 0, 0);
-  //neck.matrix.rotate(90, 1, 0, 0);
+  // neck.matrix.rotate(90, 1, 0, 0);
   neck.render();
 
   // body
   var base = new Sphere();
   base.color = [0.874, 0.878, 0.886, 1];
   base.matrix.setTranslate(0, -0.25, 0);
-  //base.matrix.rotate(g_yellowAngle, 1, 0, 0);
+  base.matrix.rotate(g_yellowAngle, 1, 0, 0);
   var baseCoor = new Matrix4(base.matrix);
   base.matrix.scale(1.55, 1, 2);
   base.render();
@@ -216,12 +216,36 @@ function renderAllShapes() {
   chest.render();
 
   var back = new Cube();
-  back.color = [1, 1, 0, 1];
+  back.color = [0.874, 0.878, 0.886, 1];
+  back.top = 0.8
   back.matrix = baseCoor;
-  back.matrix.translate(-0.25, 0, 0.5);
-  back.matrix.rotate(-30, 1, 0, 0);
-  back.matrix.scale(0.5, 0.5, 0.1);
+  let tailCoor = new Matrix4(baseCoor)
+  back.matrix.translate(0, -0.08, 0.33);
+  back.matrix.rotate(-40, 1, 0, 0);
+  back.matrix.scale(0.4, 0.5, 0.1);
   back.render();
+
+  var tailBasec = new Sphere();
+  tailBasec.color = [1, 1, 0, 1];
+  tailBasec.matrix = baseCoor;
+  tailBasec.matrix.translate(0, -0.55, -0.2);
+  tailBasec.matrix.scale(2, 1, 2.7);
+  tailBasec.render();
+  var tailBase = new Sphere();
+  tailBase.color = [.8, .8, 0,1];
+  tailBase.matrix = tailCoor;
+  tailBase.matrix.translate(0, -0.55, -0.2);
+  tailBase.matrix.scale(2, 1, 2.7);
+  tailBase.render();
+
+  var tailc = new Cube();
+  tailc.color = [1, 1, 0, 1];
+  tailc.matrix = baseCoor;
+  // tail.matrix.rotate(180, 1, 0, 0);
+  tailc.matrix.rotate(10, 1, 0, 0);
+  tailc.matrix.scale(.5, .5, .3);
+  tailc.render();
+
 
   // // draw left arm
   // var yellow = new Cube();
