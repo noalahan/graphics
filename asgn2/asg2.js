@@ -84,6 +84,7 @@ function connectVariablesToGLSL() {
 let g_globalAngle = 90;
 let g_yellowAngle = 0;
 let g_pinkAngle = 0;
+let g_headAngle = 0;
 let g_yellowAnim = false;
 let g_pinkAnim = false;
 
@@ -113,6 +114,10 @@ function addActionsForHtmlUI() {
   });
   document.getElementById("pink").addEventListener("mousemove", function () {
     g_pinkAngle = this.value;
+    renderAllShapes();
+  });
+  document.getElementById("head").addEventListener("mousemove", function () {
+    g_headAngle = this.value;
     renderAllShapes();
   });
 }
@@ -150,12 +155,14 @@ function renderAllShapes() {
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   gl.clear(gl.COLOR_BUFFER_BIT);
 
-  // let bodyColor = [0.874, 0.878, 0.886, 1];
+  // colors
   let bodyColor = [0.761, 0.776, 0.812, 1];
-
+  let headColor = [0.333, 0.372, 0.404, 1];
+  let eyeColor = [0.99, 0.5, 0.357, 1];
+  let blackColor = [0.031, 0.063, 0.075, 1];
   // body
   var base = new Sphere();
-  base.color = bodyColor
+  base.color = bodyColor;
   base.matrix.setTranslate(0, -0.25, 0);
   base.matrix.rotate(g_yellowAngle, 1, 0, 0);
   let baseCoor = new Matrix4(base.matrix);
@@ -163,7 +170,7 @@ function renderAllShapes() {
   base.render();
 
   var chest = new Sphere();
-  chest.color = bodyColor
+  chest.color = bodyColor;
   chest.matrix = baseCoor;
   chest.matrix.translate(0, 0.1, -0.25);
   chest.matrix.rotate(-25, 1, 0, 0);
@@ -172,7 +179,7 @@ function renderAllShapes() {
   chest.render();
 
   var upperChest = new Sphere();
-  upperChest.color = bodyColor
+  upperChest.color = bodyColor;
   upperChest.matrix = new Matrix4(chestCoor);
   upperChest.matrix.rotate(-g_pinkAngle * 0.9, 1, 0, 0);
   upperChest.matrix.translate(0, 0.04, 0.03);
@@ -182,7 +189,7 @@ function renderAllShapes() {
   upperChest.render();
 
   var back = new Cube();
-  back.color = bodyColor
+  back.color = bodyColor;
   back.top = 0.8;
   back.matrix = new Matrix4(baseCoor);
   back.matrix.translate(0, -0.08, 0.33);
@@ -191,7 +198,7 @@ function renderAllShapes() {
   back.render();
 
   var tailBase = new Sphere();
-  tailBase.color = bodyColor
+  tailBase.color = bodyColor;
   tailBase.matrix = new Matrix4(baseCoor);
   tailBase.matrix.translate(0, -0.29, 0.49);
   tailBase.matrix.rotate(50, 1, 0, 0);
@@ -199,7 +206,7 @@ function renderAllShapes() {
   tailBase.render();
 
   var tail = new Cube();
-  tail.color = [7/255, 16/255, 19/255, 1];
+  tail.color = blackColor;
   tail.matrix = new Matrix4(baseCoor);
   tail.top = 0.7;
   tail.matrix.translate(0, -0.37, 0.6);
@@ -238,47 +245,83 @@ function renderAllShapes() {
   var green = new Cylinder();
   // green.color = [0.314, 0.541, 0.357, 1];
   green.color = [0.271, 0.588, 0.329, 1];
-  green.bottom = 0.8;
-  green.top = 1.1;
+  green.bottom = 0.78;
+  green.top = 1.13;
   green.matrix = new Matrix4(neckCoor);
-  green.matrix.translate(0, 0.4, 0.2);
-  green.matrix.rotate(-20, 1, 0, 0);
-  green.matrix.scale(0.29, 0.2, 0.35);
-  green.matrix.rotate(120, 1, 0, 0);
+  green.matrix.translate(0, 0.35, 0.19);
+  green.matrix.rotate(0, 1, 0, 0);
+  green.matrix.scale(0.29, 0.15, 0.34);
+  green.matrix.rotate(100, 1, 0, 0);
   green.render();
+
+  let headY = 0.2;
+  let headZ = 0.15;
+  let headCoor = new Matrix4(neckCoor);
+  headCoor.translate(0, headY, headZ);
 
   // head
   var head = new Sphere();
-  head.color = [0.333, 0.372, 0.404, 1];
-  head.matrix.setTranslate(0, 0.47, -0.345);
-  head.matrix.scale(0.9, 0.9, 0.8);
-  head.matrix.rotate(45, 0, 1, 0);
+  head.color = headColor;
+  head.matrix = new Matrix4(headCoor);
+  head.matrix.rotate(g_headAngle, 1, 0, 0);
+  let chinCoor = new Matrix4(head.matrix);
+  head.matrix.translate(0, 0.47 - headY, 0.24 - headZ);
+  head.matrix.scale(0.55, 0.55, 0.55);
+  head.matrix.rotate(25, 1, 0, 0);
   head.render();
+
+  var chin = new Cylinder();
+  chin.color = headColor;
+  chin.matrix = new Matrix4(chinCoor);
+  chin.matrix.translate(0, 0.42 - headY, 0.213 - headZ);
+  chin.matrix.rotate(0, 1, 0, 0);
+  chin.matrix.scale(0.28, 0.1, 0.3);
+  chin.matrix.rotate(100, 1, 0, 0);
+  chin.render();
+
+  var beak = new Cylinder();
+  beak.color = blackColor;
+  beak.top = 0;
+  beak.matrix = new Matrix4(chinCoor);
+  beak.matrix.rotate(205, 1, 0, 0);
+  beak.matrix.translate(0, -0.29, 0.21);
+  beak.matrix.scale(0.08, 0.07, 0.1);
+  beak.render();
+
+  var beakBase = new Sphere();
+  beakBase.color = [1, 0, 0, 1];
+  beakBase.matrix = new Matrix4(chinCoor);
+  beakBase.matrix.translate(0.5, 0, 0);
+  // beakBase.matrix.rotate();
+  beakBase.matrix.scale(0.1, 0.1, 0.1);
+  beakBase.render();
 
   // eyes
   var lEye = new Sphere();
-  lEye.color = [0.99, 0.5, 0.357, 1];
-  lEye.matrix.rotate(15, 0, 1, 1);
-  lEye.matrix.translate(0.375, 0.48, -0.3);
-  lEye.matrix.scale(0.1, 0.25, 0.25);
+  lEye.color = eyeColor;
+  lEye.matrix = new Matrix4(chinCoor);
+  lEye.matrix.rotate(25, 0, 1, 1);
+  lEye.matrix.rotate(25, 1, 0, 0);
+  lEye.matrix.translate(0.185, 0.295, 0.01);
+  lEye.matrix.scale(0.1, 0.2, 0.2);
   lEye.render();
-
-  var rEye = new Sphere();
-  rEye.color = [0.99, 0.5, 0.357, 1];
-  rEye.matrix.rotate(-15, 0, 1, 1);
-  rEye.matrix.translate(-0.375, 0.48, -0.3);
-  rEye.matrix.scale(0.1, 0.25, 0.25);
-  rEye.render();
-
   var lPupil = new Sphere();
-  lPupil.color = [0.031, 0.063, 0.075, 1];
+  lPupil.color = blackColor;
   lPupil.matrix = lEye.matrix;
   lPupil.matrix.translate(0.18, 0, 0);
   lPupil.matrix.scale(0.5, 0.5, 0.5);
   lPupil.render();
 
+  var rEye = new Sphere();
+  rEye.color = eyeColor;
+  rEye.matrix = new Matrix4(chinCoor);
+  rEye.matrix.rotate(-25, 0, 1, 1);
+  rEye.matrix.rotate(25, 1, 0, 0);
+  rEye.matrix.translate(-0.185, 0.295, 0.01);
+  rEye.matrix.scale(0.1, 0.2, 0.2);
+  rEye.render();
   var rPupil = new Sphere();
-  rPupil.color = [0.031, 0.063, 0.075, 1];
+  rPupil.color = blackColor;
   rPupil.matrix = rEye.matrix;
   rPupil.matrix.translate(-0.18, 0, 0);
   rPupil.matrix.scale(0.5, 0.5, 0.5);
