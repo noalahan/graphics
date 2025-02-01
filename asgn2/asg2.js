@@ -85,20 +85,31 @@ let g_globalAngle = 90;
 let g_bodyHeight = 0;
 let g_bodyAngle = 0;
 let g_neckAngle = 0;
+let g_greenAngle = 0;
 let g_headAngle = 0;
-let g_yellowAnim = false;
+let g_headY = 0;
+let g_headZ = 0;
+let g_walkAnim = false;
 let g_pinkAnim = false;
 
 function addActionsForHtmlUI() {
   // animation selector
-  document.getElementById("yon").onclick = function () {
-    g_yellowAnim = true;
+  document.getElementById("on").onclick = function () {
+    g_walkAnim = true;
   };
-  document.getElementById("yoff").onclick = function () {
-    g_yellowAnim = false;
+  document.getElementById("off").onclick = function () {
+    g_walkAnim = false;
   };
-  document.getElementById("pon").onclick = function () {
-    g_pinkAnim = true;
+  document.getElementById("pose").onclick = function () {
+    g_walkAnim = false;
+    // g_globalAngle = 90;
+    g_bodyHeight = 0;
+    g_bodyAngle = 0;
+    g_neckAngle = 0;
+    g_greenAngle = 0;
+    g_headAngle = 0;
+    g_headY = 0;
+    g_headZ = 0;
   };
   document.getElementById("poff").onclick = function () {
     g_pinkAnim = false;
@@ -144,8 +155,23 @@ function main() {
 }
 
 function updateAnim() {
-  if (g_yellowAnim) {
-    g_bodyAngle = 45 * Math.sin(g_seconds);
+  if (g_walkAnim) {
+    let a = 4;
+    document.getElementById("button").innerHTML = Math.sin(g_seconds * 4);
+
+    g_bodyHeight = 0.01 * Math.sin(g_seconds * a);
+    g_bodyAngle = 3 * Math.sin(-g_seconds * a);
+    g_neckAngle = 20 * (Math.sin(g_seconds * a) + 1);
+    g_greenAngle = 8 * (Math.sin(g_seconds * a) + 1);
+    g_headAngle = 19 * (Math.sin(g_seconds * a) + 0.5);
+    g_headY = 0.03 * Math.sin(g_seconds * a) + 0.06;
+    g_headZ = 0.07 * Math.sin(-g_seconds * a);
+
+    document.getElementById("height").value = 2 * Math.sin(g_seconds * a);
+    document.getElementById("body").value = 3 * Math.sin(g_seconds * a);
+    document.getElementById("neck").value = 20 * (Math.sin(g_seconds * a) + 1);
+    document.getElementById("head").value =
+      19 * (Math.sin(g_seconds * a) + 0.5);
   }
   if (g_pinkAnim) {
     g_neckAngle = 45 * Math.sin(3 * g_seconds);
@@ -257,7 +283,7 @@ function renderAllShapes() {
   green.top = 1.13;
   green.matrix = new Matrix4(neckCoor);
   green.matrix.translate(0, 0.35, 0.19);
-  green.matrix.rotate(0, 1, 0, 0);
+  green.matrix.rotate(g_greenAngle, 1, 0, 0);
   green.matrix.scale(0.29, 0.15, 0.34);
   green.matrix.rotate(100, 1, 0, 0);
   green.render();
@@ -265,7 +291,7 @@ function renderAllShapes() {
   let headY = 0.2;
   let headZ = 0.15;
   let headCoor = new Matrix4(neckCoor);
-  headCoor.translate(0, headY, headZ);
+  headCoor.translate(0, headY + g_headY, headZ + g_headZ);
 
   // head
   var head = new Sphere();
