@@ -82,8 +82,9 @@ function connectVariablesToGLSL() {
 }
 
 let g_globalAngle = 90;
-let g_yellowAngle = 0;
-let g_pinkAngle = 0;
+let g_bodyHeight = 0;
+let g_bodyAngle = 0;
+let g_neckAngle = 0;
 let g_headAngle = 0;
 let g_yellowAnim = false;
 let g_pinkAnim = false;
@@ -103,17 +104,23 @@ function addActionsForHtmlUI() {
     g_pinkAnim = false;
   };
 
+  // height selector
+  document.getElementById("height").addEventListener("mousemove", function () {
+    g_bodyHeight = this.value * 0.01;
+    renderAllShapes();
+  });
+
   // rotation selector
   document.getElementById("angle").addEventListener("mousemove", function () {
     g_globalAngle = this.value;
     renderAllShapes();
   });
-  document.getElementById("yellow").addEventListener("mousemove", function () {
-    g_yellowAngle = this.value;
+  document.getElementById("body").addEventListener("mousemove", function () {
+    g_bodyAngle = this.value;
     renderAllShapes();
   });
-  document.getElementById("pink").addEventListener("mousemove", function () {
-    g_pinkAngle = this.value;
+  document.getElementById("neck").addEventListener("mousemove", function () {
+    g_neckAngle = this.value;
     renderAllShapes();
   });
   document.getElementById("head").addEventListener("mousemove", function () {
@@ -138,12 +145,18 @@ function main() {
 
 function updateAnim() {
   if (g_yellowAnim) {
-    g_yellowAngle = 45 * Math.sin(g_seconds);
+    g_bodyAngle = 45 * Math.sin(g_seconds);
   }
   if (g_pinkAnim) {
-    g_pinkAngle = 45 * Math.sin(3 * g_seconds);
+    g_neckAngle = 45 * Math.sin(3 * g_seconds);
   }
 }
+
+// colors
+let bodyColor = [0.761, 0.776, 0.812, 1];
+let headColor = [0.333, 0.372, 0.404, 1];
+let eyeColor = [0.82, 0.447, 0.231, 1];
+let blackColor = [0.031, 0.063, 0.075, 1];
 
 // draw every shape on canvas
 function renderAllShapes() {
@@ -155,16 +168,11 @@ function renderAllShapes() {
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   gl.clear(gl.COLOR_BUFFER_BIT);
 
-  // colors
-  let bodyColor = [0.761, 0.776, 0.812, 1];
-  let headColor = [0.333, 0.372, 0.404, 1];
-  let eyeColor = [0.99, 0.5, 0.357, 1];
-  let blackColor = [0.031, 0.063, 0.075, 1];
   // body
   var base = new Sphere();
   base.color = bodyColor;
-  base.matrix.setTranslate(0, -0.25, 0);
-  base.matrix.rotate(g_yellowAngle, 1, 0, 0);
+  base.matrix.setTranslate(0, -0.25 + g_bodyHeight, 0);
+  base.matrix.rotate(g_bodyAngle, 1, 0, 0);
   let baseCoor = new Matrix4(base.matrix);
   base.matrix.scale(1.55, 1, 2);
   base.render();
@@ -181,7 +189,7 @@ function renderAllShapes() {
   var upperChest = new Sphere();
   upperChest.color = bodyColor;
   upperChest.matrix = new Matrix4(chestCoor);
-  upperChest.matrix.rotate(-g_pinkAngle * 0.9, 1, 0, 0);
+  upperChest.matrix.rotate(-g_neckAngle * 0.9, 1, 0, 0);
   upperChest.matrix.translate(0, 0.04, 0.03);
   upperChest.matrix.scale(0.9, 1.05, 0.9);
   upperChest.matrix.rotate(10, 1, 0, 0);
@@ -224,7 +232,7 @@ function renderAllShapes() {
   pink.bottom = 0.7;
   pink.top = 1.1;
   pink.matrix = new Matrix4(chestCoor);
-  pink.matrix.rotate(-g_pinkAngle, 1, 0, 0);
+  pink.matrix.rotate(-g_neckAngle, 1, 0, 0);
   let neckCoor = new Matrix4(pink.matrix);
   pink.matrix.translate(0, 0.25, 0.01 - z);
   pink.matrix.rotate(-20, 1, 0, 0);
@@ -289,11 +297,11 @@ function renderAllShapes() {
   beak.render();
 
   var beakBase = new Sphere();
-  beakBase.color = [1, 0, 0, 1];
+  beakBase.color = bodyColor;
   beakBase.matrix = new Matrix4(chinCoor);
-  beakBase.matrix.translate(0.5, 0, 0);
-  // beakBase.matrix.rotate();
-  beakBase.matrix.scale(0.1, 0.1, 0.1);
+  beakBase.matrix.translate(0, 0.34, -0.015);
+  beakBase.matrix.rotate(25, 1, 0, 0);
+  beakBase.matrix.scale(0.17, 0.17, 0.1);
   beakBase.render();
 
   // eyes
@@ -366,5 +374,3 @@ function tick() {
   // Tell the browser to update again
   requestAnimationFrame(tick);
 }
-
-var g_shapesList = [];
