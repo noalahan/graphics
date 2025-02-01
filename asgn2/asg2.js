@@ -89,6 +89,10 @@ let g_greenAngle = 0;
 let g_headAngle = 0;
 let g_headY = 0;
 let g_headZ = 0;
+let g_lWingAngle = 0;
+let g_rWingAngle = 0;
+let g_lLegAngle = 0;
+let g_rLegAngle = 0;
 let g_walkAnim = false;
 let g_pinkAnim = false;
 
@@ -110,6 +114,15 @@ function addActionsForHtmlUI() {
     g_headAngle = 0;
     g_headY = 0;
     g_headZ = 0;
+    g_lWingAngle = 0;
+    g_rWingAngle = 0;   
+    g_lLegAngle = 0; 
+    g_rLegAngle = 0; 
+
+    document.getElementById("height").value = 0;
+    document.getElementById("body").value = 0;
+    document.getElementById("neck").value = 0;
+    document.getElementById("head").value = 0;
   };
   document.getElementById("poff").onclick = function () {
     g_pinkAnim = false;
@@ -138,6 +151,22 @@ function addActionsForHtmlUI() {
     g_headAngle = this.value;
     renderAllShapes();
   });
+  document.getElementById("lWing").addEventListener("mousemove", function () {
+    g_lWingAngle = this.value;
+    renderAllShapes();
+  });
+  document.getElementById("rWing").addEventListener("mousemove", function () {
+    g_rWingAngle = this.value;
+    renderAllShapes();
+  });
+  document.getElementById("lLeg").addEventListener("mousemove", function () {
+    g_lLegAngle = this.value;
+    renderAllShapes();
+  });
+  document.getElementById("rLeg").addEventListener("mousemove", function () {
+    g_rLegAngle = this.value;
+    renderAllShapes();
+  });
 }
 
 function main() {
@@ -157,7 +186,7 @@ function main() {
 function updateAnim() {
   if (g_walkAnim) {
     let a = 4;
-    document.getElementById("button").innerHTML = Math.sin(g_seconds * 4);
+    // document.getElementById("button").innerHTML = Math.sin(g_seconds * 4);
 
     g_bodyHeight = 0.01 * Math.sin(g_seconds * a);
     g_bodyAngle = 3 * Math.sin(-g_seconds * a);
@@ -183,6 +212,7 @@ let bodyColor = [0.761, 0.776, 0.812, 1];
 let headColor = [0.333, 0.372, 0.404, 1];
 let eyeColor = [0.82, 0.447, 0.231, 1];
 let blackColor = [0.031, 0.063, 0.075, 1];
+let wingColor = [0.596, 0.651, 0.710, 1];
 
 // draw every shape on canvas
 function renderAllShapes() {
@@ -231,6 +261,50 @@ function renderAllShapes() {
   back.matrix.scale(0.4, 0.5, 0.1);
   back.render();
 
+  // wings
+  var lShoulder = new Sphere();
+  lShoulder.color = wingColor
+  lShoulder.matrix = new Matrix4(baseCoor);
+  lShoulder.matrix.rotate(25, 1, 0, 0);
+  lShoulder.matrix.rotate(g_lWingAngle, 1, 0, 0);
+  let lWingCoor = new Matrix4(lShoulder.matrix);
+  lShoulder.matrix.rotate(15, 0, 0, 1);
+  lShoulder.matrix.translate(0.23, 0.06, 0.1);
+  lShoulder.matrix.scale(0.2, 0.7, 0.7);
+  lShoulder.render();
+
+  var lWing = new Cylinder();
+  lWing.color = wingColor;
+  lWing.top = 0;
+  lWing.matrix = new Matrix4(lWingCoor);
+  lWing.matrix.translate(0.215, 0.05, 0.4);
+  lWing.matrix.rotate(13, 1, 0, 0);
+  lWing.matrix.rotate(15, 0, 0, 1);
+  lWing.matrix.scale(0.1, 0.34, 0.55);
+  lWing.render();
+
+  var rShoulder = new Sphere();
+  rShoulder.color = wingColor
+  rShoulder.matrix = new Matrix4(baseCoor);
+  rShoulder.matrix.rotate(25, 1, 0, 0);
+  rShoulder.matrix.rotate(g_rWingAngle, 1, 0, 0);
+  let rWingCoor = new Matrix4(rShoulder.matrix);
+  rShoulder.matrix.rotate(-15, 0, 0, 1);
+  rShoulder.matrix.translate(-0.23, 0.06, 0.1);
+  rShoulder.matrix.scale(0.2, 0.7, 0.7);
+  rShoulder.render();
+
+  var rWing = new Cylinder();
+  rWing.color = wingColor
+  rWing.top = 0;
+  rWing.matrix = new Matrix4(rWingCoor);
+  rWing.matrix.translate(-0.215, 0.05, 0.4);
+  rWing.matrix.rotate(13, 1, 0, 0);
+  rWing.matrix.rotate(-15, 0, 0, 1);
+  rWing.matrix.scale(0.1, 0.34, 0.55);
+  rWing.render();
+
+  // tail
   var tailBase = new Sphere();
   tailBase.color = bodyColor;
   tailBase.matrix = new Matrix4(baseCoor);
@@ -360,6 +434,19 @@ function renderAllShapes() {
   rPupil.matrix.translate(-0.18, 0, 0);
   rPupil.matrix.scale(0.5, 0.5, 0.5);
   rPupil.render();
+
+  // legs
+  var lThigh = new Cylinder();
+  lThigh.color = [0, 1, 0, 1];
+  lThigh.matrix = new Matrix4(baseCoor);
+  lThigh.matrix.rotate(25, 1, 0, 0);
+  lThigh.matrix.translate(0.1, 0.1, 0.07);
+  lThigh.matrix.rotate(g_lLegAngle, 1, 0, 0);
+  let lLegCoor = new Matrix4(lThigh.matrix);
+  lThigh.matrix.rotate(90, 1, 0, 0);
+  lThigh.matrix.translate(.5, 0, 0.3);
+  lThigh.matrix.scale(.5, 0.06, 0.3);
+  lThigh.render();
 
   // // draw left arm
   // var yellow = new Cube();

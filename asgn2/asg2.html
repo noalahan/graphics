@@ -6,15 +6,19 @@
   </head>
 
   <body onload="main()">
-    <h1>Assignment 2</h1>
-    <h3>CSE 160 Noa Lahan</h3>
+    <h1>Assignment 2 CSE 160 Noa Lahan</h1>
 
-    <button type="button" id="button"></button>
-    <br />
+    <!-- <button type="button" id="button"></button>
+    <br /> -->
     
     <canvas id="webgl" width="400" height="400">
       Please use a browser that supports "canvas"
     </canvas>
+    
+    <br />
+    Camera Angle
+    <input type="range" min="-90" max="270" value="90" class="slider" id="angle" />
+    <br />
 
     <p>
       Animation:
@@ -37,11 +41,19 @@
     Head
     <input type="range" min="-20" max="20" value="0" class="slider" id="head" />
     <br />
-   Camera Angle
-    <input type="range" min="-90" max="270" value="90" class="slider" id="angle" />
+    Left Wing
+    <input type="range" min="-20" max="20" value="0" class="slider" id="lWing" />
     <br />
+    Right Wing
+    <input type="range" min="-20" max="20" value="0" class="slider" id="rWing" />
     <br />
-
+    Left Leg
+    <input type="range" min="-40" max="20" value="0" class="slider" id="lLeg" />
+    <br />
+    Right Leg
+    <input type="range" min="-40" max="20" value="0" class="slider" id="rLeg" />
+    <br />
+   
     <script src="../lib/webgl-utils.js"></script>
     <script src="../lib/webgl-debug.js"></script>
     <script src="../lib/cuon-utils.js"></script>

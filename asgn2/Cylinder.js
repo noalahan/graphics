@@ -42,13 +42,13 @@ class Cylinder {
       drawTriangle3D([0, 0, -.5, pt1[0]*b, pt1[1]*b, -.5, pt2[0]*b, pt2[1]*b, -.5]);
       
       // sides
-      // gl.uniform4f(
-      //   u_FragColor,
-      //   rgba[0] * 0.8,
-      //   rgba[1] * 0.8,
-      //   rgba[2] * 0.8,
-      //   rgba[3]
-      // );
+      gl.uniform4f(
+        u_FragColor,
+        rgba[0] * 0.8,
+        rgba[1] * 0.8,
+        rgba[2] * 0.8,
+        rgba[3]
+      );
       drawTriangle3D([pt1[0]*a, pt1[1]*a, .5, pt1[0]*b, pt1[1]*b, -.5, pt2[0]*b, pt2[1]*b, -.5]);
       drawTriangle3D([pt2[0]*b, pt2[1]*b, -.5, pt1[0]*a, pt1[1]*a, .5, pt2[0]*a, pt2[1]*a, .5]);
       
