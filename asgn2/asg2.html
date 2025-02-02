@@ -8,8 +8,8 @@
   <body onload="main()">
     <h1>Assignment 2 CSE 160 Noa Lahan</h1>
 
-    <!-- <button type="button" id="button"></button>
-    <br /> -->
+    <button type="button" id="button"></button>
+    <br />
     
     <canvas id="webgl" width="400" height="400">
       Please use a browser that supports "canvas"
@@ -19,17 +19,22 @@
     Camera Angle
     <input type="range" min="-90" max="270" value="90" class="slider" id="angle" />
     <br />
+    Animation Speed
+    <input type="range" min="1" max="15" value="7" class="slider" id="speed" />
+    <br />
 
     <p>
       Animation:
       <button type="button" id="pose">Pose</button>
-      <button type="button" id="on">Walk</button>
-      <button type="button" id="off">Stop</button>
-      <button type="button" id="poff">pink Off</button>
+      <button type="button" id="wOn">Walk</button>
+      <button type="button" id="wOff">Stop</button>
+      <button type="button" id="pOn">Sit</button>
     </p>
 
     Body height
     <input type="range" min="-50" max="50" value="0" class="slider" id="height" />
+    Position
+    <input type="range" min="-50" max="50" value="0" class="slider" id="pos" />
     <br />
 
     Body

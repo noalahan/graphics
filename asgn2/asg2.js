@@ -82,8 +82,10 @@ function connectVariablesToGLSL() {
 }
 
 let g_globalAngle = 90;
+let g_speed = 7;
 // body
 let g_bodyHeight = 0;
+let g_bodyPos = 0;
 let g_bodyAngle = 0;
 let g_neckAngle = 0;
 let g_greenAngle = 0;
@@ -102,21 +104,23 @@ let g_rLegAngle = 0;
 let g_rCalfAngle = 0;
 let g_rFootAngle = 0;
 
-let g_walkAnim = true;
-let g_pinkAnim = false;
+let g_walkAnim = false;
+let g_pokeAnim = false;
+var count = 0;
 
 function addActionsForHtmlUI() {
   // animation selector
-  document.getElementById("on").onclick = function () {
+  document.getElementById("wOn").onclick = function () {
     g_walkAnim = true;
   };
-  document.getElementById("off").onclick = function () {
+  document.getElementById("wOff").onclick = function () {
     g_walkAnim = false;
   };
   document.getElementById("pose").onclick = function () {
     g_walkAnim = false;
     // g_globalAngle = 90;
     g_bodyHeight = 0;
+    g_bodyPos = 0;
     g_bodyAngle = 0;
     g_neckAngle = 0;
     g_greenAngle = 0;
@@ -148,14 +152,27 @@ function addActionsForHtmlUI() {
     document.getElementById("rCalf").value = 0;
     document.getElementById("rFoot").value = 0;
   };
+  document.getElementById("speed").addEventListener("mousemove", function () {
+    g_speed = this.value;
+  });
 
-  document.getElementById("poff").onclick = function () {
-    g_pinkAnim = false;
+  document.getElementById("pOn").onclick = function () {
+    g_pokeAnim = true;
+    count = 0;
   };
-
-  // height selector
+  document.addEventListener("click", function (event) {
+    if (event.shiftKey) {
+      g_pokeAnim = true;
+      count = 0;
+    }
+  });
+  // Position selector
   document.getElementById("height").addEventListener("mousemove", function () {
     g_bodyHeight = this.value * 0.01;
+    renderAllShapes();
+  });
+  document.getElementById("pos").addEventListener("mousemove", function () {
+    g_bodyPos = this.value * 0.01;
     renderAllShapes();
   });
 
@@ -230,9 +247,7 @@ function main() {
 
 function updateAnim() {
   if (g_walkAnim) {
-    let a = 6;
-    // document.getElementById("button").innerHTML =
-    // -35 * Math.sin(g_seconds * a) + 25;
+    let a = g_speed;
 
     // body
     g_bodyHeight = 0.01 * Math.sin(g_seconds * a);
@@ -259,15 +274,13 @@ function updateAnim() {
       5 * Math.sin(g_seconds * a + Math.PI / 4);
 
     // legs
-    let b = 0.6;
+    let b = 0.7;
     g_lLegAngle = 25 * Math.sin(g_seconds * a * b) - 5;
     g_lCalfAngle = 35 * Math.sin(g_seconds * a * b + Math.PI / 2) + 25;
     g_lFootAngle = 15 * Math.sin(g_seconds * a * b - Math.PI / 4) - 10;
-    g_rLegAngle = 25 * Math.sin(g_seconds * a * b + Math.PI) - 5;
-    g_rCalfAngle =
-      35 * Math.sin(g_seconds * a * b + Math.PI / 2 + Math.PI) + 25;
-    g_rFootAngle =
-      15 * Math.sin(g_seconds * a * b - Math.PI / 4 + Math.PI) - 10;
+    g_rLegAngle = -25 * Math.sin(g_seconds * a * b) - 5;
+    g_rCalfAngle = -35 * Math.sin(g_seconds * a * b + Math.PI / 2) + 25;
+    g_rFootAngle = -15 * Math.sin(g_seconds * a * b - Math.PI / 4) - 10;
     //update sliders
     document.getElementById("lLeg").value =
       25 * Math.sin(g_seconds * a * b) - 5;
@@ -276,14 +289,33 @@ function updateAnim() {
     document.getElementById("lFoot").value =
       15 * Math.sin(g_seconds * a * b - Math.PI / 4) - 5;
     document.getElementById("rLeg").value =
-      25 * Math.sin(g_seconds * a * b + Math.PI) - 10;
+      -25 * Math.sin(g_seconds * a * b) - 5;
     document.getElementById("rCalf").value =
-      35 * Math.sin(g_seconds * a * b + Math.PI / 2 + Math.PI) + 25;
+      -35 * Math.sin(g_seconds * a * b + Math.PI / 2) + 25;
     document.getElementById("rFoot").value =
-      15 * Math.sin(g_seconds * a * b - Math.PI / 4 + Math.PI) - 10;
+      -15 * Math.sin(g_seconds * a * b - Math.PI / 4) - 10;
   }
-  if (g_pinkAnim) {
-    g_neckAngle = 45 * Math.sin(3 * g_seconds);
+  if (g_pokeAnim) {
+    count += 6;
+    let angle = Math.cos((count * Math.PI) / 180);
+
+    document.getElementById("button").innerHTML = 10 * Math.sin((Math.PI/2 * (count * Math.PI) / 180)) + 5;
+
+    g_bodyHeight = 0.105 * angle - 0.105;
+    g_bodyPos = 0.115 * angle - 0.115;
+    g_lLegAngle = 15 * angle - 15;
+    g_lCalfAngle = -30 * angle + 30;
+    g_lFootAngle = 15 * angle - 15;
+    g_rLegAngle = 15 * angle - 15;
+    g_rCalfAngle = -30 * angle + 30;
+    g_rFootAngle = 15 * angle - 15;
+    g_rWingAngle = 10 * Math.sin((Math.PI * (count * Math.PI) / 180)) - 20;
+    g_lWingAngle = 10 * Math.sin(-(Math.PI * (count * Math.PI) / 180)) - 20;
+
+    if (count > 360) {
+      count = 0;
+      g_pokeAnim = false;
+    }
   }
 }
 
@@ -308,7 +340,7 @@ function renderAllShapes() {
   // body
   var base = new Sphere();
   base.color = bodyColor;
-  base.matrix.setTranslate(0, -0.25 + g_bodyHeight, 0);
+  base.matrix.setTranslate(0, -0.25 + g_bodyHeight, 0 + g_bodyPos);
   base.matrix.rotate(g_bodyAngle, 1, 0, 0);
   let baseCoor = new Matrix4(base.matrix);
   base.matrix.scale(1.55, 1, 2);
