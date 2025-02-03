@@ -82,6 +82,8 @@ function connectVariablesToGLSL() {
 }
 
 let g_globalAngle = 90;
+let g_xAngle = 0;
+let g_zAngle = 0;
 let g_speed = 7;
 // body
 let g_bodyHeight = 0;
@@ -155,7 +157,7 @@ function addActionsForHtmlUI() {
   document.getElementById("speed").addEventListener("mousemove", function () {
     g_speed = this.value;
   });
-
+  // poke animation
   document.getElementById("pOn").onclick = function () {
     g_pokeAnim = true;
     count = 0;
@@ -166,6 +168,7 @@ function addActionsForHtmlUI() {
       count = 0;
     }
   });
+
   // Position selector
   document.getElementById("height").addEventListener("mousemove", function () {
     g_bodyHeight = this.value * 0.01;
@@ -181,6 +184,59 @@ function addActionsForHtmlUI() {
     g_globalAngle = this.value;
     renderAllShapes();
   });
+  document.getElementById("xAngle").addEventListener("mousemove", function () {
+    g_xAngle = this.value;
+    renderAllShapes();
+  });
+  document.getElementById("zAngle").addEventListener("mousemove", function () {
+    g_zAngle = this.value;
+    renderAllShapes();
+  });
+  let x = 0,
+    y = 0,
+    xStart,
+    yStart,
+    xLast,
+    yLast;
+  let drag = false;
+  document
+    .getElementById("webgl")
+    .addEventListener("mousedown", function (event) {
+      drag = true;
+      xStart = event.clientX;
+      yStart = event.clientY;
+    });
+  document
+    .getElementById("webgl")
+    .addEventListener("mousemove", function (event) {
+      if (drag) {
+        xLast = x;
+        x = event.clientX - xStart;
+        if (Math.abs(xLast) - Math.abs(x) > 0) {
+          xStart = event.clientX;
+        }
+        // console.log(event.clientX);
+        g_globalAngle -= x * 0.04;
+        document.getElementById("angle").value = g_globalAngle;
+
+        yLast = y;
+        y = event.clientY - yStart;
+        if (Math.abs(yLast) - Math.abs(y) > 0) {
+          yStart = event.clientY;
+        }
+        if (event.clientX < 200) {
+          g_xAngle -= y * 0.04;
+          document.getElementById("xAngle").value = g_xAngle;
+        } else {
+          g_zAngle -= y * 0.04;
+          document.getElementById("zAngle").value = g_zAngle;
+        }
+      }
+    });
+  document.addEventListener("mouseup", function () {
+    drag = false;
+  });
+
   // body rotations
   document.getElementById("body").addEventListener("mousemove", function () {
     g_bodyAngle = this.value;
@@ -258,7 +314,7 @@ function updateAnim() {
     g_headY = 0.03 * Math.sin(g_seconds * a) + 0.06;
     g_headZ = 0.07 * Math.sin(-g_seconds * a);
     // update sliders
-    document.getElementById("height").value = 2 * Math.sin(g_seconds * a);
+    document.getElementById("height").value = 2 * Math.sin(g_seconds * a) * 5;
     document.getElementById("body").value = 3 * Math.sin(g_seconds * a);
     document.getElementById("neck").value = 20 * (Math.sin(g_seconds * a) + 1);
     document.getElementById("head").value =
@@ -299,8 +355,10 @@ function updateAnim() {
     count += 6;
     let angle = Math.cos((count * Math.PI) / 180);
 
-    document.getElementById("button").innerHTML = 10 * Math.sin((Math.PI/2 * (count * Math.PI) / 180)) + 5;
+    // document.getElementById("button").innerHTML =
+    //   10 * Math.sin(((Math.PI / 2) * (count * Math.PI)) / 180) + 5;
 
+    // animation
     g_bodyHeight = 0.105 * angle - 0.105;
     g_bodyPos = 0.115 * angle - 0.115;
     g_lLegAngle = 15 * angle - 15;
@@ -309,12 +367,29 @@ function updateAnim() {
     g_rLegAngle = 15 * angle - 15;
     g_rCalfAngle = -30 * angle + 30;
     g_rFootAngle = 15 * angle - 15;
-    g_rWingAngle = 10 * Math.sin((Math.PI * (count * Math.PI) / 180)) - 20;
-    g_lWingAngle = 10 * Math.sin(-(Math.PI * (count * Math.PI) / 180)) - 20;
+    g_lWingAngle = 10 * Math.sin((Math.PI * (count * Math.PI)) / 180) - 20;
+    g_rWingAngle = 10 * Math.sin(-((Math.PI * (count * Math.PI)) / 180)) - 20;
+
+    document.getElementById("height").value = (0.105 * angle - 0.105) * 100;
+    document.getElementById("pos").value = (0.115 * angle - 0.115) * 100;
+    document.getElementById("lLeg").value = 15 * angle - 15;
+    document.getElementById("lCalf").value = -30 * angle + 30;
+    document.getElementById("lFoot").value = 15 * angle - 15;
+    document.getElementById("rLeg").value = 15 * angle - 15;
+    document.getElementById("rCalf").value = -30 * angle + 30;
+    document.getElementById("rFoot").value = 15 * angle - 15;
+    document.getElementById("lWing").value =
+      10 * Math.sin((Math.PI * (count * Math.PI)) / 180) - 20;
+    document.getElementById("rWing").value =
+      10 * Math.sin(-((Math.PI * (count * Math.PI)) / 180)) - 20;
 
     if (count > 360) {
       count = 0;
       g_pokeAnim = false;
+      g_lWingAngle = 0;
+      g_rWingAngle = 0;
+      document.getElementById("lWing").value = 0;
+      document.getElementById("rWing").value = 0;
     }
   }
 }
@@ -330,7 +405,10 @@ let legColor = [0.812, 0.376, 0.243, 1];
 // draw every shape on canvas
 function renderAllShapes() {
   // pass the matrix to u_ModelMatrix attribute
-  var globalRotMat = new Matrix4().rotate(g_globalAngle, 0, 1, 0);
+  var globalRotMat = new Matrix4();
+  globalRotMat.rotate(g_globalAngle, 0, 1, 0);
+  globalRotMat.rotate(g_xAngle, 1, 0, 0);
+  globalRotMat.rotate(g_zAngle, 0, 0, 1);
   gl.uniformMatrix4fv(u_GlobalRotateMatrix, false, globalRotMat.elements);
 
   // Clear <canvas>
@@ -643,7 +721,7 @@ var g_seconds = performance.now() / 1000.0;
 function tick() {
   // save current time
   g_seconds = performance.now() / 1000.0 - g_startTime;
-  console.log(g_seconds);
+  // console.log(g_seconds);
 
   // update animation angles
   updateAnim();

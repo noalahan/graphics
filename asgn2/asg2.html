@@ -8,18 +8,22 @@
   <body onload="main()">
     <h1>Assignment 2 CSE 160 Noa Lahan</h1>
 
-    <button type="button" id="button"></button>
-    <br />
+    <!-- <button type="button" id="button"></button>
+    <br /> -->
     
     <canvas id="webgl" width="400" height="400">
       Please use a browser that supports "canvas"
     </canvas>
     
     <br />
-    Camera Angle
-    <input type="range" min="-90" max="270" value="90" class="slider" id="angle" />
+    Camera Y
+    <input type="range" min="-360" max="360" value="90" class="slider" id="angle" />
+    X
+    <input type="range" min="-360" max="360" value="0" class="slider" id="xAngle" />
+    Z
+    <input type="range" min="-360" max="360" value="0" class="slider" id="zAngle" />
     <br />
-    Animation Speed
+    Walking Speed
     <input type="range" min="1" max="15" value="7" class="slider" id="speed" />
     <br />
 
@@ -52,20 +56,26 @@
     Right Wing
     <input type="range" min="-20" max="20" value="0" class="slider" id="rWing" />
     <br />
-    L Leg
+    Left Leg
     <input type="range" min="-30" max="20" value="0" class="slider" id="lLeg" />
     Calf
     <input type="range" min="-10" max="60" value="0" class="slider" id="lCalf" />
     Foot
     <input type="range" min="-25" max="25" value="0" class="slider" id="lFoot" />
     <br />
-    R Leg
+    Right Leg
     <input type="range" min="-30" max="20" value="0" class="slider" id="rLeg" />
     Calf
     <input type="range" min="-10" max="60" value="0" class="slider" id="rCalf" />
     Foot
     <input type="range" min="-25" max="25" value="0" class="slider" id="rFoot" />
     <br />
+
+    <p>
+      shift-click to activate poke animation  
+      <br/>
+      click and drag to rotate with mouse
+    </p>
    
     <script src="../lib/webgl-utils.js"></script>
     <script src="../lib/webgl-debug.js"></script>
