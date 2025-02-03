@@ -720,7 +720,9 @@ var g_seconds = performance.now() / 1000.0;
 
 function tick() {
   // save current time
+  var startTime = performance.now();
   g_seconds = performance.now() / 1000.0 - g_startTime;
+
   // console.log(g_seconds);
 
   // update animation angles
@@ -728,6 +730,11 @@ function tick() {
 
   // Draw everything
   renderAllShapes();
+
+  // check running time
+  var duration = performance.now() - startTime;
+  document.getElementById("perf").innerHTML =
+    "  ms:  " + Math.floor(duration) + " fps: " + Math.floor(10000 / duration);
 
   // Tell the browser to update again
   requestAnimationFrame(tick);
