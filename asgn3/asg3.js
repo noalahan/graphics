@@ -161,6 +161,15 @@ let g_pinkAnim = false;
  * Sets all functions of elements defined in HTML
  */
 function addActionsForHtmlUI() {
+  // mouse movement
+  document
+    .addEventListener("mousemove", function (event) {
+      // console.log(event.clientX - canvas.width / 2);
+      g_at[0] = (event.clientX - canvas.width / 2);
+      console.log(g_at[0])
+      // console.log(-event.clientY + canvas.height / 2);
+    });
+
   // animation selector
   document.getElementById("yon").onclick = function () {
     g_yellowAnim = true;
@@ -298,19 +307,19 @@ var g_up = [0, 1, 0];
  * @param {*} event Key press event
  */
 function keydown(event) {
-  let change = 0.1;
+  let change = 0.3;
   if (event.keyCode == 87) {
     // W
-    g_eye[2] += change;
+    g_eye[2] -= change;
   } else if (event.keyCode == 65) {
     // A
-    g_eye[0] += change;
+    g_eye[0] -= change;
   } else if (event.keyCode == 83) {
     // S
-    g_eye[2] -= change;
+    g_eye[2] += change;
   } else if (event.keyCode == 68) {
     // D
-    g_eye[0] -= change;
+    g_eye[0] += change;
   } else if (event.keyCode == 81) {
     // Q
     // rotate left
@@ -348,15 +357,15 @@ var g_map = [
 //}
 
 function drawMap() {
-  for (x = 0; x < 8; x++) {
-    for (y = 0; y < 8; y++) {
-      if (x<1 || x==31 || y==0 || y==31){
+  for (x = 0; x < 10; x++) {
+    for (y = 0; y < 10; y++) {
+      if (x < 1 || x == 31 || y == 0 || y == 31) {
         var body = new Cube();
         body.color = [0.8, 1, 1, 1];
-        body.matrix.translate(0, -.75, 0);
-        body.matrix.scale(.4, .4, .4);
-        body.matrix.translate(x-16, 0, y-16);
-        body.render()
+        body.matrix.translate(0, -0.75, 0);
+        body.matrix.scale(0.4, 0.4, 0.4);
+        body.matrix.translate(x - 16, 0, y - 16);
+        body.render();
       }
     }
   }
@@ -407,6 +416,13 @@ function renderAllShapes() {
   floor.matrix.scale(10, 0, 10);
   floor.matrix.translate(-0.5, 0, -0.5);
   floor.render();
+
+  var sky = new Cube();
+  sky.color = [0, 1, 1, 1];
+  sky.textureNum = 0;
+  sky.matrix.scale(50, 50, 50);
+  sky.matrix.translate(-0.5, -0.5, -0.5);
+  sky.render();
 
   drawMap();
 
