@@ -297,9 +297,9 @@ function updateAnim() {
 }
 
 // var g_eye = new Vector([0, 0, 3]);
-var g_eye = new Vector([-1, 2, 5]);
+var g_eye = new Vector([0, 6, 15]);
 // var g_at = new Vector([0, 0, -100]);
-var g_at = new Vector([0, -20, -100]);
+var g_at = new Vector([0, -40, -100]);
 var g_up = new Vector([0, 1, 0]);
 /**
  * Changes camera placement on key press
@@ -412,7 +412,7 @@ function renderAllShapes() {
   sky.matrix.translate(-0.5, -0.45, -0.5);
   sky.render();
 
-  // drawMap();
+  drawMap();
 
   // draw the body cube
   var red = new Cube();
