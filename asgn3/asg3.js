@@ -196,6 +196,8 @@ function addActionsForHtmlUI() {
   });
 }
 
+let SKY = 0;
+let HEDGE = 1;
 /**
  * Sets all sampler textures
  * @returns true if ran successfully
@@ -223,7 +225,7 @@ function initTextures() {
   image1.onload = function () {
     sendImageToTexture(image1, 1);
   };
-  image1.src = "img/code.jpg";
+  image1.src = "img/hedge.png";
 
   return true;
 }
@@ -296,10 +298,11 @@ function updateAnim() {
   }
 }
 
-// var g_eye = new Vector([0, 0, 3]);
-var g_eye = new Vector([-10, 10, 10]);
-// var g_at = new Vector([0, 0, -100]);
-var g_at = new Vector([0, 0, 0]);
+// var g_eye = new Vector([-6.5, 0.5, 5.5]);
+// var g_at = new Vector([0, 0.5, 0]);
+
+var g_eye = new Vector([0, 0.5, 3]);
+var g_at = new Vector([0, 0.5, -10]);
 var g_up = new Vector([0, 1, 0]);
 /**
  * Changes camera placement on key press
@@ -310,7 +313,7 @@ function keydown(event) {
   console.log("g_at(" + g_at.x + ", " + g_at.y + ", " + g_at.z + ")");
   // console.log(event.keyCode);
 
-  let change = 0.5;
+  let change = 0.2;
   // get front direction
   var frontDir = g_eye.direction(g_at);
   frontDir.mul(change);
@@ -348,8 +351,15 @@ function keydown(event) {
     // down arrow: move down
     g_eye.y -= change;
   } else if (event.keyCode == 37) {
-    // left arrow: break cube
-    console.log("break!");
+    console.log(
+      "loc: (" +
+        Math.abs(Math.floor(g_eye.x * 1.454) - 16) +
+        ", " +
+        Math.floor(g_eye.y) +
+        "," +
+        Math.floor(g_eye.z) +
+        ")"
+    );
   } else if (event.keyCode == 39) {
     // left arrow: build cube
     console.log("build!");
@@ -397,53 +407,56 @@ function renderAllShapes() {
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   gl.clear(gl.COLOR_BUFFER_BIT);
 
-  // floor
-  var floor = new Cube();
-  floor.color = [0, 1, 0, 1];
-  floor.matrix.translate(0, -0.75, 0);
-  floor.matrix.scale(10, 0, 10);
-  floor.matrix.translate(-0.5, 0, -0.5);
-  floor.render();
-
+  // scene
   var sky = new Cube();
-  sky.color = [0, 1, 1, 1];
-  sky.textureNum = 0;
+  sky.textureNum = SKY;
+  sky.matrix.translate(0, 10, 0);
   sky.matrix.scale(100, 100, 100);
-  sky.matrix.translate(-0.5, -0.45, -0.5);
+  // sky.matrix.translate(-0.5, -0.45, -0.5);
   sky.render();
+
+  var floor = new Cube();
+  floor.textureNum = HEDGE;
+  floor.matrix.translate(0, -0.5, 0);
+  floor.matrix.scale(16, 1, 16);
+  floor.render();
 
   drawMap();
 
-  // draw the body cube
-  var red = new Cube();
-  red.color = [1.0, 0.0, 0.0, 1.0];
-  red.textureNum = 1;
-  red.matrix.setTranslate(-0.25, -0.75, 0.0);
-  red.matrix.rotate(-5, 1, 0, 0);
-  red.matrix.scale(0.5, 0.3, 0.5);
-  red.render();
+  if (Math.abs(g_eye.x) < 1 && Math.abs(g_eye.z) < 1){
+    console.log("you have found love")
+  }
 
-  // draw left arm
-  var yellow = new Cube();
-  yellow.color = [1, 1, 0, 1];
-  yellow.textureNum = 0;
-  yellow.matrix.setTranslate(0, -0.5, 0.0);
-  yellow.matrix.rotate(-5, 1, 0, 0);
-  yellow.matrix.rotate(-g_yellowAngle, 0, 0, 1);
-  var yellowCoordinates = new Matrix4(yellow.matrix);
-  yellow.matrix.scale(0.25, 0.7, 0.5);
-  yellow.matrix.translate(-0.5, 0, 0);
-  yellow.render();
+  // // draw the body cube
+  // var red = new Cube();
+  // red.color = [1.0, 0.0, 0.0, 1.0];
+  // red.textureNum = 1;
+  // red.matrix.setTranslate(-0.25, -0.75, 0.0);
+  // red.matrix.rotate(-5, 1, 0, 0);
+  // red.matrix.scale(0.5, 0.3, 0.5);
+  // red.render();
 
-  // test box
-  var pink = new Cube();
-  pink.color = [1, 0, 1, 1];
-  pink.matrix = yellowCoordinates;
-  pink.matrix.translate(0, 0.65, 0);
-  pink.matrix.rotate(-g_pinkAngle, 0, 0, 1);
-  pink.matrix.scale(0.3, 0.3, 0.3);
-  pink.matrix.translate(-0.5, 0, -0.00005);
-  pink.render();
+  // // draw left arm
+  // var yellow = new Cube();
+  // yellow.color = [1, 1, 0, 1];
+  // yellow.textureNum = 0;
+  // yellow.matrix.setTranslate(0, -0.5, 0.0);
+  // yellow.matrix.rotate(-5, 1, 0, 0);
+  // yellow.matrix.rotate(-g_yellowAngle, 0, 0, 1);
+  // var yellowCoordinates = new Matrix4(yellow.matrix);
+  // yellow.matrix.scale(0.25, 0.7, 0.5);
+  // yellow.matrix.translate(-0.5, 0, 0);
+  // yellow.render();
+
+  // // test box
+  // var pink = new Cube();
+  // pink.color = [1, 0, 1, 1];
+  // pink.matrix = yellowCoordinates;
+  // pink.matrix.translate(0, 0.65, 0);
+  // pink.matrix.rotate(-g_pinkAngle, 0, 0, 1);
+  // pink.matrix.scale(0.3, 0.3, 0.3);
+  // pink.matrix.translate(-0.5, 0, -0.00005);
+  // pink.render();
 }
 
 var g_startTime = performance.now() / 1000.0;

@@ -39,18 +39,9 @@ class Vector {
    * @return this
    */
   set(src) {
-    var i, s, d;
-
-    s = src.elements;
-    d = this.elements;
-
-    if (s === d) {
-      return;
-    }
-
-    for (i = 0; i < 3; ++i) {
-      d[i] = s[i];
-    }
+    this.x = src.x;
+    this.y = src.y;
+    this.z = src.z;
 
     return this;
   }

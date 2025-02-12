@@ -6,7 +6,7 @@ class Cube {
     this.textureNum = -1;
   }
 
-  oldrender() {
+  slowrender() {
     var rgba = this.color;
 
     // pass the texture number
@@ -86,7 +86,7 @@ class Cube {
       [0.25, 0.25, 0, 0.5, 0, 0.25]
     );
   }
-  render() {
+  renderWORKS() {
     var rgba = this.color;
 
     // pass the texture number
@@ -153,6 +153,74 @@ class Cube {
 
     drawTriangle3DUV(allverts, alluvs);
   }
+  render() {
+    var rgba = this.color;
+
+    // pass the texture number
+    gl.uniform1i(u_whichTexture, this.textureNum);
+
+    // Pass the color of a point to u_FragColor variable
+    gl.uniform4f(u_FragColor, rgba[0], rgba[1], rgba[2], rgba[3]);
+
+    // Pass the matrix to u_ModelMatrix attribute
+    gl.uniformMatrix4fv(u_ModelMatrix, false, this.matrix.elements);
+
+    var allverts = [];
+    var alluvs = [];
+
+    // front of cube
+    allverts = allverts.concat([-0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5]);
+    alluvs = alluvs.concat([0.25, 0.25, 0.5, 0.5, 0.5, 0.25]);
+    allverts = allverts.concat([-0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5]);
+    alluvs = alluvs.concat([0.25, 0.25, 0.25, 0.5, 0.5, 0.5]);
+    // back of cube
+    allverts = allverts.concat([-0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5]);
+    alluvs = alluvs.concat([1, 0.25, 0.75, 0.5, 0.75, 0.25]);
+    allverts = allverts.concat([-0.5, -0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5]);
+    alluvs = alluvs.concat([1, 0.25, 1, 0.5, 0.75, 0.5]);
+    // pass the color of a point to u_FragColor uniform variable
+    gl.uniform4f(
+      u_FragColor,
+      rgba[0] * 0.9,
+      rgba[1] * 0.9,
+      rgba[2] * 0.9,
+      rgba[3]
+    );
+    // top of cube
+    allverts = allverts.concat([-0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5]);
+    alluvs = alluvs.concat([0.25, 0.5, 0.25, 0.75, 0.5, 0.75]);
+    allverts = allverts.concat([-0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5]);
+    alluvs = alluvs.concat([0.25, 0.5, 0.5, 0.75, 0.5, 0.5]);
+    // bottom of cube
+    allverts = allverts.concat([-0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5]);
+    alluvs = alluvs.concat([0.25, 0.25, 0.25, 0, 0.5, 0]);
+    allverts = allverts.concat([-0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5]);
+    alluvs = alluvs.concat([0.25, 0.25, 0.5, 0, 0.5, 0.25]);
+    // pass the color of a point to u_FragColor uniform variable
+    gl.uniform4f(
+      u_FragColor,
+      rgba[0] * 0.8,
+      rgba[1] * 0.8,
+      rgba[2] * 0.8,
+      rgba[3]
+    );
+    // left of cube
+    allverts = allverts.concat([0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5]);
+    alluvs = alluvs.concat([0.5, 0.25, 0.5, 0.5, 0.75, 0.5]);
+    allverts = allverts.concat([0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5]);
+    alluvs = alluvs.concat([0.5, 0.25, 0.75, 0.5, 0.75, 0.25]);
+    // right of cube
+    allverts = allverts.concat([-0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5]);
+    alluvs = alluvs.concat([0.25, 0.25, 0.25, 0.5, 0, 0.5]);
+    allverts = allverts.concat([-0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5]);
+    alluvs = alluvs.concat([0.25, 0.25, 0, 0.5, 0, 0.25]);
+
+    // console.log("All verts length:", allverts.length);
+    // console.log("Expected vertex count:", allverts.length / 3);
+
+    drawTriangle3DUV(allverts, alluvs);
+  }
+  
 }
 
 function drawTriangle3D(vertices) {
