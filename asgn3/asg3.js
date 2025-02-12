@@ -151,7 +151,7 @@ function connectVariablesToGLSL() {
   gl.uniformMatrix4fv(u_ModelMatrix, false, identityM.elements);
 }
 
-let g_globalAngle = 0;
+let g_globalAngle = -140;
 let g_yellowAngle = 0;
 let g_pinkAngle = 0;
 let g_yellowAnim = false;
@@ -162,13 +162,10 @@ let g_pinkAnim = false;
  */
 function addActionsForHtmlUI() {
   // mouse movement
-  document
-    .addEventListener("mousemove", function (event) {
-      // console.log(event.clientX - canvas.width / 2);
-      g_at[0] = (event.clientX - canvas.width / 2);
-      console.log(g_at[0])
-      // console.log(-event.clientY + canvas.height / 2);
-    });
+  // document.addEventListener("mousemove", function (event) {
+  //   g_at.x = event.clientX - canvas.width / 2;
+  //   g_at.y = -event.clientY + canvas.width / 2;
+  // });
 
   // animation selector
   document.getElementById("yon").onclick = function () {
@@ -215,7 +212,7 @@ function initTextures() {
     sendImageToTexture(image0, 0);
   };
   // Tell the browser to load an image
-  image0.src = "img/sky.jpg";
+  image0.src = "img/sky.png";
 
   // add texture1
   var image1 = new Image();
@@ -299,37 +296,65 @@ function updateAnim() {
   }
 }
 
-var g_eye = [0, 0, 3];
-var g_at = [0, 0, -100];
-var g_up = [0, 1, 0];
+var g_eye = new Vector([0, 0, 3]);
+var g_at = new Vector([0, 0, -100]);
+var g_up = new Vector([0, 1, 0]);
 /**
  * Changes camera placement on key press
  * @param {*} event Key press event
  */
 function keydown(event) {
-  let change = 0.3;
+  console.log("g_eye(" + g_eye.x + ", " + g_eye.y + ", " + g_eye.z + ")");
+  console.log("g_at(" + g_at.x + ", " + g_at.y + ", " + g_at.z + ")");
+  // console.log(event.keyCode);
+
+  let change = 0.5;
+  // get front direction
+  var frontDir = g_eye.direction(g_at);
+  frontDir.mul(change);
+  // get side direction
+  var sideDir = Vector.cross(g_up, frontDir);
+  sideDir.normalize();
+  sideDir.mul(change);
+
   if (event.keyCode == 87) {
-    // W
-    g_eye[2] -= change;
+    // W: move forward
+    g_eye.add(frontDir);
+    g_at.add(frontDir);
   } else if (event.keyCode == 65) {
-    // A
-    g_eye[0] -= change;
+    // A: move left
+    g_eye.add(sideDir);
+    g_at.add(sideDir);
   } else if (event.keyCode == 83) {
-    // S
-    g_eye[2] += change;
+    // S: move backward
+    g_eye.setSub(frontDir);
+    g_at.setSub(frontDir);
   } else if (event.keyCode == 68) {
-    // D
-    g_eye[0] += change;
+    // D: move right
+    g_eye.setSub(sideDir);
+    g_at.setSub(sideDir);
   } else if (event.keyCode == 81) {
-    // Q
-    // rotate left
+    // Q: look left
+    g_at.x -= change * 10;
   } else if (event.keyCode == 69) {
-    // E
-    // rotate right
+    // E: look right
+    g_at.x += change * 10;
+  } else if (event.keyCode == 38) {
+    // up arrow: move up
+    g_eye.y += change;
+  } else if (event.keyCode == 40) {
+    // down arrow: move down
+    g_eye.y -= change;
+  } else if (event.keyCode == 37) {
+    // left arrow: break cube
+    console.log("break!");
+  } else if (event.keyCode == 39) {
+    // left arrow: build cube
+    console.log("build!");
   }
 
   renderAllShapes();
-  console.log(event.keyCode);
+  // console.log(event.keyCode);
 }
 
 var g_map = [
@@ -357,8 +382,8 @@ var g_map = [
 //}
 
 function drawMap() {
-  for (x = 0; x < 10; x++) {
-    for (y = 0; y < 10; y++) {
+  for (x = 0; x < 32; x++) {
+    for (y = 0; y < 32; y++) {
       if (x < 1 || x == 31 || y == 0 || y == 31) {
         var body = new Cube();
         body.color = [0.8, 1, 1, 1];
@@ -387,15 +412,15 @@ function renderAllShapes() {
   // pass the view matrix
   var viewMat = new Matrix4();
   viewMat.setLookAt(
-    g_eye[0],
-    g_eye[1],
-    g_eye[2],
-    g_at[0],
-    g_at[1],
-    g_at[2],
-    g_up[0],
-    g_up[1],
-    g_up[2]
+    g_eye.x,
+    g_eye.y,
+    g_eye.z,
+    g_at.x,
+    g_at.y,
+    g_at.z,
+    g_up.x,
+    g_up.y,
+    g_up.z
   ); // (eye, at, up)
   gl.uniformMatrix4fv(u_ViewMatrix, false, viewMat.elements);
 
@@ -420,8 +445,8 @@ function renderAllShapes() {
   var sky = new Cube();
   sky.color = [0, 1, 1, 1];
   sky.textureNum = 0;
-  sky.matrix.scale(50, 50, 50);
-  sky.matrix.translate(-0.5, -0.5, -0.5);
+  sky.matrix.scale(100, 100, 100);
+  sky.matrix.translate(-0.5, -0.45, -0.5);
   sky.render();
 
   drawMap();

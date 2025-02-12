@@ -20,11 +20,11 @@ class Cube {
     gl.uniformMatrix4fv(u_ModelMatrix, false, this.matrix.elements);
 
     // front of cube
-    drawTriangle3DUV([0, 0, 0, 1, 1, 0, 1, 0, 0], [0, 0, 1, 1, 1, 0]);
-    drawTriangle3DUV([0, 0, 0, 0, 1, 0, 1, 1, 0], [0, 0, 0, 1, 1, 1]);
+    drawTriangle3DUV([0, 0, 0, 1, 1, 0, 1, 0, 0], [0.25, 0.25, 0.5, 0.5, 0.5, 0.25]);
+    drawTriangle3DUV([0, 0, 0, 0, 1, 0, 1, 1, 0], [0.25, 0.25, 0.25, 0.5, 0.5, 0.5]);
     // back of cube
-    drawTriangle3DUV([0, 0, 1, 1, 1, 1, 1, 0, 1], [0, 0, 1, 1, 1, 0]);
-    drawTriangle3DUV([0, 0, 1, 0, 1, 1, 1, 1, 1], [0, 0, 0, 1, 1, 1]);
+    drawTriangle3DUV([0, 0, 1, 1, 1, 1, 1, 0, 1], [1, 0.25, 0.75, 0.5, 0.75, 0.25]);
+    drawTriangle3DUV([0, 0, 1, 0, 1, 1, 1, 1, 1], [1, 0.25, 1, 0.5, 0.75, 0.5]);
     // pass the color of a point to u_FragColor uniform variable
     gl.uniform4f(
       u_FragColor,
@@ -34,11 +34,11 @@ class Cube {
       rgba[3]
     );
     // top of cube
-    drawTriangle3DUV([0, 1, 0, 0, 1, 1, 1, 1, 1], [0, 1, 0, 1, 1, 1]);
-    drawTriangle3DUV([0, 1, 0, 1, 1, 1, 1, 1, 0], [0, 1, 1, 1, 1, 1]);
+    drawTriangle3DUV([0, 1, 0, 0, 1, 1, 1, 1, 1], [0.25, 0.5, 0.25, 0.75, 0.5, 0.75, ]);
+    drawTriangle3DUV([0, 1, 0, 1, 1, 1, 1, 1, 0], [0.25, 0.5, 0.5, 0.75, 0.5, 0.5]);
     // bottom of cube
-    drawTriangle3DUV([0, 0, 0, 0, 0, 1, 1, 0, 1], [0, 0, 0, 0, 1, 0]);
-    drawTriangle3D([0, 0, 0, 1, 0, 1, 1, 0, 0], [0, 0, 1, 0, 1, 0]);
+    drawTriangle3DUV([0, 0, 0, 0, 0, 1, 1, 0, 1], [0.25, 0.25, 0.25, 0, 0.5, 0]);
+    drawTriangle3DUV([0, 0, 0, 1, 0, 1, 1, 0, 0], [0.25, 0.25, 0.5, 0, 0.5, 0.25]);
     // pass the color of a point to u_FragColor uniform variable
     gl.uniform4f(
       u_FragColor,
@@ -48,11 +48,11 @@ class Cube {
       rgba[3]
     );
     // left of cube
-    drawTriangle3DUV([1, 0, 0, 1, 1, 0, 1, 1, 1], [1, 0, 1, 1, 1, 1]);
-    drawTriangle3DUV([1, 0, 0, 1, 1, 1, 1, 0, 1], [1, 0, 1, 1, 1, 0]);
+    drawTriangle3DUV([1, 0, 0, 1, 1, 0, 1, 1, 1], [0.5, 0.25, 0.5, 0.5, 0.75, 0.5]);
+    drawTriangle3DUV([1, 0, 0, 1, 1, 1, 1, 0, 1], [0.5, 0.25, 0.75, 0.5, 0.75, 0.25]);
     // right of cube
-    drawTriangle3DUV([0, 0, 0, 0, 1, 0, 0, 1, 1], [0, 0, 0, 1, 0, 1]);
-    drawTriangle3DUV([0, 0, 0, 0, 1, 1, 0, 0, 1], [0, 0, 0, 1, 0, 0]);
+    drawTriangle3DUV([0, 0, 0, 0, 1, 0, 0, 1, 1], [0.25, 0.25, 0.25, 0.5, 0, 0.5]);
+    drawTriangle3DUV([0, 0, 0, 0, 1, 1, 0, 0, 1], [0.25, 0.25, 0, 0.5, 0, 0.25]);
   }
   renderFast() {
     var rgba = this.color;
@@ -66,46 +66,28 @@ class Cube {
     // Pass the matrix to u_ModelMatrix attribute
     gl.uniformMatrix4fv(u_ModelMatrix, false, this.matrix.elements);
 
-    var allvertices = [];
+    var allverts = [];
     // front of cube
     drawTriangle3DUV([0, 0, 0, 1, 1, 0, 1, 0, 0], [0, 0, 1, 1, 1, 0]);
-    // allvertices = allvertices.concat([0, 0, 0, 1, 1, 0, 1, 0, 0]);
-    allvertices = allvertices.concat([0, 0, 0, 0, 1, 0, 1, 1, 0]);
+    // allverts = allverts.concat([0, 0, 0, 1, 1, 0, 1, 0, 0]);
+    allverts = allverts.concat([0, 0, 0, 0, 1, 0, 1, 1, 0]);
     // back of cube
-    allvertices = allvertices.concat([0, 0, 1, 1, 1, 1, 1, 0, 1]);
-    allvertices = allvertices.concat([0, 0, 1, 0, 1, 1, 1, 1, 1]);
+    allverts = allverts.concat([0, 0, 1, 1, 1, 1, 1, 0, 1]);
+    allverts = allverts.concat([0, 0, 1, 0, 1, 1, 1, 1, 1]);
     // top of cube
-    allvertices = allvertices.concat([0, 1, 0, 0, 1, 1, 1, 1, 1]);
-    allvertices = allvertices.concat([0, 1, 0, 1, 1, 1, 1, 1, 0]);
+    allverts = allverts.concat([0, 1, 0, 0, 1, 1, 1, 1, 1]);
+    allverts = allverts.concat([0, 1, 0, 1, 1, 1, 1, 1, 0]);
     // bottom of cube
-    allvertices = allvertices.concat([0, 0, 0, 0, 0, 1, 1, 0, 1]);
-    allvertices = allvertices.concat([0, 0, 0, 1, 0, 1, 1, 0, 0]);
+    allverts = allverts.concat([0, 0, 0, 0, 0, 1, 1, 0, 1]);
+    allverts = allverts.concat([0, 0, 0, 1, 0, 1, 1, 0, 0]);
     // left of cube
-    allvertices = allvertices.concat([1, 0, 0, 1, 1, 0, 1, 1, 1]);
-    allvertices = allvertices.concat([1, 0, 0, 1, 1, 1, 1, 0, 1]);
+    allverts = allverts.concat([1, 0, 0, 1, 1, 0, 1, 1, 1]);
+    allverts = allverts.concat([1, 0, 0, 1, 1, 1, 1, 0, 1]);
     // right of cube
-    allvertices = allvertices.concat([0, 0, 0, 0, 1, 0, 0, 1, 1]);
-    allvertices = allvertices.concat([0, 0, 0, 0, 1, 1, 0, 0, 1]);
+    allverts = allverts.concat([0, 0, 0, 0, 1, 0, 0, 1, 1]);
+    allverts = allverts.concat([0, 0, 0, 0, 1, 1, 0, 0, 1]);
 
-    drawTriangle3D(allvertices);
-    // // front of cube
-    // drawTriangle3DUV([0, 0, 0, 1, 1, 0, 1, 0, 0], [0, 0, 1, 1, 1, 0]);
-    // drawTriangle3DUV([0, 0, 0, 0, 1, 0, 1, 1, 0], [0, 0, 0, 1, 1, 1]);
-    // // back of cube
-    // drawTriangle3DUV([0, 0, 1, 1, 1, 1, 1, 0, 1], [0, 0, 1, 1, 1, 0]);
-    // drawTriangle3DUV([0, 0, 1, 0, 1, 1, 1, 1, 1], [0, 0, 0, 1, 1, 1]);
-    // // top of cube
-    // drawTriangle3DUV([0, 1, 0, 0, 1, 1, 1, 1, 1], [0, 1, 0, 1, 1, 1]);
-    // drawTriangle3DUV([0, 1, 0, 1, 1, 1, 1, 1, 0], [0, 1, 1, 1, 1, 1]);
-    // // bottom of cube
-    // drawTriangle3DUV([0, 0, 0, 0, 0, 1, 1, 0, 1], [0, 0, 0, 0, 1, 0]);
-    // drawTriangle3D([0, 0, 0, 1, 0, 1, 1, 0, 0], [0, 0, 1, 0, 1, 0]);
-    // // left of cube
-    // drawTriangle3DUV([1, 0, 0, 1, 1, 0, 1, 1, 1], [1, 0, 1, 1, 1, 1]);
-    // drawTriangle3DUV([1, 0, 0, 1, 1, 1, 1, 0, 1], [1, 0, 1, 1, 1, 0]);
-    // // right of cube
-    // drawTriangle3DUV([0, 0, 0, 0, 1, 0, 0, 1, 1], [0, 0, 0, 1, 0, 1]);
-    // drawTriangle3DUV([0, 0, 0, 0, 1, 1, 0, 0, 1], [0, 0, 0, 1, 0, 0]);
+    drawTriangle3D(allverts);
   }
 }
 
