@@ -49,18 +49,24 @@ var g_map = [
 //     }
 // }
 
-function drawMap() {
-  for (x = 0; x < 32; x++) {
-    for (y = 0; y < 32; y++) {
-      if (x == 0 || x == 31 || y == 0 || y == 31) {
-        drawCube();
-      } else if(x == 2 || y == 2 || x == 29 || y == 29){
-        drawCube();}
-    //   } else if(x == 4 || y == 4 || x == 27 || y == 27){
-    //     drawCube();
-    //   }
-    }
-  }
+// function drawMap() {
+//   for (x = 0; x < 1; x++) {
+//     for (y = 0; y < 1; y++) {
+//       if (x == 0 || x == 31 || y == 0 || y == 31) {
+//         drawCube();
+//       }
+//     //   else if(x == 2 || y == 2 || x == 29 || y == 29){
+//     //     drawCube();
+//     //   }
+//     }
+//   }
+// }
+
+function drawMap(){
+    var body = new Cube();
+    body.color = [0.8, 1, 1, 1];
+    body.matrix.translate(0, -0.75, 0);
+    body.render();
 }
 
 function drawCube() {
@@ -71,3 +77,28 @@ function drawCube() {
     body.matrix.translate(x - 16, 0, y - 16);
     body.render();
 }
+
+
+// var g_map = [
+//   [1, 1, 1, 1, 1, 1, 1, 1],
+//   [1, 0, 0, 0, 0, 0, 0, 1],
+//   [1, 0, 0, 0, 0, 0, 0, 1],
+//   [1, 0, 0, 1, 1, 0, 0, 1],
+//   [1, 0, 0, 0, 0, 0, 0, 1],
+//   [1, 0, 0, 0, 0, 0, 0, 1],
+//   [1, 0, 0, 0, 1, 0, 0, 1],
+//   [1, 0, 0, 0, 0, 0, 0, 1],
+// ];
+
+//function drawMap() {
+// for (let x = 0; x < 8; x++) {
+//   for (let y = 0; y < 8; y++) {
+//     if (g_map[x][y] == 1) {
+//       var block = new Cube();
+//       block.color = [1, 1, 0, 1];
+//       block.matrix.translate(x - 4, -0.75, y - 4);
+//       block.render();
+//     }
+//   }
+// }
+//}

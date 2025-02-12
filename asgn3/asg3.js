@@ -296,8 +296,10 @@ function updateAnim() {
   }
 }
 
-var g_eye = new Vector([0, 0, 3]);
-var g_at = new Vector([0, 0, -100]);
+// var g_eye = new Vector([0, 0, 3]);
+var g_eye = new Vector([-1, 2, 5]);
+// var g_at = new Vector([0, 0, -100]);
+var g_at = new Vector([0, -20, -100]);
 var g_up = new Vector([0, 1, 0]);
 /**
  * Changes camera placement on key press
@@ -357,32 +359,6 @@ function keydown(event) {
   // console.log(event.keyCode);
 }
 
-// var g_map = [
-//   [1, 1, 1, 1, 1, 1, 1, 1],
-//   [1, 0, 0, 0, 0, 0, 0, 1],
-//   [1, 0, 0, 0, 0, 0, 0, 1],
-//   [1, 0, 0, 1, 1, 0, 0, 1],
-//   [1, 0, 0, 0, 0, 0, 0, 1],
-//   [1, 0, 0, 0, 0, 0, 0, 1],
-//   [1, 0, 0, 0, 1, 0, 0, 1],
-//   [1, 0, 0, 0, 0, 0, 0, 1],
-// ];
-
-//function drawMap() {
-// for (let x = 0; x < 8; x++) {
-//   for (let y = 0; y < 8; y++) {
-//     if (g_map[x][y] == 1) {
-//       var block = new Cube();
-//       block.color = [1, 1, 0, 1];
-//       block.matrix.translate(x - 4, -0.75, y - 4);
-//       block.render();
-//     }
-//   }
-// }
-//}
-
-
-
 /**
  * Draws all shaped on screen
  */
@@ -436,7 +412,7 @@ function renderAllShapes() {
   sky.matrix.translate(-0.5, -0.45, -0.5);
   sky.render();
 
-  drawMap();
+  // drawMap();
 
   // draw the body cube
   var red = new Cube();
