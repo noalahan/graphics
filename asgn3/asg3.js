@@ -297,9 +297,9 @@ function updateAnim() {
 }
 
 // var g_eye = new Vector([0, 0, 3]);
-var g_eye = new Vector([0, 6, 15]);
+var g_eye = new Vector([-10, 10, 10]);
 // var g_at = new Vector([0, 0, -100]);
-var g_at = new Vector([0, -40, -100]);
+var g_at = new Vector([0, 0, 0]);
 var g_up = new Vector([0, 1, 0]);
 /**
  * Changes camera placement on key press
