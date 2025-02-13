@@ -22,6 +22,11 @@ var FSHADER_SOURCE = `
   uniform vec4 u_FragColor;
   uniform sampler2D u_Sampler0;
   uniform sampler2D u_Sampler1;
+  uniform sampler2D u_Sampler2;
+  uniform sampler2D u_Sampler3;
+  uniform sampler2D u_Sampler4;
+  uniform sampler2D u_Sampler5;
+  uniform sampler2D u_Sampler6;
   uniform int u_whichTexture;
 
   void main() {
@@ -32,7 +37,17 @@ var FSHADER_SOURCE = `
     } else if (u_whichTexture == 0){
       gl_FragColor = texture2D(u_Sampler0, v_UV); // use texture0
     } else if (u_whichTexture == 1){
-      gl_FragColor = texture2D(u_Sampler1, v_UV); // use texture0
+      gl_FragColor = texture2D(u_Sampler1, v_UV); // use texture1
+    } else if (u_whichTexture == 2){
+      gl_FragColor = texture2D(u_Sampler2, v_UV); // use texture2
+    } else if (u_whichTexture == 3){
+      gl_FragColor = texture2D(u_Sampler3, v_UV); // use texture3
+    } else if (u_whichTexture == 4){
+      gl_FragColor = texture2D(u_Sampler4, v_UV); // use texture4
+    } else if (u_whichTexture == 5){
+      gl_FragColor = texture2D(u_Sampler5, v_UV); // use texture5
+    } else if (u_whichTexture == 6){
+      gl_FragColor = texture2D(u_Sampler6, v_UV); // use texture6
     } else {
       gl_FragColor = vec4(1, .2, .2, 1);          // error, put red(ish)
     }  
@@ -51,6 +66,11 @@ let u_ProjectionMatrix;
 let u_FragColor;
 let u_Sampler0;
 let u_Sampler1;
+let u_Sampler2;
+let u_Sampler3;
+let u_Sampler4;
+let u_Sampler5;
+let u_Sampler6;
 let u_whichTexture;
 
 function setupWebGL() {
@@ -139,6 +159,41 @@ function connectVariablesToGLSL() {
     return false;
   }
 
+  // Get the storage location of u_Sampler2
+  u_Sampler2 = gl.getUniformLocation(gl.program, "u_Sampler2");
+  if (!u_Sampler2) {
+    console.log("Failed to get the storage location of u_Sampler2");
+    return false;
+  }
+
+  // Get the storage location of u_Sampler3
+  u_Sampler3 = gl.getUniformLocation(gl.program, "u_Sampler3");
+  if (!u_Sampler3) {
+    console.log("Failed to get the storage location of u_Sampler3");
+    return false;
+  }
+
+  // Get the storage location of u_Sampler4
+  u_Sampler4 = gl.getUniformLocation(gl.program, "u_Sampler4");
+  if (!u_Sampler4) {
+    console.log("Failed to get the storage location of u_Sampler4");
+    return false;
+  }
+
+  // Get the storage location of u_Sampler5
+  u_Sampler5 = gl.getUniformLocation(gl.program, "u_Sampler5");
+  if (!u_Sampler5) {
+    console.log("Failed to get the storage location of u_Sampler5");
+    return false;
+  }
+
+  // Get the storage location of u_Sampler6
+  u_Sampler6 = gl.getUniformLocation(gl.program, "u_Sampler6");
+  if (!u_Sampler6) {
+    console.log("Failed to get the storage location of u_Sampler6");
+    return false;
+  }
+
   // Get the storage location of u_whichTexture
   u_whichTexture = gl.getUniformLocation(gl.program, "u_whichTexture");
   if (!u_whichTexture) {
@@ -219,7 +274,7 @@ function addActionsForHtmlUI() {
 
 let COLOR = -2;
 let SKY = 0;
-let HEDGE = 1;
+// let HEDGE = 1;
 /**
  * Sets all sampler textures
  * @returns true if ran successfully
@@ -247,7 +302,62 @@ function initTextures() {
   image1.onload = function () {
     sendImageToTexture(image1, 1);
   };
-  image1.src = "img/hedge.png";
+  image1.src = "img/hedge1.png";
+
+  // add texture2
+  var image2 = new Image();
+  if (!image2) {
+    console.log("Failed to create the image object");
+    return false;
+  }
+  image2.onload = function () {
+    sendImageToTexture(image2, 2);
+  };
+  image2.src = "img/hedge2.png";
+
+  // add texture3
+  var image3 = new Image();
+  if (!image3) {
+    console.log("Failed to create the image object");
+    return false;
+  }
+  image3.onload = function () {
+    sendImageToTexture(image3, 3);
+  };
+  image3.src = "img/hedge3.png";
+
+  // add texture4
+  var image4 = new Image();
+  if (!image4) {
+    console.log("Failed to create the image object");
+    return false;
+  }
+  image4.onload = function () {
+    sendImageToTexture(image4, 4);
+  };
+  image4.src = "img/hedge4.png";
+
+  // add texture5
+  var image5 = new Image();
+  if (!image5) {
+    console.log("Failed to create the image object");
+    return false;
+  }
+  image5.onload = function () {
+    sendImageToTexture(image5, 5);
+  };
+  image5.src = "img/hedge5.png";
+
+  // add texture6
+  var image6 = new Image();
+  if (!image6) {
+    console.log("Failed to create the image object");
+    return false;
+  }
+  image6.onload = function () {
+    sendImageToTexture(image6, 6);
+  };
+  image6.src = "img/hedge6.png";
 
   return true;
 }
@@ -270,6 +380,16 @@ function sendImageToTexture(image, n) {
     gl.activeTexture(gl.TEXTURE0);
   } else if (n == 1) {
     gl.activeTexture(gl.TEXTURE1);
+  } else if (n == 2) {
+    gl.activeTexture(gl.TEXTURE2);
+  } else if (n == 3) {
+    gl.activeTexture(gl.TEXTURE3);
+  } else if (n == 4) {
+    gl.activeTexture(gl.TEXTURE4);
+  } else if (n == 5) {
+    gl.activeTexture(gl.TEXTURE5);
+  } else if (n == 6) {
+    gl.activeTexture(gl.TEXTURE6);
   }
   // Bind the texture object to the target
   gl.bindTexture(gl.TEXTURE_2D, texture);
@@ -284,6 +404,16 @@ function sendImageToTexture(image, n) {
     gl.uniform1i(u_Sampler0, 0);
   } else if (n == 1) {
     gl.uniform1i(u_Sampler1, 1);
+  } else if (n == 2) {
+    gl.uniform1i(u_Sampler2, 2);
+  } else if (n == 3) {
+    gl.uniform1i(u_Sampler3, 3);
+  } else if (n == 4) {
+    gl.uniform1i(u_Sampler4, 4);
+  } else if (n == 5) {
+    gl.uniform1i(u_Sampler5, 5);
+  } else if (n == 6) {
+    gl.uniform1i(u_Sampler6, 6);
   }
 
   // gl.clear(gl.COLOR_BUFFER_BIT);   // Clear <canvas>
