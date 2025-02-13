@@ -182,3 +182,28 @@ class Vector {
     return dir;
   }
 }
+
+function rotateCamera(angle, axis) {
+  var cos = Math.cos(angle);
+  var sin = Math.sin(angle);
+  
+  var ux = axis.x, uy = axis.y, uz = axis.z;
+  
+  // Rotation matrix components
+  var rotationMatrix = [
+    [cos + (1 - cos) * ux * ux, (1 - cos) * ux * uy - sin * uz, (1 - cos) * ux * uz + sin * uy],
+    [(1 - cos) * uy * ux + sin * uz, cos + (1 - cos) * uy * uy, (1 - cos) * uy * uz - sin * ux],
+    [(1 - cos) * uz * ux - sin * uy, (1 - cos) * uz * uy + sin * ux, cos + (1 - cos) * uz * uz]
+  ];
+  
+  // Step 2: Compute the new direction for g_at (view direction)
+  var viewDir = g_eye.sub(g_at, g_eye);  // g_at - g_eye
+  var newViewDir = new Vector();
+  
+  newViewDir.x = rotationMatrix[0][0] * viewDir.x + rotationMatrix[0][1] * viewDir.y + rotationMatrix[0][2] * viewDir.z;
+  newViewDir.y = rotationMatrix[1][0] * viewDir.x + rotationMatrix[1][1] * viewDir.y + rotationMatrix[1][2] * viewDir.z;
+  newViewDir.z = rotationMatrix[2][0] * viewDir.x + rotationMatrix[2][1] * viewDir.y + rotationMatrix[2][2] * viewDir.z;
+
+  // Step 3: Update g_at with the new direction
+  g_at = new Vector([g_eye.x + newViewDir.x, g_eye.y + newViewDir.y, g_eye.z + newViewDir.z]);
+}

@@ -162,10 +162,31 @@ let g_pinkAnim = false;
  */
 function addActionsForHtmlUI() {
   // mouse movement
-  // document.addEventListener("mousemove", function (event) {
-  //   g_at.x = event.clientX - canvas.width / 2;
-  //   g_at.y = -event.clientY + canvas.width / 2;
-  // });
+  let lastMouseX = null;
+  let lastMouseY = null;
+  let mouseTrack = true;
+  document.addEventListener("mousemove", function (event) {
+    if (mouseTrack) {
+      let frontDir = g_eye.direction(g_at);
+      let right = Vector.cross(g_up, frontDir);
+      right.normalize();
+
+      let deltaX = event.clientX - canvas.width / 2 - lastMouseX;
+      let deltaY = event.clientY - canvas.width / 2 - lastMouseY;
+
+      lastMouseX = event.clientX - canvas.width / 2;
+      lastMouseY = event.clientY - canvas.width / 2;
+
+      rotateCamera(-deltaX * 0.005, g_up);
+      rotateCamera(deltaY * 0.005, right);
+    }
+  });
+  document.getElementById("mouse").onclick = function () {
+    if (mouseTrack){
+      g_at.y = 0;
+    }
+    mouseTrack = !mouseTrack;
+  };
 
   // animation selector
   document.getElementById("yon").onclick = function () {
@@ -196,6 +217,7 @@ function addActionsForHtmlUI() {
   });
 }
 
+let COLOR = -2;
 let SKY = 0;
 let HEDGE = 1;
 /**
@@ -301,22 +323,24 @@ function updateAnim() {
 // var g_eye = new Vector([-6.5, 0.5, 5.5]);
 // var g_at = new Vector([0, 0.5, 0]);
 
-var g_eye = new Vector([0, 0.5, 3]);
-var g_at = new Vector([0, 0.5, -10]);
+var g_eye = new Vector([-10, 2, 2]);
+var g_at = new Vector([10, 0, -10]);
 var g_up = new Vector([0, 1, 0]);
 /**
  * Changes camera placement on key press
  * @param {*} event Key press event
  */
 function keydown(event) {
-  console.log("g_eye(" + g_eye.x + ", " + g_eye.y + ", " + g_eye.z + ")");
-  console.log("g_at(" + g_at.x + ", " + g_at.y + ", " + g_at.z + ")");
-  // console.log(event.keyCode);
+  // console.log("g_eye(" + g_eye.x + ", " + g_eye.y + ", " + g_eye.z + ")");
 
-  let change = 0.2;
+  let change = 0.1;
   // get front direction
   var frontDir = g_eye.direction(g_at);
+  frontDir.y = 0;
   frontDir.mul(change);
+  // console.log(
+  //   "dir(" + frontDir.x + ", " + frontDir.y + ", " + frontDir.z + ")"
+  // );
   // get side direction
   var sideDir = Vector.cross(g_up, frontDir);
   sideDir.normalize();
@@ -340,29 +364,25 @@ function keydown(event) {
     g_at.setSub(sideDir);
   } else if (event.keyCode == 81) {
     // Q: look left
-    g_at.x -= change * 10;
+    rotateCamera(change * 0.5, g_up);
   } else if (event.keyCode == 69) {
     // E: look right
-    g_at.x += change * 10;
-  } else if (event.keyCode == 38) {
-    // up arrow: move up
-    g_eye.y += change;
-  } else if (event.keyCode == 40) {
-    // down arrow: move down
-    g_eye.y -= change;
+    rotateCamera(-change * 0.5, g_up);
+    
+    // } else if (event.keyCode == 38) {
+    //   // up arrow: move up
+    //   g_eye.y += change;
+    //   g_at.y += change;
+    // } else if (event.keyCode == 40) {
+    //   // down arrow: move down
+    //   g_eye.y -= change;
+    //   g_at.y -= change;
   } else if (event.keyCode == 37) {
-    console.log(
-      "loc: (" +
-        Math.abs(Math.floor(g_eye.x * 1.454) - 16) +
-        ", " +
-        Math.floor(g_eye.y) +
-        "," +
-        Math.floor(g_eye.z) +
-        ")"
-    );
+    // left arrow: break cube
+    editMap(-1, frontDir);
   } else if (event.keyCode == 39) {
-    // left arrow: build cube
-    console.log("build!");
+    // right arrow: build cube
+    editMap(1, frontDir);
   }
 
   renderAllShapes();
@@ -416,15 +436,17 @@ function renderAllShapes() {
   sky.render();
 
   var floor = new Cube();
-  floor.textureNum = HEDGE;
-  floor.matrix.translate(0, -0.5, 0);
-  floor.matrix.scale(16, 1, 16);
+  floor.color = [0, 1, 0.5, 1]
+  floor.textureNum = COLOR;
+  floor.matrix.rotate(-40, 0, 1, 0);
+  floor.matrix.translate(0, -0.25, 0);
+  floor.matrix.scale(16, 0.5, 16);
   floor.render();
 
   drawMap();
 
-  if (Math.abs(g_eye.x) < 1 && Math.abs(g_eye.z) < 1){
-    console.log("you have found love")
+  if (Math.abs(g_eye.x) < 1 && Math.abs(g_eye.z) < 1) {
+    // console.log("you have found love");
   }
 
   // // draw the body cube
