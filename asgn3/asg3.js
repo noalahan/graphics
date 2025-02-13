@@ -27,6 +27,7 @@ var FSHADER_SOURCE = `
   uniform sampler2D u_Sampler4;
   uniform sampler2D u_Sampler5;
   uniform sampler2D u_Sampler6;
+  uniform sampler2D u_Sampler7;
   uniform int u_whichTexture;
 
   void main() {
@@ -48,6 +49,8 @@ var FSHADER_SOURCE = `
       gl_FragColor = texture2D(u_Sampler5, v_UV); // use texture5
     } else if (u_whichTexture == 6){
       gl_FragColor = texture2D(u_Sampler6, v_UV); // use texture6
+    } else if (u_whichTexture == 7){
+      gl_FragColor = texture2D(u_Sampler7, v_UV); // use texture7
     } else {
       gl_FragColor = vec4(1, .2, .2, 1);          // error, put red(ish)
     }  
@@ -71,6 +74,7 @@ let u_Sampler3;
 let u_Sampler4;
 let u_Sampler5;
 let u_Sampler6;
+let u_Sampler7;
 let u_whichTexture;
 
 function setupWebGL() {
@@ -194,6 +198,13 @@ function connectVariablesToGLSL() {
     return false;
   }
 
+  // Get the storage location of u_Sampler7
+  u_Sampler7 = gl.getUniformLocation(gl.program, "u_Sampler7");
+  if (!u_Sampler7) {
+    console.log("Failed to get the storage location of u_Sampler7");
+    return false;
+  }
+
   // Get the storage location of u_whichTexture
   u_whichTexture = gl.getUniformLocation(gl.program, "u_whichTexture");
   if (!u_whichTexture) {
@@ -211,6 +222,8 @@ let g_yellowAngle = 0;
 let g_pinkAngle = 0;
 let g_yellowAnim = false;
 let g_pinkAnim = false;
+let g_heartHeight = 0;
+let g_baseAngle = 0;
 
 /**
  * Sets all functions of elements defined in HTML
@@ -274,6 +287,7 @@ function addActionsForHtmlUI() {
 
 let COLOR = -2;
 let SKY = 0;
+let FLOOR = 7;
 // let HEDGE = 1;
 /**
  * Sets all sampler textures
@@ -359,6 +373,17 @@ function initTextures() {
   };
   image6.src = "img/hedge6.png";
 
+  // add texture7
+  var image7 = new Image();
+  if (!image7) {
+    console.log("Failed to create the image object");
+    return false;
+  }
+  image7.onload = function () {
+    sendImageToTexture(image7, 7);
+  };
+  image7.src = "img/floor.png";
+
   return true;
 }
 
@@ -390,6 +415,8 @@ function sendImageToTexture(image, n) {
     gl.activeTexture(gl.TEXTURE5);
   } else if (n == 6) {
     gl.activeTexture(gl.TEXTURE6);
+  } else if (n == 7) {
+    gl.activeTexture(gl.TEXTURE7);
   }
   // Bind the texture object to the target
   gl.bindTexture(gl.TEXTURE_2D, texture);
@@ -414,12 +441,14 @@ function sendImageToTexture(image, n) {
     gl.uniform1i(u_Sampler5, 5);
   } else if (n == 6) {
     gl.uniform1i(u_Sampler6, 6);
+  } else if (n == 7) {
+    gl.uniform1i(u_Sampler7, 7);
   }
 
   // gl.clear(gl.COLOR_BUFFER_BIT);   // Clear <canvas>
 
   // gl.drawArrays(gl.TRIANGLE_STRIP, 0, n); // Draw the rectangle
-  console.log("finished loadTexture" + n);
+  // console.log("finished loadTexture" + n);
 }
 
 function main() {
@@ -442,6 +471,10 @@ function main() {
  * Increment animated elements
  */
 function updateAnim() {
+  // heart float
+  g_heartHeight = 0.05 * Math.sin(g_seconds * 2) + 0.1;
+  g_baseAngle += 0.5;
+
   if (g_yellowAnim) {
     g_yellowAngle = 45 * Math.sin(g_seconds);
   }
@@ -453,8 +486,8 @@ function updateAnim() {
 // var g_eye = new Vector([-6.5, 0.5, 5.5]);
 // var g_at = new Vector([0, 0.5, 0]);
 
-var g_eye = new Vector([-10, 2, 2]);
-var g_at = new Vector([10, 0, -10]);
+var g_eye = new Vector([-2, 3, -2]);
+var g_at = new Vector([10, 0, 10]);
 var g_up = new Vector([0, 1, 0]);
 /**
  * Changes camera placement on key press
@@ -566,50 +599,69 @@ function renderAllShapes() {
   sky.render();
 
   var floor = new Cube();
-  // floor.color = [122/255, 185/255, 77/255, 1]
-  floor.color = [0.416, 0.631, 0.263, 1]
-  floor.textureNum = COLOR;
+  floor.color = [35/255, 74/255, 8/255, 1]
+  floor.textureNum = FLOOR;
   floor.matrix.rotate(-40, 0, 1, 0);
-  floor.matrix.translate(0, -0.25, 0);
-  floor.matrix.scale(16, 0.5, 16);
+  floor.matrix.translate(0, -0.1, 0);
+  floor.matrix.scale(16, 0.2, 16);
   floor.render();
-
+   
   drawMap();
+
+  var heartL = new Cube();
+  heartL.color = [1, 0, 0, 1];
+  heartL.textureNum = COLOR;
+  heartL.matrix.rotate(50, 0, 1, 0);
+  heartL.matrix.translate(0, 0.5 + g_heartHeight, 0.1);
+  heartL.matrix.rotate(45, 1, 0, 0);
+  heartL.matrix.scale(0.3, 0.55, 0.3);
+  heartL.render();
+
+  var heartR = new Cube();
+  heartR.color = [1, 0, 0, 1];
+  heartR.textureNum = COLOR;
+  heartR.matrix.rotate(50, 0, 1, 0);
+  heartR.matrix.translate(0, 0.5 + g_heartHeight, -0.1);
+  heartR.matrix.rotate(-45, 1, 0, 0);
+  heartR.matrix.scale(0.3, 0.55, 0.3);
+  heartR.render();
+
+  var base = new Cube();
+  base.matrix.translate(0, 0, 0);
+  base.matrix.rotate(0 + g_baseAngle, 0, 1, 0);
+  base.matrix.scale(1, 0.05, 1);
+  base.render();
 
   if (Math.abs(g_eye.x) < 1 && Math.abs(g_eye.z) < 1) {
     // console.log("you have found love");
   }
 
-  // // draw the body cube
-  // var red = new Cube();
-  // red.color = [1.0, 0.0, 0.0, 1.0];
-  // red.textureNum = 1;
-  // red.matrix.setTranslate(-0.25, -0.75, 0.0);
-  // red.matrix.rotate(-5, 1, 0, 0);
-  // red.matrix.scale(0.5, 0.3, 0.5);
-  // red.render();
+  // butterflies
+  var body = new Cube();
+  body.color = [0, 0, 0, 1];
+  body.textureNum = SKY;
+  body.matrix.rotate(50, 0, 1, 0);
+  body.matrix.translate(0, 2.5, 0);
+  let bodyCoor = new Matrix4(body.matrix);
+  body.matrix.scale(0.4, 0.1, 0.1);
+  body.render();
 
-  // // draw left arm
-  // var yellow = new Cube();
-  // yellow.color = [1, 1, 0, 1];
-  // yellow.textureNum = 0;
-  // yellow.matrix.setTranslate(0, -0.5, 0.0);
-  // yellow.matrix.rotate(-5, 1, 0, 0);
-  // yellow.matrix.rotate(-g_yellowAngle, 0, 0, 1);
-  // var yellowCoordinates = new Matrix4(yellow.matrix);
-  // yellow.matrix.scale(0.25, 0.7, 0.5);
-  // yellow.matrix.translate(-0.5, 0, 0);
-  // yellow.render();
+  g_eye = new Vector([-0.5, 3, -1])
+  g_at = new Vector([3, 0, 10])
 
-  // // test box
-  // var pink = new Cube();
-  // pink.color = [1, 0, 1, 1];
-  // pink.matrix = yellowCoordinates;
-  // pink.matrix.translate(0, 0.65, 0);
-  // pink.matrix.rotate(-g_pinkAngle, 0, 0, 1);
-  // pink.matrix.scale(0.3, 0.3, 0.3);
-  // pink.matrix.translate(-0.5, 0, -0.00005);
-  // pink.render();
+  var lWing = new Cube();
+  lWing.matrix = new Matrix4(bodyCoor);
+  lWing.matrix.rotate(-20, 1, 0, 0);
+  lWing.matrix.translate(0, 0, 0.15);
+  lWing.matrix.scale(0.35, 0.07, 0.25);
+  lWing.render();
+  
+  var rWing = new Cube();
+  rWing.matrix = new Matrix4(bodyCoor);
+  rWing.matrix.rotate(20, 1, 0, 0);
+  rWing.matrix.translate(0, 0, -0.15);
+  rWing.matrix.scale(0.35, 0.07, 0.25);
+  rWing.render();
 }
 
 var g_startTime = performance.now() / 1000.0;

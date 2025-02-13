@@ -135,7 +135,6 @@ function drawMap() {
       let a = g_map[x][y];
       if (a > 0) {
         var body = new Cube();
-        // console.log("texture "+a);
         body.textureNum = a;
         body.matrix.rotate(-40, 0, 1, 0);
         body.matrix.translate(0, 0.25 * a, 0);
