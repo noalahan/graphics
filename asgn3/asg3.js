@@ -164,7 +164,7 @@ function addActionsForHtmlUI() {
   // mouse movement
   let lastMouseX = null;
   let lastMouseY = null;
-  let mouseTrack = true;
+  let mouseTrack = false;
   document.addEventListener("mousemove", function (event) {
     if (mouseTrack) {
       let frontDir = g_eye.direction(g_at);
@@ -436,7 +436,8 @@ function renderAllShapes() {
   sky.render();
 
   var floor = new Cube();
-  floor.color = [0, 1, 0.5, 1]
+  // floor.color = [122/255, 185/255, 77/255, 1]
+  floor.color = [0.416, 0.631, 0.263, 1]
   floor.textureNum = COLOR;
   floor.matrix.rotate(-40, 0, 1, 0);
   floor.matrix.translate(0, -0.25, 0);

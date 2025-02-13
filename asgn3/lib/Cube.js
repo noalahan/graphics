@@ -178,14 +178,6 @@ class Cube {
     alluvs = alluvs.concat([1, 0.25, 0.75, 0.5, 0.75, 0.25]);
     allverts = allverts.concat([-0.5, -0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5]);
     alluvs = alluvs.concat([1, 0.25, 1, 0.5, 0.75, 0.5]);
-    // pass the color of a point to u_FragColor uniform variable
-    gl.uniform4f(
-      u_FragColor,
-      rgba[0] * 0.9,
-      rgba[1] * 0.9,
-      rgba[2] * 0.9,
-      rgba[3]
-    );
     // top of cube
     allverts = allverts.concat([-0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5]);
     alluvs = alluvs.concat([0.25, 0.5, 0.25, 0.75, 0.5, 0.75]);
@@ -196,14 +188,6 @@ class Cube {
     alluvs = alluvs.concat([0.25, 0.25, 0.25, 0, 0.5, 0]);
     allverts = allverts.concat([-0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5]);
     alluvs = alluvs.concat([0.25, 0.25, 0.5, 0, 0.5, 0.25]);
-    // pass the color of a point to u_FragColor uniform variable
-    gl.uniform4f(
-      u_FragColor,
-      rgba[0] * 0.8,
-      rgba[1] * 0.8,
-      rgba[2] * 0.8,
-      rgba[3]
-    );
     // left of cube
     allverts = allverts.concat([0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5]);
     alluvs = alluvs.concat([0.5, 0.25, 0.5, 0.5, 0.75, 0.5]);
