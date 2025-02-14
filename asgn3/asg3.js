@@ -220,10 +220,17 @@ function connectVariablesToGLSL() {
 let g_globalAngle = -140;
 let g_fov = 65;
 let mouseTrack = true;
+let g_currentX = -10;
+let g_currentZ = 0;
 /**
  * Sets all functions of elements defined in HTML
  */
 function addActionsForHtmlUI() {
+  // start game
+  document.getElementById("play").onclick = function () {
+    document.getElementById("game").style.display = "block";
+  };
+
   // mouse movement
   let lastMouseX = null;
   let lastMouseY = null;
@@ -258,9 +265,9 @@ function addActionsForHtmlUI() {
   };
 
   // rotation selector
-  document.getElementById("angle").addEventListener("mousemove", function () {
-    g_globalAngle = this.value;
-  });
+  // document.getElementById("angle").addEventListener("mousemove", function () {
+  //   g_globalAngle = this.value;
+  // });
   // field of view selector
   document.getElementById("fov").addEventListener("mousemove", function () {
     g_fov = this.value;
@@ -540,7 +547,7 @@ let bfZ = [];
 let bfRot = [];
 for (i = 0; i < 15; i++) {
   bfX[i] = Math.random() * 16 - 8;
-  bfY[i] = Math.ceil(Math.random() * 4) - 2;
+  bfY[i] = Math.random() * 4 - 2;
   bfZ[i] = Math.random() * 16 - 8;
   bfRot[i] = Math.random() * 360;
 }
@@ -548,8 +555,9 @@ for (i = 0; i < 15; i++) {
  * Draws all shaped on screen
  */
 function renderAllShapes() {
-  // // check the time at the start of this function
-  // var startTime = performance.now();
+  // update coordinates
+  g_currentX = g_eye.x;
+  g_currentZ = g_eye.z;
 
   // pass the projection matrix
   var projMat = new Matrix4();
@@ -733,9 +741,10 @@ function tick() {
 
   // check running time
   var duration = performance.now() - startTime;
-  document.getElementById("perf").innerHTML =
+  document.getElementById("performance").innerHTML =
     "  ms:  " + Math.floor(duration) + " fps: " + Math.floor(10000 / duration);
 
+  document.getElementById("coor").innerHTML = g_currentX.toFixed(2) + ", " + g_currentZ.toFixed(2);
   // Tell the browser to update again
   requestAnimationFrame(tick);
 }

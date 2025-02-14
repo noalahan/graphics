@@ -3,29 +3,41 @@
   <head>
     <meta charset="utf-8" />
     <title>CSE 160 Assignment 3</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
   </head>
 
   <body onload="main()">
     <h1 id="title">Assignment 3</h1>
     <h3>CSE 160 Noa Lahan</h3>
+    <div id="performance"></div>
+    <button type="button" id="play">Play</button>
 
-    <div id = "perf"></div>
+    <div id="game">
+      <canvas id="webgl" width="900" height="500">
+        Please use a browser that supports "canvas"
+      </canvas>
 
-    <canvas id="webgl" width="900" height="500">
-      Please use a browser that supports "canvas"
-    </canvas>
+      <br />
 
-    <br />
+      <button type="button" id="mouse">Mouse Track</button>
+      <button type="button" id="reset">Reset Location</button>
+      <!-- Camera Angle -->
+      <!-- <input type="range" min="-360" max="360" value="0" class="slider" id="angle" /> -->
 
-    <button type="button" id="mouse">Mouse Track</button>
-    <button type="button" id="reset">Reset Location</button>
+      Field of View
+      <input type="range" min="45" max="110" value="65" class="slider" id="fov"/>
 
-    Camera Angle
-    <input type="range" min="-360" max="360" value="0" class="slider" id="angle" />
+      <br />
+      <button type="button" id="reset">Reset Location</button>
+      Position: <div id="coor"></div>
 
-    Field of View
-    <input type="range" min="45" max="110" value="65" class="slider" id="fov" />
-    
+    </div>
     <script src="../lib/webgl-utils.js"></script>
     <script src="../lib/webgl-debug.js"></script>
     <script src="../lib/cuon-utils.js"></script>

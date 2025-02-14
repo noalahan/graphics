@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@font-face {
+  font-family: "Montserrat", serif;
+  src: url(Movement/Desktop/Movement-DirectThin.otf);
+} */
+
+*, html{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* body {
+  background-color: #86bbd8;
+  font-family: "Montserrat", sans-serif;
+}
+
+h1 {
+  font-family: "Montserrat";
+  font-size: 3rem;
+  text-align: center;
+  color: #9c1f1c;
+} */
+
+/* #game {
+    display: none;
+}
