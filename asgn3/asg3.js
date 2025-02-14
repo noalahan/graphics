@@ -222,8 +222,6 @@ let g_yellowAngle = 0;
 let g_pinkAngle = 0;
 let g_yellowAnim = false;
 let g_pinkAnim = false;
-let g_heartHeight = 0;
-let g_baseAngle = 0;
 
 /**
  * Sets all functions of elements defined in HTML
@@ -288,7 +286,6 @@ function addActionsForHtmlUI() {
 let COLOR = -2;
 let SKY = 0;
 let FLOOR = 7;
-// let HEDGE = 1;
 /**
  * Sets all sampler textures
  * @returns true if ran successfully
@@ -467,6 +464,10 @@ function main() {
   requestAnimationFrame(tick);
 }
 
+let g_heartHeight = 0;
+let g_baseAngle = 0;
+let g_wings1 = 1;
+let g_height1 = 0;
 /**
  * Increment animated elements
  */
@@ -474,6 +475,10 @@ function updateAnim() {
   // heart float
   g_heartHeight = 0.05 * Math.sin(g_seconds * 2) + 0.1;
   g_baseAngle += 0.5;
+  
+  // butterflies
+  g_wings1 = Math.sin(g_seconds * 10)
+  g_height1 = 0.1 * Math.sin(g_seconds * 3);
 
   if (g_yellowAnim) {
     g_yellowAngle = 45 * Math.sin(g_seconds);
@@ -483,11 +488,11 @@ function updateAnim() {
   }
 }
 
-// var g_eye = new Vector([-6.5, 0.5, 5.5]);
-// var g_at = new Vector([0, 0.5, 0]);
+var g_eye = new Vector([-6.5, 1.5, 5.5]);
+var g_at = new Vector([0, 0.5, 0]);
 
-var g_eye = new Vector([-2, 3, -2]);
-var g_at = new Vector([10, 0, 10]);
+// var g_eye = new Vector([-2, 3, -2]);
+// var g_at = new Vector([10, 0, 10]);
 var g_up = new Vector([0, 1, 0]);
 /**
  * Changes camera placement on key press
@@ -637,31 +642,59 @@ function renderAllShapes() {
   }
 
   // butterflies
+  drawButterfly(g_wings1, 0, g_height1, 0);
+  drawButterfly(g_wings1, 1, g_height1, 0);
+}
+
+function drawButterfly(wings, x, y, z){
   var body = new Cube();
   body.color = [0, 0, 0, 1];
   body.textureNum = SKY;
   body.matrix.rotate(50, 0, 1, 0);
-  body.matrix.translate(0, 2.5, 0);
+  body.matrix.translate(0 + x, 2.5 + y, 0 + z);
   let bodyCoor = new Matrix4(body.matrix);
   body.matrix.scale(0.4, 0.1, 0.1);
   body.render();
 
-  g_eye = new Vector([-0.5, 3, -1])
-  g_at = new Vector([3, 0, 10])
+  // g_eye = new Vector([-0.5, 3, -1])
+  // g_at = new Vector([3, 0, 10])
 
   var lWing = new Cube();
   lWing.matrix = new Matrix4(bodyCoor);
-  lWing.matrix.rotate(-20, 1, 0, 0);
-  lWing.matrix.translate(0, 0, 0.15);
+  lWing.matrix.rotate(20 * wings, 1, 0, 0);
+  lWing.matrix.translate(0, 0, -0.15);
   lWing.matrix.scale(0.35, 0.07, 0.25);
   lWing.render();
   
   var rWing = new Cube();
   rWing.matrix = new Matrix4(bodyCoor);
-  rWing.matrix.rotate(20, 1, 0, 0);
-  rWing.matrix.translate(0, 0, -0.15);
+  rWing.matrix.rotate(-20 * wings, 1, 0, 0);
+  rWing.matrix.translate(0, 0, 0.15);
   rWing.matrix.scale(0.35, 0.07, 0.25);
   rWing.render();
+  
+  // g_globalAngle = 60
+
+  var lEye = new Cube()
+  lEye.color = [0, 0, 0, 1];
+  lEye.textureNum = COLOR;
+  lEye.matrix = new Matrix4(bodyCoor);
+  lEye.matrix.translate(0.25, 0.05, 0.05);
+  lEye.matrix.rotate(-30, 0, 1, 0);
+  lEye.matrix.rotate(20, 0, 0, 1);
+  lEye.matrix.scale(0.1, 0.02, 0.02);
+  lEye.render();
+
+  var rEye = new Cube()
+  rEye.color = [0, 0, 0, 1];
+  rEye.textureNum = COLOR;
+  rEye.matrix = new Matrix4(bodyCoor);
+  rEye.matrix.translate(0.25, 0.05, -0.05);
+  rEye.matrix.rotate(30, 0, 1, 0);
+  rEye.matrix.rotate(20, 0, 0, 1);
+  rEye.matrix.scale(0.1, 0.02, 0.02);
+  rEye.render();
+
 }
 
 var g_startTime = performance.now() / 1000.0;
