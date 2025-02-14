@@ -156,10 +156,12 @@ function drawMap() {
 
 function editMap(i, dir) {
     let x = g_eye.x, y = g_eye.z;
-    let startX = 31 - (x * 2 + 15.5);
-    let startY = 31 - (y * 2 + 15.5);
+    let startX = Math.round(31 - (x * 2 + 15.5));
+    let startY = Math.round(31 - (y * 2 + 15.5));
     let dirX = dir.x, dirY = dir.z;
     
+    console.log("start: "+startX+" "+startY);
+
     let mapX, mapY, roundX, roundY, block;
     let hit = false;
     while(!hit){
@@ -174,10 +176,11 @@ function editMap(i, dir) {
         if (roundX < 32 && roundX > -1 && roundY < 32 && roundY > -1){
             block = g_map[roundX][roundY]
             // if not breaking an empty block & not building on current block
-            if (!(i < 0 && block == 0) && !(i > 0 && mapX == startX && mapY == startY)){
+            if (!(i < 0 && block == 0) && !(i > 0 && (roundX == startX || roundY == startY))){
                 hit = true;
                 if (!(i > 0 && block > 5)){
                     g_map[roundX][roundY] += i;
+                    console.log("break: "+roundX+" "+roundY);
                 }
             }
         }
