@@ -11,35 +11,20 @@
 
     <div id = "perf"></div>
 
-    <canvas id="webgl" width="500" height="400">
+    <canvas id="webgl" width="900" height="500">
       Please use a browser that supports "canvas"
     </canvas>
 
+    <br />
+
     <button type="button" id="mouse">Mouse Track</button>
 
-    <br />
     Camera Angle
     <input type="range" min="-360" max="360" value="0" class="slider" id="angle" />
-    <br />
-    
-    <p>
-      Yellow Animation:
-      <button type="button" id="yon">On</button>
-      <button type="button" id="yoff">Off</button>
-    </p>
-    <p>
-      Pink Animation:
-      <button type="button" id="pon">On</button>
-      <button type="button" id="poff">Off</button>
-    </p>
 
-    <br />
-    Yellow
-    <input type="range" min="-45" max="45" value="0" class="slider" id="yellow" />
-    <br />
-    Pink
-    <input type="range" min="-45" max="45" value="0" class="slider" id="pink" />
-    <br />
+    Field of View
+    <input type="range" min="45" max="110" value="65" class="slider" id="fov" />
+    
     <script src="../lib/webgl-utils.js"></script>
     <script src="../lib/webgl-debug.js"></script>
     <script src="../lib/cuon-utils.js"></script>

@@ -218,11 +218,7 @@ function connectVariablesToGLSL() {
 }
 
 let g_globalAngle = -140;
-let g_yellowAngle = 0;
-let g_pinkAngle = 0;
-let g_yellowAnim = false;
-let g_pinkAnim = false;
-
+let g_fov = 65;
 /**
  * Sets all functions of elements defined in HTML
  */
@@ -247,6 +243,7 @@ function addActionsForHtmlUI() {
       rotateCamera(deltaY * 0.005, right);
     }
   });
+  // mouse movement toggle
   document.getElementById("mouse").onclick = function () {
     if (mouseTrack) {
       g_at.y = 0;
@@ -254,33 +251,13 @@ function addActionsForHtmlUI() {
     mouseTrack = !mouseTrack;
   };
 
-  // animation selector
-  document.getElementById("yon").onclick = function () {
-    g_yellowAnim = true;
-  };
-  document.getElementById("yoff").onclick = function () {
-    g_yellowAnim = false;
-  };
-  document.getElementById("pon").onclick = function () {
-    g_pinkAnim = true;
-  };
-  document.getElementById("poff").onclick = function () {
-    g_pinkAnim = false;
-  };
-
   // rotation selector
   document.getElementById("angle").addEventListener("mousemove", function () {
     g_globalAngle = this.value;
-    renderAllShapes();
   });
-  document.getElementById("yellow").addEventListener("mousemove", function () {
-    g_yellowAngle = this.value;
-    renderAllShapes();
-  });
-  document.getElementById("pink").addEventListener("mousemove", function () {
-    g_pinkAngle = this.value;
-    renderAllShapes();
-  });
+  document.getElementById("fov").addEventListener("mousemove", function() {
+    g_fov = this.value;
+  })
 }
 
 let COLOR = -2;
@@ -480,19 +457,13 @@ function updateAnim() {
   g_wings1 = Math.sin(g_seconds * 10);
   g_height1 = 0.1 * Math.sin(g_seconds * 4);
 
-  if (g_yellowAnim) {
-    g_yellowAngle = 45 * Math.sin(g_seconds);
-  }
-  if (g_pinkAnim) {
-    g_pinkAngle = 45 * Math.sin(3 * g_seconds);
-  }
 }
 
-var g_eye = new Vector([-6.5, 1.5, 5.5]);
-var g_at = new Vector([0, 0.5, 0]);
+// var g_eye = new Vector([-6.3, 0.6, 6]);
+// var g_at = new Vector([-4, 0.5, -10]);
 
-// var g_eye = new Vector([-2, 3, -2]);
-// var g_at = new Vector([10, 0, 10]);
+var g_eye = new Vector([-10, 0.6, 0]);
+var g_at = new Vector([10, 0, 0]);
 var g_up = new Vector([0, 1, 0]);
 /**
  * Changes camera placement on key press
@@ -577,7 +548,7 @@ function renderAllShapes() {
   // pass the projection matrix
   var projMat = new Matrix4();
   // (field of view, aspect ratio, near plane, far plane)
-  projMat.setPerspective(60, canvas.width / canvas.height, 0.1, 100);
+  projMat.setPerspective(g_fov, canvas.width / canvas.height, 0.1, 100);
   gl.uniformMatrix4fv(u_ProjectionMatrix, false, projMat.elements);
 
   // pass the view matrix
