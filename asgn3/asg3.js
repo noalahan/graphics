@@ -219,6 +219,7 @@ function connectVariablesToGLSL() {
 
 let g_globalAngle = -140;
 let g_fov = 65;
+let mouseTrack = true;
 /**
  * Sets all functions of elements defined in HTML
  */
@@ -226,7 +227,6 @@ function addActionsForHtmlUI() {
   // mouse movement
   let lastMouseX = null;
   let lastMouseY = null;
-  let mouseTrack = false;
   document.addEventListener("mousemove", function (event) {
     if (mouseTrack) {
       let frontDir = g_eye.direction(g_at);
@@ -250,14 +250,21 @@ function addActionsForHtmlUI() {
     }
     mouseTrack = !mouseTrack;
   };
+  // reset location
+  document.getElementById("reset").onclick = function () {
+    g_eye = new Vector([-10, 0.6, 0]);
+    g_at = new Vector([10, 0.6, 0]);
+    document.getElementById("title").innerHTML = "Assignment 3";
+  };
 
   // rotation selector
   document.getElementById("angle").addEventListener("mousemove", function () {
     g_globalAngle = this.value;
   });
-  document.getElementById("fov").addEventListener("mousemove", function() {
+  // field of view selector
+  document.getElementById("fov").addEventListener("mousemove", function () {
     g_fov = this.value;
-  })
+  });
 }
 
 let COLOR = -2;
@@ -456,14 +463,13 @@ function updateAnim() {
   // butterflies
   g_wings1 = Math.sin(g_seconds * 10);
   g_height1 = 0.1 * Math.sin(g_seconds * 4);
-
 }
 
 // var g_eye = new Vector([-6.3, 0.6, 6]);
 // var g_at = new Vector([-4, 0.5, -10]);
 
 var g_eye = new Vector([-10, 0.6, 0]);
-var g_at = new Vector([10, 0, 0]);
+var g_at = new Vector([10, 0.6, 0]);
 var g_up = new Vector([0, 1, 0]);
 /**
  * Changes camera placement on key press
@@ -530,7 +536,7 @@ function keydown(event) {
 
 let bfX = [];
 let bfY = [];
-let bfZ = []; 
+let bfZ = [];
 let bfRot = [];
 for (i = 0; i < 15; i++) {
   bfX[i] = Math.random() * 16 - 8;
@@ -619,7 +625,7 @@ function renderAllShapes() {
   base.render();
 
   if (Math.abs(g_eye.x) < 1 && Math.abs(g_eye.z) < 1) {
-    // console.log("you have found love");
+    document.getElementById("title").innerHTML = "You found love!";
   }
 
   // butterflies

@@ -176,7 +176,7 @@ function editMap(i, dir) {
         if (roundX < 32 && roundX > -1 && roundY < 32 && roundY > -1){
             block = g_map[roundX][roundY]
             // if not breaking an empty block & not building on current block
-            if (!(i < 0 && block == 0) && !(i > 0 && (roundX == startX || roundY == startY))){
+            if (!(i < 0 && block == 0) && !(i > 0 && roundX == startX && roundY == startY)){
                 hit = true;
                 if (!(i > 0 && block > 5)){
                     g_map[roundX][roundY] += i;
