@@ -248,7 +248,7 @@ function addActionsForHtmlUI() {
     }
   });
   document.getElementById("mouse").onclick = function () {
-    if (mouseTrack){
+    if (mouseTrack) {
       g_at.y = 0;
     }
     mouseTrack = !mouseTrack;
@@ -475,10 +475,10 @@ function updateAnim() {
   // heart float
   g_heartHeight = 0.05 * Math.sin(g_seconds * 2) + 0.1;
   g_baseAngle += 0.5;
-  
+
   // butterflies
-  g_wings1 = Math.sin(g_seconds * 10)
-  g_height1 = 0.1 * Math.sin(g_seconds * 3);
+  g_wings1 = Math.sin(g_seconds * 10);
+  g_height1 = 0.1 * Math.sin(g_seconds * 4);
 
   if (g_yellowAnim) {
     g_yellowAngle = 45 * Math.sin(g_seconds);
@@ -536,7 +536,7 @@ function keydown(event) {
   } else if (event.keyCode == 69) {
     // E: look right
     rotateCamera(-change * 0.5, g_up);
-    
+
     // } else if (event.keyCode == 38) {
     //   // up arrow: move up
     //   g_eye.y += change;
@@ -557,6 +557,16 @@ function keydown(event) {
   // console.log(event.keyCode);
 }
 
+let bfX = [];
+let bfY = [];
+let bfZ = []; 
+let bfRot = [];
+for (i = 0; i < 15; i++) {
+  bfX[i] = Math.random() * 16 - 8;
+  bfY[i] = Math.ceil(Math.random() * 4) - 2;
+  bfZ[i] = Math.random() * 16 - 8;
+  bfRot[i] = Math.random() * 360;
+}
 /**
  * Draws all shaped on screen
  */
@@ -604,13 +614,13 @@ function renderAllShapes() {
   sky.render();
 
   var floor = new Cube();
-  floor.color = [35/255, 74/255, 8/255, 1]
+  floor.color = [35 / 255, 74 / 255, 8 / 255, 1];
   floor.textureNum = FLOOR;
   floor.matrix.rotate(-40, 0, 1, 0);
   floor.matrix.translate(0, -0.1, 0);
   floor.matrix.scale(16, 0.2, 16);
   floor.render();
-   
+
   drawMap();
 
   var heartL = new Cube();
@@ -642,59 +652,88 @@ function renderAllShapes() {
   }
 
   // butterflies
-  drawButterfly(g_wings1, 0, g_height1, 0);
-  drawButterfly(g_wings1, 1, g_height1, 0);
+  for (i = 0; i < 15; i++) {
+    drawButterfly(g_wings1, bfX[i], 1.5 + g_height1 * bfY[i], bfZ[i], bfRot[i]);
+  }
+  // drawButterfly(g_wings1, 1, g_height1, 0);
 }
 
-function drawButterfly(wings, x, y, z){
+/**
+ * Draws a butterfly based on inputs
+ * @param {*} wings wing flap (between -1 and 1)
+ * @param {*} x x coordinate
+ * @param {*} y y coordinate
+ * @param {*} z z coordinate
+ * @param {degrees} rotation direction of facing
+ */
+function drawButterfly(wings, x, y, z, rotation) {
   var body = new Cube();
   body.color = [0, 0, 0, 1];
-  body.textureNum = SKY;
-  body.matrix.rotate(50, 0, 1, 0);
-  body.matrix.translate(0 + x, 2.5 + y, 0 + z);
+  body.textureNum = COLOR;
+  body.matrix.rotate(rotation, 0, 1, 0);
+  body.matrix.translate(x, y, z);
   let bodyCoor = new Matrix4(body.matrix);
-  body.matrix.scale(0.4, 0.1, 0.1);
+  body.matrix.scale(0.37, 0.08, 0.08);
   body.render();
 
-  // g_eye = new Vector([-0.5, 3, -1])
-  // g_at = new Vector([3, 0, 10])
+  // g_eye = new Vector([-0.2, 3, -0.5])
+  // g_at = new Vector([3, -10, 10])
+  // g_eye = new Vector([-0.2, 19, -0.5])
+  // g_at = new Vector([3, -10, 10])
 
   var lWing = new Cube();
   lWing.matrix = new Matrix4(bodyCoor);
   lWing.matrix.rotate(20 * wings, 1, 0, 0);
-  lWing.matrix.translate(0, 0, -0.15);
-  lWing.matrix.scale(0.35, 0.07, 0.25);
+  lWing.matrix.translate(0.07, 0, -0.15);
+  lWing.matrix.rotate(-10, 0, 1, 0);
+  lWing.matrix.scale(0.25, 0.05, 0.25);
   lWing.render();
-  
+
+  var lWingBottom = new Cube();
+  lWingBottom.matrix = new Matrix4(bodyCoor);
+  lWingBottom.matrix.rotate(20 * wings, 1, 0, 0);
+  lWingBottom.matrix.translate(-0.12, 0, -0.13);
+  lWingBottom.matrix.rotate(20, 0, 1, 0);
+  lWingBottom.matrix.scale(0.15, 0.03, 0.17);
+  lWingBottom.render();
+
   var rWing = new Cube();
   rWing.matrix = new Matrix4(bodyCoor);
   rWing.matrix.rotate(-20 * wings, 1, 0, 0);
-  rWing.matrix.translate(0, 0, 0.15);
-  rWing.matrix.scale(0.35, 0.07, 0.25);
+  rWing.matrix.translate(0.07, 0, 0.15);
+  rWing.matrix.rotate(10, 0, 1, 0);
+  rWing.matrix.scale(0.25, 0.05, 0.25);
   rWing.render();
-  
-  // g_globalAngle = 60
 
-  var lEye = new Cube()
+  var rWingBottom = new Cube();
+  rWingBottom.matrix = new Matrix4(bodyCoor);
+  rWingBottom.matrix.rotate(-20 * wings, 1, 0, 0);
+  rWingBottom.matrix.translate(-0.12, 0, 0.13);
+  rWingBottom.matrix.rotate(-20, 0, 1, 0);
+  rWingBottom.matrix.scale(0.15, 0.03, 0.17);
+  rWingBottom.render();
+
+  // g_globalAngle = 120
+
+  var lEye = new Cube();
   lEye.color = [0, 0, 0, 1];
   lEye.textureNum = COLOR;
   lEye.matrix = new Matrix4(bodyCoor);
-  lEye.matrix.translate(0.25, 0.05, 0.05);
+  lEye.matrix.translate(0.22, 0.04, 0.05);
   lEye.matrix.rotate(-30, 0, 1, 0);
   lEye.matrix.rotate(20, 0, 0, 1);
   lEye.matrix.scale(0.1, 0.02, 0.02);
   lEye.render();
 
-  var rEye = new Cube()
+  var rEye = new Cube();
   rEye.color = [0, 0, 0, 1];
   rEye.textureNum = COLOR;
   rEye.matrix = new Matrix4(bodyCoor);
-  rEye.matrix.translate(0.25, 0.05, -0.05);
+  rEye.matrix.translate(0.22, 0.04, -0.05);
   rEye.matrix.rotate(30, 0, 1, 0);
   rEye.matrix.rotate(20, 0, 0, 1);
   rEye.matrix.scale(0.1, 0.02, 0.02);
   rEye.render();
-
 }
 
 var g_startTime = performance.now() / 1000.0;
