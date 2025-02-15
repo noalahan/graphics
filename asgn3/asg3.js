@@ -230,7 +230,8 @@ function addActionsForHtmlUI() {
   // start game
   document.getElementById("play").onclick = function () {
     g_at = new Vector([10, 0.6, 0]);
-    document.getElementById("game").style.display = "block";
+    document.getElementById("opening").style.display = "none";
+    document.getElementById("game").style.display = "grid";
   };
 
   // mouse movement
@@ -257,13 +258,18 @@ function addActionsForHtmlUI() {
     if (mouseTrack) {
       g_at.y = 0;
     }
+    if (mouseTrack) {
+      this.style.backgroundColor = "#edebe8";
+    } else {
+      this.style.backgroundColor = "#f3a5c0";
+    }
     mouseTrack = !mouseTrack;
   };
   // reset location
   document.getElementById("reset").onclick = function () {
     g_eye = new Vector([-10, 0.6, 0]);
     g_at = new Vector([10, 0.6, 0]);
-    document.getElementById("title").innerHTML = "Assignment 3";
+    document.getElementById("title").innerHTML = "";
   };
 
   // rotation selector
@@ -275,8 +281,9 @@ function addActionsForHtmlUI() {
     g_fov = this.value;
   });
 
-  let eye = new Vector(), at = new Vector();
-  // top view
+  // top view toggle
+  let eye = new Vector(),
+    at = new Vector();
   document.getElementById("top").onclick = function () {
     view = true;
 
@@ -289,8 +296,7 @@ function addActionsForHtmlUI() {
     // toggle buttons
     document.getElementById("return").style.display = "inline-block";
     this.style.display = "none";
-  }
-
+  };
   document.getElementById("return").onclick = function () {
     view = false;
 
@@ -299,7 +305,7 @@ function addActionsForHtmlUI() {
 
     document.getElementById("top").style.display = "inline-block";
     this.style.display = "none";
-  }
+  };
 }
 
 let COLOR = -2;
@@ -623,6 +629,7 @@ function renderAllShapes() {
   // scene
   var sky = new Cube();
   sky.textureNum = SKY;
+  sky.matrix.rotate(-40, 0, 1, 0);
   sky.matrix.translate(0, 10, 0);
   sky.matrix.scale(100, 100, 100);
   // sky.matrix.translate(-0.5, -0.45, -0.5);
@@ -662,7 +669,7 @@ function renderAllShapes() {
   base.matrix.scale(1, 0.05, 1);
   base.render();
 
-  if (Math.abs(g_eye.x) < 1 && Math.abs(g_eye.z) < 1) {
+  if (Math.abs(g_eye.x) < 1 && Math.abs(g_eye.z) < 1 && !view) {
     document.getElementById("title").innerHTML = "You found love!";
   }
 
@@ -776,7 +783,7 @@ function tick() {
 
   // coordinate display
   document.getElementById("coor").innerHTML =
-    "Position: " + g_currentX.toFixed(2) + ", " + g_currentZ.toFixed(2);
+    "Coordinates:\n" + g_currentX.toFixed(2) + ", " + g_currentZ.toFixed(2);
 
   // Tell the browser to update again
   requestAnimationFrame(tick);

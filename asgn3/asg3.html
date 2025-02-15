@@ -17,42 +17,60 @@
       <h1>Valentine's</h1>
       <h1>Maze</h1>
       <h2>Assignment 3 CSE 160 Noa Lahan</h2>
-      <p>As butterflies fill your stomach (and the sky!), you cannot help but feel that love is near. But where? Embark on a journey to find love...</p>
+      <p>
+        As butterflies fill your stomach (and the sky!), you cannot help but
+        feel that love is near. But where? Embark on a journey to find love...
+      </p>
       <button type="button" class="btn" id="play">Play</button>
     </div>
 
     <div id="game">
-      <canvas id="webgl" width="900" height="500">
-        Please use a browser that supports "canvas"
-      </canvas>
+      <div id="header">
+        <h1>Valentine's Maze</h1>
+      </div>
 
-      <br />
+      <div id="menu">
+        <button type="button" class="btn" id="mouse">Mouse Track</button>
+        <div>
+          Field of View
+          <input
+            type="range"
+            min="45"
+            max="110"
+            value="65"
+            class="slider"
+            id="fov"
+          />
+        </div>
+        <button type="button" class="btn" id="top">Top View</button>
+        <button type="button" class="btn" id="return">
+          Return to Coordinates
+        </button>
+        <div id="coor"></div>
 
-      <div id="performance"></div>
+        <div id="performance"></div>
+        <button type="button" class="btn" id="reset">Restart</button>
+      </div>
 
-      <br />
+      <div id="main">
+        <canvas id="webgl" width="1000" height="600">
+          Please use a browser that supports "canvas"
+        </canvas>
+      </div>
 
-      <button type="button" id="mouse">Mouse Track</button>
-      <button type="button" id="reset">Reset Location</button>
-      <!-- Camera Angle -->
-      <!-- <input type="range" min="-360" max="360" value="0" class="slider" id="angle" /> -->
+      <div id="info">
+        Solve the maze to find love!<br /><br />
+        
+        W: Moves up<br />S: Moves down<br />A: Moves left<br />D: Moves right<br />Q:
+        Looks left<br />E: Looks right<br />&larr;: break blocks<br />&rarr;:
+        build blocks<br /><br />
 
-      Field of View
-      <input
-        type="range"
-        min="45"
-        max="110"
-        value="65"
-        class="slider"
-        id="fov"
-      />
+        Wow: HTML/CSS and butterflies
+      </div>
 
-      <br />
-      <button type="button" id="top">Top View</button>
-      <button type="button" id="return">Return</button>
-      <div id="coor"></div>
-
-      <div id="title"></div>
+      <div id="footer">
+        <h1 id="title"></h1>
+      </div>
     </div>
     <script src="../lib/webgl-utils.js"></script>
     <script src="../lib/webgl-debug.js"></script>
