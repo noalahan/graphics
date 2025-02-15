@@ -222,6 +222,7 @@ let g_fov = 65;
 let mouseTrack = true;
 let g_currentX = -10;
 let g_currentZ = 0;
+let view = false;
 /**
  * Sets all functions of elements defined in HTML
  */
@@ -272,6 +273,32 @@ function addActionsForHtmlUI() {
   document.getElementById("fov").addEventListener("mousemove", function () {
     g_fov = this.value;
   });
+
+  let eye = new Vector(), at = new Vector();
+  // top view
+  document.getElementById("top").onclick = function () {
+    view = true;
+
+    // save old position and update
+    eye.set(g_eye);
+    at.set(g_at);
+    g_eye = new Vector([-12, 10, 0]);
+    g_at = new Vector([10, -10, 0]);
+
+    // toggle buttons
+    document.getElementById("return").style.display = "inline-block";
+    this.style.display = "none";
+  }
+
+  document.getElementById("return").onclick = function () {
+    view = false;
+
+    g_eye.set(eye);
+    g_at.set(at);
+
+    document.getElementById("top").style.display = "inline-block";
+    this.style.display = "none";
+  }
 }
 
 let COLOR = -2;
@@ -556,8 +583,10 @@ for (i = 0; i < 15; i++) {
  */
 function renderAllShapes() {
   // update coordinates
-  g_currentX = g_eye.x;
-  g_currentZ = g_eye.z;
+  if (!view) {
+    g_currentX = g_eye.x;
+    g_currentZ = g_eye.z;
+  }
 
   // pass the projection matrix
   var projMat = new Matrix4();
@@ -744,7 +773,10 @@ function tick() {
   document.getElementById("performance").innerHTML =
     "  ms:  " + Math.floor(duration) + " fps: " + Math.floor(10000 / duration);
 
-  document.getElementById("coor").innerHTML = g_currentX.toFixed(2) + ", " + g_currentZ.toFixed(2);
+  // coordinate display
+  document.getElementById("coor").innerHTML =
+    "Position: " + g_currentX.toFixed(2) + ", " + g_currentZ.toFixed(2);
+
   // Tell the browser to update again
   requestAnimationFrame(tick);
 }
