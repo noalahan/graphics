@@ -1,31 +1,65 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+/* SETUP */
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
 @font-face {
   font-family: "Montserrat", serif;
   src: url(Movement/Desktop/Movement-DirectThin.otf);
-} */
-
-*, html{
+}
+*, html {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
-
-#return{
-  /* color: red; */
-  display: none;
-}
-/* body {
-  background-color: #86bbd8;
+body {
+  background-color: #bf1a2f;
   font-family: "Montserrat", sans-serif;
 }
+.btn {
+  background-color: #edebe8;
+  padding: 5px;
+  border-radius: 5px;
+  text-decoration: none;
 
+  border-style: solid;
+  border-width: 2px 2px 4px 2px;
+
+  color: #1e1b18;
+  font-size: 150%;
+}
+
+
+
+/* OPENING CARD */
+#opening {
+  display: flex;
+  /* justify-content: center; */
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10px;
+}
 h1 {
-  font-family: "Montserrat";
-  font-size: 3rem;
+  font-size: 6rem;
+  color: #f6bdd1;
+  /* padding: 0; */
+}
+h2 {
+  font-size: 4rem;
+  color: #f3a5c0;
   text-align: center;
-  color: #9c1f1c;
-} */
+  margin: 5px;
+  /* padding: 0; */
+}
+p {
+  font-size: 3rem;
+  color: #1e1b18;
+  padding: 30px;
+  font-weight: 500;
+}
 
-/* #game {
-    display: none;
+/* GAME VIEW */
+#game {
+  display: none;
+}
+#return {
+  /* color: red; */
+  display: none;
 }

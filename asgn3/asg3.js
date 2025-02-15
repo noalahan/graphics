@@ -229,6 +229,7 @@ let view = false;
 function addActionsForHtmlUI() {
   // start game
   document.getElementById("play").onclick = function () {
+    g_at = new Vector([10, 0.6, 0]);
     document.getElementById("game").style.display = "block";
   };
 

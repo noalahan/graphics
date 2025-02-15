@@ -13,15 +13,22 @@
   </head>
 
   <body onload="main()">
-    <h1 id="title">Assignment 3</h1>
-    <h3>CSE 160 Noa Lahan</h3>
-    <div id="performance"></div>
-    <button type="button" id="play">Play</button>
+    <div id="opening">
+      <h1>Valentine's</h1>
+      <h1>Maze</h1>
+      <h2>Assignment 3 CSE 160 Noa Lahan</h2>
+      <p>As butterflies fill your stomach (and the sky!), you cannot help but feel that love is near. But where? Embark on a journey to find love...</p>
+      <button type="button" class="btn" id="play">Play</button>
+    </div>
 
     <div id="game">
       <canvas id="webgl" width="900" height="500">
         Please use a browser that supports "canvas"
       </canvas>
+
+      <br />
+
+      <div id="performance"></div>
 
       <br />
 
@@ -31,13 +38,21 @@
       <!-- <input type="range" min="-360" max="360" value="0" class="slider" id="angle" /> -->
 
       Field of View
-      <input type="range" min="45" max="110" value="65" class="slider" id="fov"/>
+      <input
+        type="range"
+        min="45"
+        max="110"
+        value="65"
+        class="slider"
+        id="fov"
+      />
 
       <br />
       <button type="button" id="top">Top View</button>
       <button type="button" id="return">Return</button>
       <div id="coor"></div>
 
+      <div id="title"></div>
     </div>
     <script src="../lib/webgl-utils.js"></script>
     <script src="../lib/webgl-debug.js"></script>
