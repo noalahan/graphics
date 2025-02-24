@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>CSE 160 Assignment 3</title>
+  </head>
+
+  <body onload="main()">
+    <h1>Assignment 3</h1>
+    <h3>CSE 160 Noa Lahan</h3>
+
+    <div id = "performance"></div>
+
+    <canvas id="webgl" width="400" height="400">
+      Please use a browser that supports "canvas"
+    </canvas>
+
+    <br />
+    Camera Angle
+    <input type="range" min="0" max="270" value="220" class="slider" id="angle" />
+    <br />
+    
+    <p>
+      Yellow Animation:<br />
+      <button type="button" id="yon">On</button>
+      <button type="button" id="yoff">Off</button>
+    </p>
+    <p>
+      Pink Animation:<br />
+      <button type="button" id="pon">On</button>
+      <button type="button" id="poff">Off</button>
+    </p>
+
+    <script src="../lib/webgl-utils.js"></script>
+    <script src="../lib/webgl-debug.js"></script>
+    <script src="../lib/cuon-utils.js"></script>
+    <script src="../lib/cuon-matrix.js"></script>
+    <script src="lib/Cube.js"></script>
+    <script src="lib/cuon-vector.js"></script>
+    <script src="asg4.js"></script>
+  </body>
+</html>
