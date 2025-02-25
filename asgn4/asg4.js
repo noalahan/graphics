@@ -4,7 +4,9 @@ var VSHADER_SOURCE = `
   precision mediump float;
   attribute vec4 a_Position;
   attribute vec2 a_UV;
+  attribute vec3 a_Normal;
   varying vec2 v_UV;
+  varying vec3 v_Normal;
   uniform mat4 u_ModelMatrix;
   uniform mat4 u_GlobalRotateMatrix;
   uniform mat4 u_ViewMatrix;
@@ -13,12 +15,14 @@ var VSHADER_SOURCE = `
   void main() {
     gl_Position = u_ProjectionMatrix * u_ViewMatrix * u_GlobalRotateMatrix * u_ModelMatrix * a_Position;
     v_UV = a_UV;
+    v_Normal = a_Normal;
   }`;
 
 // Fragment shader program
 var FSHADER_SOURCE = `
   precision mediump float;
   varying vec2 v_UV;
+  varying vec3 v_Normal;
   uniform vec4 u_FragColor;
   uniform sampler2D u_Sampler0;
   uniform sampler2D u_Sampler1;
@@ -26,7 +30,9 @@ var FSHADER_SOURCE = `
   uniform int u_whichTexture;
 
   void main() {
-    if (u_whichTexture == -2){
+    if (u_whichTexture == -3){
+      gl_FragColor = vec4((v_Normal+1.0)/2.0, 1.0);                 // use color
+    } else if (u_whichTexture == -2){
       gl_FragColor = u_FragColor;                 // use color
     } else if (u_whichTexture == -1){
       gl_FragColor = vec4(v_UV, 1.0, 1.0);        // use UV debug
@@ -46,6 +52,7 @@ let canvas;
 let gl;
 let a_Position;
 let a_UV;
+let a_Normal;
 // let u_Size;
 let u_ModelMatrix;
 let u_GlobalRotateMatrix;
@@ -89,6 +96,13 @@ function connectVariablesToGLSL() {
   a_UV = gl.getAttribLocation(gl.program, "a_UV");
   if (a_UV < 0) {
     console.log("Failed to get the storage location of a_UV");
+    return;
+  }
+
+  // Get the storage location of a_Normal
+  a_Normal = gl.getAttribLocation(gl.program, "a_Normal");
+  if (a_Normal < 0) {
+    console.log("Failed to get the storage location of a_Normal");
     return;
   }
 
@@ -170,6 +184,7 @@ let g_pinkAngle = 0;
 let g_yellowAnim = true;
 let g_pinkAnim = true;
 
+let g_normalOn = false;
 let g_fov = 65;
 // let mouseTrack = true;
 // let g_currentX = -10;
@@ -180,6 +195,12 @@ let g_fov = 65;
  */
 function addActionsForHtmlUI() {
   // animation selector - from testing
+  document.getElementById("non").onclick = function () {
+    g_normalOn = true;
+  };
+  document.getElementById("noff").onclick = function () {
+    g_normalOn = false;
+  };
   document.getElementById("yon").onclick = function () {
     g_yellowAnim = true;
   };
@@ -398,8 +419,8 @@ function updateAnim() {
   g_height1 = 0.1 * Math.sin(g_seconds * 4);
 }
 
-var g_eye = new Vector([3, 0, 0]);
-var g_at = new Vector([-5, 0, 0]);
+var g_eye = new Vector([3, 0.5, 0]);
+var g_at = new Vector([-5, 0.5, 0]);
 
 // var g_eye = new Vector([-10, 0.6, 0]);
 // var g_at = new Vector([10, 0.6, 0]);
@@ -471,12 +492,6 @@ function keydown(event) {
  * Draws all shaped on screen
  */
 function renderAllShapes() {
-  // update coordinates
-  //   if (!view) {
-  //     g_currentX = g_eye.x;
-  //     g_currentZ = g_eye.z;
-  //   }
-
   // pass the projection matrix
   var projMat = new Matrix4();
   // (field of view, aspect ratio, near plane, far plane)
@@ -514,7 +529,6 @@ function renderAllShapes() {
   red.color = [1.0, 0.0, 0.0, 1.0];
   red.textureNum = 1;
   red.matrix.setTranslate(0, -0.5, 0);
-  //   red.matrix.rotate(-5, 1, 0, 0);
   red.matrix.scale(0.6, 0.3, 0.6);
   red.render();
 
@@ -522,6 +536,7 @@ function renderAllShapes() {
   var yellow = new Cube();
   yellow.color = [1, 1, 0, 1];
   yellow.textureNum = -2;
+  if (g_normalOn) yellow.textureNum = -3;
   yellow.matrix.translate(0, -0.5, 0);
   yellow.matrix.rotate(-g_yellowAngle, 0, 0, 1);
   var yellowCoordinates = new Matrix4(yellow.matrix);
@@ -542,10 +557,10 @@ function renderAllShapes() {
   // scene
   var sky = new Cube();
   sky.textureNum = SKY;
+  if (g_normalOn) sky.textureNum = -3;
   sky.matrix.rotate(-40, 0, 1, 0);
   sky.matrix.translate(0, 0, 0);
-  sky.matrix.scale(8, 8, 8);
-  // sky.matrix.translate(-0.5, -0.45, -0.5);
+  sky.matrix.scale(-8, -8, -8);
   sky.render();
 
   var floor = new Cube();
@@ -555,6 +570,11 @@ function renderAllShapes() {
   floor.matrix.translate(0, -0.75, 0);
   floor.matrix.scale(8, 0.2, 8);
   floor.render();
+
+  var sphere = new Sphere();
+  if (g_normalOn) sphere.textureNum = -3;
+  sphere.matrix.translate(0, 0.5, 0);
+  sphere.render();
 }
 
 var g_startTime = performance.now() / 1000.0;
