@@ -8,6 +8,7 @@ var VSHADER_SOURCE = `
   varying vec2 v_UV;
   varying vec3 v_Normal;
   varying vec4 v_VertPos;
+  uniform mat4 u_NormalMatrix;
   uniform mat4 u_ModelMatrix;
   uniform mat4 u_GlobalRotateMatrix;
   uniform mat4 u_ViewMatrix;
@@ -16,7 +17,7 @@ var VSHADER_SOURCE = `
   void main() {
     gl_Position = u_ProjectionMatrix * u_ViewMatrix * u_GlobalRotateMatrix * u_ModelMatrix * a_Position;
     v_UV = a_UV;
-    v_Normal = a_Normal;
+    v_Normal = normalize(vec3(u_NormalMatrix * vec4(a_Normal, 1)));
     v_VertPos = u_ModelMatrix * a_Position;
   }`;
 
@@ -98,6 +99,7 @@ let a_Position;
 let a_UV;
 let a_Normal;
 // let u_Size;
+let u_NormalMatrix;
 let u_ModelMatrix;
 let u_GlobalRotateMatrix;
 let u_ViewMatrix;
@@ -159,12 +161,20 @@ function connectVariablesToGLSL() {
     return;
   }
 
+  // get the storage location of u_NormalMatrix
+  u_NormalMatrix = gl.getUniformLocation(gl.program, "u_NormalMatrix");
+  if (!u_NormalMatrix) {
+    console.log("Failed to get the storage location of u_NormalMatrix");
+    return;
+  }
+
   // get the storage location of u_ModelMatrix
   u_ModelMatrix = gl.getUniformLocation(gl.program, "u_ModelMatrix");
   if (!u_ModelMatrix) {
     console.log("Failed to get the storage location of u_ModelMatrix");
     return;
   }
+
   // get the storage location of u_GlobalRotateMatrix
   u_GlobalRotateMatrix = gl.getUniformLocation(
     gl.program,
@@ -500,6 +510,7 @@ function main() {
   requestAnimationFrame(tick);
 }
 
+let a = 0;
 /**
  * Increment animated elements
  */
@@ -633,6 +644,7 @@ function renderAllShapes() {
   var light = new Cube();
   light.color = [1, 1, 0, 1];
   light.textureNum = COLOR;
+  light.shiny = false;
   light.matrix.translate(g_lightPos[0], g_lightPos[1], g_lightPos[2]);
   light.matrix.scale(-.1, -.1, -.1);
   light.render();
@@ -656,11 +668,13 @@ function renderAllShapes() {
   var yellowCoordinates = new Matrix4(yellow.matrix);
   yellow.matrix.translate(0, 0.5, 0);
   yellow.matrix.scale(0.25, 0.7, 0.5);
+  yellow.normalMatrix.setInverseOf(yellow.matrix).transpose();
   yellow.render();
 
   // test box
   var pink = new Cube();
   pink.color = [1, 0, 1, 1];
+  if (g_normalOn) pink.textureNum = -3;
   pink.matrix = yellowCoordinates;
   pink.matrix.translate(0, 0.8, 0);
   pink.matrix.rotate(-g_pinkAngle, 0, 0, 1);
@@ -687,9 +701,11 @@ function renderAllShapes() {
   floor.render();
 
   var sphere = new Sphere();
-  if (g_normalOn) sphere.textureNum = -3;
+  if (g_normalOn) sphere.textureNum = HEDGE;
   sphere.matrix.scale(.5, .5, .5);
   sphere.matrix.translate(-2, 0, 0);
+  sphere.matrix.rotate(g_seconds * 100, 0, 1, 0);
+  // sphere.normalMatrix.setInverseOf(sphere.matrix).transpose();
   sphere.render();
 }
 

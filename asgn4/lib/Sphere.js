@@ -3,6 +3,7 @@ class Sphere {
     this.type = "sphere";
     this.color = [1.0, 1.0, 1.0, 1.0];
     this.matrix = new Matrix4();
+    this.normalMatrix = new Matrix4();
     this.textureNum = -1;
     this.verts32 = new Float32Array([]);
   }
@@ -18,6 +19,10 @@ class Sphere {
 
     // Pass the matrix to u_ModelMatrix attribute
     gl.uniformMatrix4fv(u_ModelMatrix, false, this.matrix.elements);
+
+    // Pass the normal matrix to u_NormalMatrix attribute
+    this.normalMatrix.setInverseOf(this.matrix).transpose();
+    gl.uniformMatrix4fv(u_NormalMatrix, false, this.normalMatrix.elements);    
 
     var d = Math.PI/15;
     var dd = Math.PI/15;
