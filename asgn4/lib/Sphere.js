@@ -94,8 +94,8 @@ class Sphere {
     // Pass the matrix to u_ModelMatrix attribute
     gl.uniformMatrix4fv(u_ModelMatrix, false, this.matrix.elements);
 
-    var d = Math.PI/20;
-    var dd = Math.PI/20;
+    var d = Math.PI/10;
+    var dd = Math.PI/10;
 
     for (var t = 0; t < Math.PI; t+=d){
         for (var r = 0; r < (2 * Math.PI); r += d){
@@ -109,19 +109,8 @@ class Sphere {
             var uv3 = [t/Math.PI, (r+dd)/(2*Math.PI)];
             var uv4 = [(t+dd)/Math.PI, (r+dd)/(2*Math.PI)];
 
-            var v = [];
-            var uv = [];
-            v = v.concat(p1); uv = uv.concat(uv1);
-            v = v.concat(p2); uv = uv.concat(uv2);
-            v = v.concat(p4); uv = uv.concat(uv4);
-            // gl.uniform4f(u_FragColor, 1, 1, 1, 1);
-            // drawTriangle3DUVNormal(v, uv, v);
-
-            // v = []; uv = [];
-            v = v.concat(p1); uv = uv.concat(uv1);
-            v = v.concat(p4); uv = uv.concat(uv4);
-            v = v.concat(p3); uv = uv.concat(uv3);
-            // gl.uniform4f(u_FragColor, 1, 0, 0, 1);
+            var v = [...p1, ...p2, ...p4, ...p1, ...p4, ...p3];
+            var uv = [...uv1, ...uv2, ...uv4, ...uv1, ...uv4, ...uv3];
             drawTriangle3DUVNormal(v, uv, v);
         }
     }

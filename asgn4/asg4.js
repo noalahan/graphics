@@ -7,6 +7,7 @@ var VSHADER_SOURCE = `
   attribute vec3 a_Normal;
   varying vec2 v_UV;
   varying vec3 v_Normal;
+  // varying vec4 v_VertPos;
   uniform mat4 u_ModelMatrix;
   uniform mat4 u_GlobalRotateMatrix;
   uniform mat4 u_ViewMatrix;
@@ -16,6 +17,7 @@ var VSHADER_SOURCE = `
     gl_Position = u_ProjectionMatrix * u_ViewMatrix * u_GlobalRotateMatrix * u_ModelMatrix * a_Position;
     v_UV = a_UV;
     v_Normal = a_Normal;
+    // v_VertPos = u_ModelMatrix * a_Position;
   }`;
 
 // Fragment shader program
@@ -28,6 +30,8 @@ var FSHADER_SOURCE = `
   uniform sampler2D u_Sampler1;
   uniform sampler2D u_Sampler2;
   uniform int u_whichTexture;
+  // uniform vec3 u_lightPos;
+  // varying vec4 v_VertPos;
 
   void main() {
     if (u_whichTexture == -3){
@@ -45,6 +49,14 @@ var FSHADER_SOURCE = `
     } else {
       gl_FragColor = vec4(1, .2, .2, 1);          // error, put red(ish)
     }  
+
+    // vec3 lightVector = vec3(v_VertPos) - u_lightPos;
+    // float r = length(lightVector);
+    // if (r < 0.0) {
+    //   gl_FragColor = vec4(1, 0, 0, 1);
+    // } else if (r > 0.0){
+    //   gl_FragColor = vec4(0, 1, 0, 1);
+    // }
   }`;
 
 // Global Variables
@@ -176,7 +188,7 @@ function connectVariablesToGLSL() {
   gl.uniformMatrix4fv(u_ModelMatrix, false, identityM.elements);
 }
 
-let g_globalAngle = 220;
+let g_globalAngle = 90;
 
 // from testing
 let g_yellowAngle = 0;
@@ -184,12 +196,13 @@ let g_pinkAngle = 0;
 let g_yellowAnim = true;
 let g_pinkAnim = true;
 
-let g_normalOn = false;
 let g_fov = 65;
 // let mouseTrack = true;
 // let g_currentX = -10;
 // let g_currentZ = 0;
 // let view = false;
+let g_normalOn = false;
+let g_lightPos = [0, 1, -2];
 /**
  * Sets all functions of elements defined in HTML
  */
@@ -286,6 +299,26 @@ function addActionsForHtmlUI() {
   //     document.getElementById("top").style.display = "inline-block";
   //     this.style.display = "none";
   //   };
+
+  // light selector
+  document.getElementById("lx").addEventListener("mousemove", function (ev) {
+    if (ev.buttons == 1) {
+      g_lightPos[0] = this.value/100;
+      // renderAllShapes();
+    }
+  });
+  document.getElementById("ly").addEventListener("mousemove", function (ev) {
+    if (ev.buttons == 1) {
+      g_lightPos[1] = this.value/100;
+      // renderAllShapes();
+    }
+  });
+  document.getElementById("lz").addEventListener("mousemove", function (ev) {
+    if (ev.buttons == 1) {
+      g_lightPos[2] = this.value/100;
+      // renderAllShapes();
+    }
+  });
 }
 
 let CODE = 1;
@@ -523,6 +556,15 @@ function renderAllShapes() {
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   gl.clear(gl.COLOR_BUFFER_BIT);
 
+  // light
+  // gl.uniform3f(u_lightPos, g_lightPos[0], g_lightPos[1], g_lightPos[2]);
+
+  var light = new Cube();
+  light.color = [1, 1, 0, 1];
+  light.matrix.translate(g_lightPos[0], g_lightPos[1], g_lightPos[2]);
+  light.matrix.scale(.1, .1, .1);
+  light.render();
+
   //   from testing
   // draw the body cube
   var red = new Cube();
@@ -558,7 +600,7 @@ function renderAllShapes() {
   var sky = new Cube();
   sky.textureNum = SKY;
   if (g_normalOn) sky.textureNum = -3;
-  sky.matrix.rotate(-40, 0, 1, 0);
+  // sky.matrix.rotate(-40, 0, 1, 0);
   sky.matrix.translate(0, 0, 0);
   sky.matrix.scale(-8, -8, -8);
   sky.render();
@@ -566,7 +608,7 @@ function renderAllShapes() {
   var floor = new Cube();
   floor.color = [35 / 255, 74 / 255, 8 / 255, 1];
   floor.textureNum = HEDGE;
-  floor.matrix.rotate(-40, 0, 1, 0);
+  // floor.matrix.rotate(-40, 0, 1, 0);
   floor.matrix.translate(0, -0.75, 0);
   floor.matrix.scale(8, 0.2, 8);
   floor.render();
@@ -574,7 +616,8 @@ function renderAllShapes() {
   var sphere = new Sphere();
   sphere.textureNum = -1;
   if (g_normalOn) sphere.textureNum = -3;
-  sphere.matrix.translate(0, 0.5, 0);
+  sphere.matrix.scale(.5, .5, .5);
+  sphere.matrix.translate(-2, 0, 0);
   sphere.render();
 }
 
