@@ -30,6 +30,8 @@ var FSHADER_SOURCE = `
   uniform sampler2D u_Sampler1;
   uniform sampler2D u_Sampler2;
   uniform int u_whichTexture;
+  uniform bool u_isShiny;
+  uniform bool u_lightOn;
   uniform vec3 u_lightPos;
   uniform vec3 u_cameraPos;
   varying vec4 v_VertPos;
@@ -51,36 +53,42 @@ var FSHADER_SOURCE = `
       gl_FragColor = vec4(1, .2, .2, 1);          // error, put red(ish)
     }  
 
-    vec3 lightVector = u_lightPos - vec3(v_VertPos);
-    float r = length(lightVector);
+    if (u_lightOn){
+      vec3 lightVector = u_lightPos - vec3(v_VertPos);
+      float r = length(lightVector);
 
-    // red/green vis
-    // if (r < 1.0) {
-    //   gl_FragColor = vec4(1, 0, 0, 1);
-    // } else if (r < 2.0){
-    //   gl_FragColor = vec4(0, 1, 0, 1);
-    // }
+      // red/green vis
+      // if (r < 1.0) {
+      //   gl_FragColor = vec4(1, 0, 0, 1);
+      // } else if (r < 2.0){
+      //   gl_FragColor = vec4(0, 1, 0, 1);
+      // }
 
-    // light vis
-    // gl_FragColor = vec4(vec3(gl_FragColor)/(r*r), 1);
+      // light vis
+      // gl_FragColor = vec4(vec3(gl_FragColor)/(r*r), 1);
 
-    // N dot L
-    vec3 L = normalize(lightVector);
-    vec3 N = normalize(v_Normal);
-    float nDotL = max(dot(N, L), 0.0);
+      // N dot L
+      vec3 L = normalize(lightVector);
+      vec3 N = normalize(v_Normal);
+      float nDotL = max(dot(N, L), 0.0);
 
-    // reflection
-    vec3 R = reflect(-L, N);
+      // reflection
+      vec3 R = reflect(-L, N);
 
-    // eye
-    vec3 E = normalize(u_cameraPos - vec3(v_VertPos));
+      // eye
+      vec3 E = normalize(u_cameraPos - vec3(v_VertPos));
 
-    // specular
-    float specular = pow(max(dot(E, R), 0.0), 10.0);
+      // specular
+      float specular = pow(max(dot(E, R), 0.0), 10.0);
 
-    vec3 diffuse = vec3(gl_FragColor) * nDotL * 0.7;
-    vec3 ambient = vec3(gl_FragColor) * 0.3;
-    gl_FragColor = vec4(specular + diffuse + ambient, 1.0);
+      vec3 diffuse = vec3(gl_FragColor) * nDotL * 0.7;
+      vec3 ambient = vec3(gl_FragColor) * 0.3;
+      if (u_isShiny) {
+        gl_FragColor = vec4(specular + diffuse + ambient, 1.0);
+      } else {
+        gl_FragColor = vec4(diffuse + ambient, 1.0);
+      }
+    }
   }`;
 
 // Global Variables
@@ -99,6 +107,8 @@ let u_Sampler0;
 let u_Sampler1;
 let u_Sampler2;
 let u_whichTexture;
+let u_isShiny;
+let u_lightOn;
 let u_lightPos;
 let u_cameraPos;
 
@@ -214,6 +224,20 @@ function connectVariablesToGLSL() {
     return false;
   }
 
+  // Get the storage location of u_isShiny
+  u_isShiny = gl.getUniformLocation(gl.program, "u_isShiny");
+  if (!u_isShiny) {
+    console.log("Failed to get the storage location of u_isShiny");
+    return false;
+  }
+
+  // Get the storage location of u_lightOn
+  u_lightOn = gl.getUniformLocation(gl.program, "u_lightOn");
+  if (!u_lightOn) {
+    console.log("Failed to get the storage location of u_lightOn");
+    return false;
+  }
+
   // Get the storage location of u_lightPos
   u_lightPos = gl.getUniformLocation(gl.program, "u_lightPos");
   if (!u_lightPos) {
@@ -248,6 +272,7 @@ let g_fov = 65;
 // let view = false;
 let g_normalOn = false;
 let g_lightPos = [0, 1, 1];
+let g_lightOn = true;
 /**
  * Sets all functions of elements defined in HTML
  */
@@ -364,6 +389,12 @@ function addActionsForHtmlUI() {
       // renderAllShapes();
     }
   });
+  document.getElementById("lon").onclick = function () {
+    g_lightOn = true;
+  };
+  document.getElementById("loff").onclick = function () {
+    g_lightOn = false;
+  };
 }
 
 /**
@@ -487,9 +518,6 @@ function updateAnim() {
 
 var g_eye = new Vector([3, 0.5, 0]);
 var g_at = new Vector([-5, 0.5, 0]);
-
-// var g_eye = new Vector([-10, 0.6, 0]);
-// var g_at = new Vector([10, 0.6, 0]);
 var g_up = new Vector([0, 1, 0]);
 /**
  * Changes camera placement on key press
@@ -589,6 +617,9 @@ function renderAllShapes() {
   // pass the camera position to u_cameraPos attribute
   gl.uniform3f(u_cameraPos, g_eye.x, g_eye.y, g_eye.z);
 
+  // pass the light status to u_lightOn attribute
+  gl.uniform1i(u_lightOn, g_lightOn);
+
   // Clear <canvas>
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
@@ -639,7 +670,8 @@ function renderAllShapes() {
 
   // scene
   var sky = new Cube();
-  sky.textureNum = SKY;
+  sky.textureNum = SKY; 
+  sky.shiny = false;
   if (g_normalOn) sky.textureNum = -3;
   // sky.matrix.rotate(-40, 0, 1, 0);
   sky.matrix.translate(0, 0, 0);
