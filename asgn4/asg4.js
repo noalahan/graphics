@@ -7,7 +7,7 @@ var VSHADER_SOURCE = `
   attribute vec3 a_Normal;
   varying vec2 v_UV;
   varying vec3 v_Normal;
-  // varying vec4 v_VertPos;
+  varying vec4 v_VertPos;
   uniform mat4 u_ModelMatrix;
   uniform mat4 u_GlobalRotateMatrix;
   uniform mat4 u_ViewMatrix;
@@ -17,7 +17,7 @@ var VSHADER_SOURCE = `
     gl_Position = u_ProjectionMatrix * u_ViewMatrix * u_GlobalRotateMatrix * u_ModelMatrix * a_Position;
     v_UV = a_UV;
     v_Normal = a_Normal;
-    // v_VertPos = u_ModelMatrix * a_Position;
+    v_VertPos = u_ModelMatrix * a_Position;
   }`;
 
 // Fragment shader program
@@ -30,12 +30,13 @@ var FSHADER_SOURCE = `
   uniform sampler2D u_Sampler1;
   uniform sampler2D u_Sampler2;
   uniform int u_whichTexture;
-  // uniform vec3 u_lightPos;
-  // varying vec4 v_VertPos;
+  uniform vec3 u_lightPos;
+  uniform vec3 u_cameraPos;
+  varying vec4 v_VertPos;
 
   void main() {
     if (u_whichTexture == -3){
-      gl_FragColor = vec4((v_Normal+1.0)/2.0, 1.0);                 // use color
+      gl_FragColor = vec4((v_Normal+1.0)/2.0, 1.0);// use color
     } else if (u_whichTexture == -2){
       gl_FragColor = u_FragColor;                 // use color
     } else if (u_whichTexture == -1){
@@ -50,13 +51,36 @@ var FSHADER_SOURCE = `
       gl_FragColor = vec4(1, .2, .2, 1);          // error, put red(ish)
     }  
 
-    // vec3 lightVector = vec3(v_VertPos) - u_lightPos;
-    // float r = length(lightVector);
-    // if (r < 0.0) {
+    vec3 lightVector = u_lightPos - vec3(v_VertPos);
+    float r = length(lightVector);
+
+    // red/green vis
+    // if (r < 1.0) {
     //   gl_FragColor = vec4(1, 0, 0, 1);
-    // } else if (r > 0.0){
+    // } else if (r < 2.0){
     //   gl_FragColor = vec4(0, 1, 0, 1);
     // }
+
+    // light vis
+    // gl_FragColor = vec4(vec3(gl_FragColor)/(r*r), 1);
+
+    // N dot L
+    vec3 L = normalize(lightVector);
+    vec3 N = normalize(v_Normal);
+    float nDotL = max(dot(N, L), 0.0);
+
+    // reflection
+    vec3 R = reflect(-L, N);
+
+    // eye
+    vec3 E = normalize(u_cameraPos - vec3(v_VertPos));
+
+    // specular
+    float specular = pow(max(dot(E, R), 0.0), 10.0);
+
+    vec3 diffuse = vec3(gl_FragColor) * nDotL * 0.7;
+    vec3 ambient = vec3(gl_FragColor) * 0.3;
+    gl_FragColor = vec4(specular + diffuse + ambient, 1.0);
   }`;
 
 // Global Variables
@@ -75,6 +99,13 @@ let u_Sampler0;
 let u_Sampler1;
 let u_Sampler2;
 let u_whichTexture;
+let u_lightPos;
+let u_cameraPos;
+
+let COLOR = -2
+let SKY = 0;
+let CODE = 1;
+let HEDGE = 2;
 
 function setupWebGL() {
   // Retrieve <canvas> element
@@ -183,6 +214,20 @@ function connectVariablesToGLSL() {
     return false;
   }
 
+  // Get the storage location of u_lightPos
+  u_lightPos = gl.getUniformLocation(gl.program, "u_lightPos");
+  if (!u_lightPos) {
+    console.log("Failed to get the storage location of u_lightPos");
+    return false;
+  }
+
+  // Get the storage location of u_cameraPos
+  u_cameraPos = gl.getUniformLocation(gl.program, "u_cameraPos");
+  if (!u_cameraPos) {
+    console.log("Failed to get the storage location of u_cameraPos");
+    return false;
+  }
+
   // set an initial value for this matrix to identity
   var identityM = new Matrix4();
   gl.uniformMatrix4fv(u_ModelMatrix, false, identityM.elements);
@@ -202,7 +247,7 @@ let g_fov = 65;
 // let g_currentZ = 0;
 // let view = false;
 let g_normalOn = false;
-let g_lightPos = [0, 1, -2];
+let g_lightPos = [0, 1, 1];
 /**
  * Sets all functions of elements defined in HTML
  */
@@ -321,9 +366,6 @@ function addActionsForHtmlUI() {
   });
 }
 
-let CODE = 1;
-let SKY = 0;
-let HEDGE = 2;
 /**
  * Sets all sampler textures
  * @returns true if ran successfully
@@ -427,10 +469,6 @@ function main() {
   requestAnimationFrame(tick);
 }
 
-let g_heartHeight = 0;
-let g_baseAngle = 0;
-let g_wings1 = 1;
-let g_height1 = 0;
 /**
  * Increment animated elements
  */
@@ -443,13 +481,8 @@ function updateAnim() {
     g_pinkAngle = 45 * Math.sin(3 * g_seconds);
   }
 
-  // heart float
-  g_heartHeight = 0.05 * Math.sin(g_seconds * 2) + 0.1;
-  g_baseAngle += 0.5;
-
-  // butterflies
-  g_wings1 = Math.sin(g_seconds * 10);
-  g_height1 = 0.1 * Math.sin(g_seconds * 4);
+  // g_lightPos[0] = Math.cos(g_seconds);
+  // document.getElementById("lx").value = Math.cos(g_seconds) * 100;
 }
 
 var g_eye = new Vector([3, 0.5, 0]);
@@ -550,19 +583,27 @@ function renderAllShapes() {
   var globalRotMat = new Matrix4().rotate(g_globalAngle, 0, 1, 0);
   gl.uniformMatrix4fv(u_GlobalRotateMatrix, false, globalRotMat.elements);
 
+  // pass the light to u_lightPos attribute
+  gl.uniform3f(u_lightPos, g_lightPos[0], g_lightPos[1], g_lightPos[2]);
+
+  // pass the camera position to u_cameraPos attribute
+  gl.uniform3f(u_cameraPos, g_eye.x, g_eye.y, g_eye.z);
+
   // Clear <canvas>
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   gl.clear(gl.COLOR_BUFFER_BIT);
 
-  // light
-  // gl.uniform3f(u_lightPos, g_lightPos[0], g_lightPos[1], g_lightPos[2]);
+  // console.log("Light Position:", u_lightPos);
+  // console.log("Camera Position:", g_eye.x);  
 
+  // light
   var light = new Cube();
   light.color = [1, 1, 0, 1];
+  light.textureNum = COLOR;
   light.matrix.translate(g_lightPos[0], g_lightPos[1], g_lightPos[2]);
-  light.matrix.scale(.1, .1, .1);
+  light.matrix.scale(-.1, -.1, -.1);
   light.render();
 
   //   from testing
@@ -614,7 +655,6 @@ function renderAllShapes() {
   floor.render();
 
   var sphere = new Sphere();
-  sphere.textureNum = -1;
   if (g_normalOn) sphere.textureNum = -3;
   sphere.matrix.scale(.5, .5, .5);
   sphere.matrix.translate(-2, 0, 0);
