@@ -572,6 +572,7 @@ function renderAllShapes() {
   floor.render();
 
   var sphere = new Sphere();
+  sphere.textureNum = -1;
   if (g_normalOn) sphere.textureNum = -3;
   sphere.matrix.translate(0, 0.5, 0);
   sphere.render();
