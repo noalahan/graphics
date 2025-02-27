@@ -19,6 +19,7 @@ var VSHADER_SOURCE = `
     v_UV = a_UV;
     v_Normal = normalize(vec3(u_NormalMatrix * vec4(a_Normal, 1)));
     v_VertPos = u_ModelMatrix * a_Position;
+    // v_VertPos = u_GlobalRotateMatrix * u_ModelMatrix * a_Position;
   }`;
 
 // Fragment shader program
@@ -35,6 +36,7 @@ var FSHADER_SOURCE = `
   uniform bool u_lightOn;
   uniform vec3 u_lightPos;
   uniform vec3 u_cameraPos;
+  uniform vec3 u_lightColor;
   varying vec4 v_VertPos;
 
   void main() {
@@ -56,9 +58,9 @@ var FSHADER_SOURCE = `
 
     if (u_lightOn){
       vec3 lightVector = u_lightPos - vec3(v_VertPos);
-      float r = length(lightVector);
 
       // red/green vis
+      // float r = length(lightVector);
       // if (r < 1.0) {
       //   gl_FragColor = vec4(1, 0, 0, 1);
       // } else if (r < 2.0){
@@ -79,26 +81,27 @@ var FSHADER_SOURCE = `
       // eye
       vec3 E = normalize(u_cameraPos - vec3(v_VertPos));
 
-      // specular
+      // phong
       float specular = pow(max(dot(E, R), 0.0), 10.0);
-
       vec3 diffuse = vec3(gl_FragColor) * nDotL * 0.7;
       vec3 ambient = vec3(gl_FragColor) * 0.3;
+
+      // specular condition for shiny surfaces
       if (u_isShiny) {
-        gl_FragColor = vec4(specular + diffuse + ambient, 1.0);
+        // gl_FragColor = vec4(u_lightColor * (specular + diffuse) + ambient, 1.0);
+        gl_FragColor = vec4(u_lightColor + 0.0 * (specular + diffuse + ambient), 1.0);
       } else {
-        gl_FragColor = vec4(diffuse + ambient, 1.0);
+        gl_FragColor = vec4(u_lightColor * diffuse + ambient, 1.0);
       }
     }
   }`;
 
-// Global Variables
+// Global GL Variables
 let canvas;
 let gl;
 let a_Position;
 let a_UV;
 let a_Normal;
-// let u_Size;
 let u_NormalMatrix;
 let u_ModelMatrix;
 let u_GlobalRotateMatrix;
@@ -113,11 +116,19 @@ let u_isShiny;
 let u_lightOn;
 let u_lightPos;
 let u_cameraPos;
+let u_lightColor;
 
+// texture values
 let COLOR = -2;
 let SKY = 0;
 let CODE = 1;
 let HEDGE = 2;
+
+// camera
+var g_eye = new Vector([3, 0.5, 0]);
+var g_at = new Vector([-5, 0.5, 0]);
+var g_up = new Vector([0, 1, 0]);
+let g_globalAngle = 90;
 
 function setupWebGL() {
   // Retrieve <canvas> element
@@ -262,12 +273,17 @@ function connectVariablesToGLSL() {
     return false;
   }
 
+  // Get the storage location of u_lightColor
+  u_lightColor = gl.getUniformLocation(gl.program, "u_lightColor");
+  if (!u_lightColor) {
+    console.log("Failed to get the storage location of u_lightColor");
+    return false;
+  }
+
   // set an initial value for this matrix to identity
   var identityM = new Matrix4();
   gl.uniformMatrix4fv(u_ModelMatrix, false, identityM.elements);
 }
-
-let g_globalAngle = 90;
 
 // from testing
 let g_yellowAngle = 0;
@@ -275,19 +291,19 @@ let g_pinkAngle = 0;
 let g_yellowAnim = true;
 let g_pinkAnim = true;
 
-let g_fov = 65;
 // let mouseTrack = true;
 // let g_currentX = -10;
 // let g_currentZ = 0;
-// let view = false;
 let g_normalOn = false;
-let g_lightPos = [0, 1, 1];
+let g_lightPos = [0, 3, 0];
 let g_lightOn = true;
+let g_lightAnim = true;
+let g_lightColor = [1, 1, 1];
 /**
  * Sets all functions of elements defined in HTML
  */
 function addActionsForHtmlUI() {
-  // animation selector - from testing
+  // animation selector
   document.getElementById("non").onclick = function () {
     g_normalOn = true;
   };
@@ -306,7 +322,12 @@ function addActionsForHtmlUI() {
   document.getElementById("poff").onclick = function () {
     g_pinkAnim = false;
   };
-
+  document.getElementById("lAnimOn").onclick = function () {
+    g_lightAnim = true;
+  };
+  document.getElementById("lAnimOff").onclick = function () {
+    g_lightAnim = false;
+  };
   //   // mouse movement
   //   let lastMouseX = null;
   //   let lastMouseY = null;
@@ -349,36 +370,6 @@ function addActionsForHtmlUI() {
   document.getElementById("angle").addEventListener("mousemove", function () {
     g_globalAngle = this.value;
   });
-  //   // field of view selector
-  //   document.getElementById("fov").addEventListener("mousemove", function () {
-  //     g_fov = this.value;
-  //   });
-
-  //   // top view toggle
-  //   let eye = new Vector(),
-  //     at = new Vector();
-  //   document.getElementById("top").onclick = function () {
-  //     view = true;
-
-  //     // save old position and update
-  //     eye.set(g_eye);
-  //     at.set(g_at);
-  //     g_eye = new Vector([-12, 10, 0]);
-  //     g_at = new Vector([10, -10, 0]);
-
-  //     // toggle buttons
-  //     document.getElementById("return").style.display = "inline-block";
-  //     this.style.display = "none";
-  //   };
-  //   document.getElementById("return").onclick = function () {
-  //     view = false;
-
-  //     g_eye.set(eye);
-  //     g_at.set(at);
-
-  //     document.getElementById("top").style.display = "inline-block";
-  //     this.style.display = "none";
-  //   };
 
   // light selector
   document.getElementById("lx").addEventListener("mousemove", function (ev) {
@@ -405,6 +396,7 @@ function addActionsForHtmlUI() {
   document.getElementById("loff").onclick = function () {
     g_lightOn = false;
   };
+  document.getElementById("")
 }
 
 /**
@@ -510,7 +502,6 @@ function main() {
   requestAnimationFrame(tick);
 }
 
-let a = 0;
 /**
  * Increment animated elements
  */
@@ -523,13 +514,15 @@ function updateAnim() {
     g_pinkAngle = 45 * Math.sin(3 * g_seconds);
   }
 
-  g_lightPos[0] = Math.cos(g_seconds);
-  document.getElementById("lx").value = Math.cos(g_seconds) * 100;
+  if (g_lightAnim) {
+    g_lightPos[0] = 2 * Math.cos(g_seconds);
+    document.getElementById("lx").value = Math.cos(g_seconds) * 200;
+
+    g_lightPos[2] = 2 * Math.sin(g_seconds);
+    document.getElementById("lz").value = Math.sin(g_seconds) * 200;
+  }
 }
 
-var g_eye = new Vector([3, 0.5, 0]);
-var g_at = new Vector([-5, 0.5, 0]);
-var g_up = new Vector([0, 1, 0]);
 /**
  * Changes camera placement on key press
  * @param {*} event Key press event
@@ -541,7 +534,7 @@ function keydown(event) {
   var frontDir = g_eye.direction(g_at);
   frontDir.y = 0;
   frontDir.mul(change);
-  
+
   // get side direction
   var sideDir = Vector.cross(g_up, frontDir);
   sideDir.normalize();
@@ -570,19 +563,19 @@ function keydown(event) {
     // E: look right
     rotateCamera(-change * 0.5, g_up);
   } else if (event.keyCode == 38) {
-    // up arrow: move up
+    // up arrow: look up
     // g_eye.y += change;
     g_at.y += change * 2;
   } else if (event.keyCode == 40) {
-    // down arrow: move down
+    // down arrow: look down
     // g_eye.y -= change;
     g_at.y -= change * 2;
   } else if (event.keyCode == 37) {
-    // left arrow: break cube
-    editMap(-1, frontDir);
+    // left arrow: look left
+    rotateCamera(change * 0.5, g_up);
   } else if (event.keyCode == 39) {
-    // right arrow: build cube
-    editMap(1, frontDir);
+    // right arrow: look right
+    rotateCamera(-change * 0.5, g_up);
   }
 
   renderAllShapes();
@@ -596,7 +589,7 @@ function renderAllShapes() {
   // pass the projection matrix
   var projMat = new Matrix4();
   // (field of view, aspect ratio, near plane, far plane)
-  projMat.setPerspective(g_fov, canvas.width / canvas.height, 0.1, 100);
+  projMat.setPerspective(70, canvas.width / canvas.height, 0.1, 100);
   gl.uniformMatrix4fv(u_ProjectionMatrix, false, projMat.elements);
 
   // pass the view matrix
@@ -620,12 +613,12 @@ function renderAllShapes() {
 
   // pass the light to u_lightPos attribute
   gl.uniform3f(u_lightPos, g_lightPos[0], g_lightPos[1], g_lightPos[2]);
-
   // pass the camera position to u_cameraPos attribute
   gl.uniform3f(u_cameraPos, g_eye.x, g_eye.y, g_eye.z);
-
   // pass the light status to u_lightOn attribute
   gl.uniform1i(u_lightOn, g_lightOn);
+  // pass the light color to u_lightColor
+  gl.uniform3f(u_lightColor, g_lightColor[0], g_lightColor[1], g_lightColor[2]);
 
   // Clear <canvas>
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
