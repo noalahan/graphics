@@ -5,7 +5,7 @@ class Sphere {
     this.matrix = new Matrix4();
     this.normalMatrix = new Matrix4();
     this.textureNum = -1;
-    this.verts32 = new Float32Array([]);
+    // this.verts32 = new Float32Array([]);
   }
 
   render() {

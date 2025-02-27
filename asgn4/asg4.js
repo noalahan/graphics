@@ -114,7 +114,7 @@ let u_lightOn;
 let u_lightPos;
 let u_cameraPos;
 
-let COLOR = -2
+let COLOR = -2;
 let SKY = 0;
 let CODE = 1;
 let HEDGE = 2;
@@ -383,19 +383,19 @@ function addActionsForHtmlUI() {
   // light selector
   document.getElementById("lx").addEventListener("mousemove", function (ev) {
     if (ev.buttons == 1) {
-      g_lightPos[0] = this.value/100;
+      g_lightPos[0] = this.value / 100;
       // renderAllShapes();
     }
   });
   document.getElementById("ly").addEventListener("mousemove", function (ev) {
     if (ev.buttons == 1) {
-      g_lightPos[1] = this.value/100;
+      g_lightPos[1] = this.value / 100;
       // renderAllShapes();
     }
   });
   document.getElementById("lz").addEventListener("mousemove", function (ev) {
     if (ev.buttons == 1) {
-      g_lightPos[2] = this.value/100;
+      g_lightPos[2] = this.value / 100;
       // renderAllShapes();
     }
   });
@@ -523,8 +523,8 @@ function updateAnim() {
     g_pinkAngle = 45 * Math.sin(3 * g_seconds);
   }
 
-  // g_lightPos[0] = Math.cos(g_seconds);
-  // document.getElementById("lx").value = Math.cos(g_seconds) * 100;
+  g_lightPos[0] = Math.cos(g_seconds);
+  document.getElementById("lx").value = Math.cos(g_seconds) * 100;
 }
 
 var g_eye = new Vector([3, 0.5, 0]);
@@ -535,16 +535,13 @@ var g_up = new Vector([0, 1, 0]);
  * @param {*} event Key press event
  */
 function keydown(event) {
-  // console.log("g_eye(" + g_eye.x + ", " + g_eye.y + ", " + g_eye.z + ")");
-
   let change = 0.1;
+
   // get front direction
   var frontDir = g_eye.direction(g_at);
   frontDir.y = 0;
   frontDir.mul(change);
-  // console.log(
-  //   "dir(" + frontDir.x + ", " + frontDir.y + ", " + frontDir.z + ")"
-  // );
+  
   // get side direction
   var sideDir = Vector.cross(g_up, frontDir);
   sideDir.normalize();
@@ -572,15 +569,14 @@ function keydown(event) {
   } else if (event.keyCode == 69) {
     // E: look right
     rotateCamera(-change * 0.5, g_up);
-
-    // } else if (event.keyCode == 38) {
-    //   // up arrow: move up
-    //   g_eye.y += change;
-    //   g_at.y += change;
-    // } else if (event.keyCode == 40) {
-    //   // down arrow: move down
-    //   g_eye.y -= change;
-    //   g_at.y -= change;
+  } else if (event.keyCode == 38) {
+    // up arrow: move up
+    // g_eye.y += change;
+    g_at.y += change * 2;
+  } else if (event.keyCode == 40) {
+    // down arrow: move down
+    // g_eye.y -= change;
+    g_at.y -= change * 2;
   } else if (event.keyCode == 37) {
     // left arrow: break cube
     editMap(-1, frontDir);
@@ -638,7 +634,7 @@ function renderAllShapes() {
   gl.clear(gl.COLOR_BUFFER_BIT);
 
   // console.log("Light Position:", u_lightPos);
-  // console.log("Camera Position:", g_eye.x);  
+  // console.log("Camera Position:", g_eye.x);
 
   // light
   var light = new Cube();
@@ -646,7 +642,7 @@ function renderAllShapes() {
   light.textureNum = COLOR;
   light.shiny = false;
   light.matrix.translate(g_lightPos[0], g_lightPos[1], g_lightPos[2]);
-  light.matrix.scale(-.1, -.1, -.1);
+  light.matrix.scale(-0.1, -0.1, -0.1);
   light.render();
 
   //   from testing
@@ -668,7 +664,7 @@ function renderAllShapes() {
   var yellowCoordinates = new Matrix4(yellow.matrix);
   yellow.matrix.translate(0, 0.5, 0);
   yellow.matrix.scale(0.25, 0.7, 0.5);
-  yellow.normalMatrix.setInverseOf(yellow.matrix).transpose();
+  // yellow.normalMatrix.setInverseOf(yellow.matrix).transpose();
   yellow.render();
 
   // test box
@@ -684,7 +680,7 @@ function renderAllShapes() {
 
   // scene
   var sky = new Cube();
-  sky.textureNum = SKY; 
+  sky.textureNum = SKY;
   sky.shiny = false;
   if (g_normalOn) sky.textureNum = -3;
   // sky.matrix.rotate(-40, 0, 1, 0);
@@ -702,7 +698,7 @@ function renderAllShapes() {
 
   var sphere = new Sphere();
   if (g_normalOn) sphere.textureNum = HEDGE;
-  sphere.matrix.scale(.5, .5, .5);
+  sphere.matrix.scale(0.5, 0.5, 0.5);
   sphere.matrix.translate(-2, 0, 0);
   sphere.matrix.rotate(g_seconds * 100, 0, 1, 0);
   // sphere.normalMatrix.setInverseOf(sphere.matrix).transpose();
