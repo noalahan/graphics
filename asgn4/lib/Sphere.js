@@ -6,6 +6,7 @@ class Sphere {
     this.normalMatrix = new Matrix4();
     this.textureNum = -1;
     this.shiny = true;
+    this.quality = 7;
   }
 
   render() {
@@ -28,8 +29,8 @@ class Sphere {
     this.normalMatrix.setInverseOf(this.matrix).transpose();
     gl.uniformMatrix4fv(u_NormalMatrix, false, this.normalMatrix.elements);    
 
-    var d = Math.PI/8;
-    var dd = Math.PI/8;
+    var d = Math.PI/this.quality;
+    var dd = Math.PI/this.quality;
 
     for (var t = 0; t < Math.PI; t+=d){
         for (var r = 0; r < (2 * Math.PI); r += d){

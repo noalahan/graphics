@@ -424,6 +424,8 @@ function addActionsForHtmlUI() {
       g_lightColor[1] = 0;
       g_lightColor[2] = 1;
     }
+    document.getElementById("color").style.backgroundColor =
+      "rgb(" + g_lightColor[0] * 255 + "," + g_lightColor[1] * 255 + "," + g_lightColor[2] * 255 + ")";
   });
 }
 
@@ -678,7 +680,7 @@ function renderAllShapes() {
   red.textureNum = 1;
   red.matrix.setTranslate(0, -0.5, 0);
   red.matrix.scale(0.6, 0.3, 0.6);
-  // red.render();
+  red.render();
 
   var yellow = new Cube();
   yellow.color = [1, 1, 0, 1];
@@ -688,7 +690,7 @@ function renderAllShapes() {
   var yellowCoordinates = new Matrix4(yellow.matrix);
   yellow.matrix.translate(0, 0.5, 0);
   yellow.matrix.scale(0.25, 0.7, 0.5);
-  // yellow.render();
+  yellow.render();
 
   var pink = new Cube();
   pink.color = [1, 0, 1, 1];
@@ -697,7 +699,7 @@ function renderAllShapes() {
   pink.matrix.rotate(-g_pinkAngle, 0, 0, 1);
   pink.matrix.translate(0, 0.2, 0);
   pink.matrix.scale(0.3, 0.3, 0.3);
-  // pink.render();
+  pink.render();
 
   // scene
   var sky = new Cube();
@@ -715,10 +717,11 @@ function renderAllShapes() {
   floor.render();
 
   var sphere = new Sphere();
+  sphere.quality = 12;
   sphere.matrix.scale(0.5, 0.5, 0.5);
-  sphere.matrix.translate(-2, 0, 0);
+  sphere.matrix.translate(-1, 0, -2);
   sphere.matrix.rotate(g_seconds * 100, 0, 1, 0);
-  // sphere.render();
+  sphere.render();
 }
 
 var g_startTime = performance.now() / 1000.0;
@@ -742,7 +745,7 @@ function tick() {
   // check running time
   var duration = performance.now() - startTime;
   document.getElementById("performance").innerHTML =
-    "  ms:  " + Math.floor(duration) + " fps: " + Math.floor(10000 / duration);
+    "Performance -  ms:  " + Math.floor(duration) + " fps: " + Math.floor(10000 / duration);
 
   // coordinate display
   //   document.getElementById("coor").innerHTML =

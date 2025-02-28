@@ -237,7 +237,7 @@ function renderPigeon() {
   var base = new Sphere();
   base.color = bodyColor;
   base.textureNum = COLOR;
-  base.matrix.setTranslate(1, 0.2 + g_bodyHeight, g_bodyPos);
+  base.matrix.setTranslate(0, -0.1 + g_bodyHeight, 2 + g_bodyPos);
   base.matrix.rotate(g_bodyAngle, 1, 0, 0);
   let baseCoor = new Matrix4(base.matrix);
   base.matrix.scale(1.55, 1, 2);

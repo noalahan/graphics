@@ -1,0 +1,46 @@
+*,
+html {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.container {
+  display: grid;
+  grid-template-areas: "canvas light pigeon";
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 5px;
+  background-color: #2196f3;
+  padding: 5px;
+  border-radius: 25px;
+}
+.container > div {
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 10px;
+  border-radius: 20px;
+}
+.container > #canvas {
+  grid-area: canvas;
+  text-align: center;
+}
+.container > div.menu {
+  grid-area: menu;
+}
+.container > div.content {
+  grid-area: content;
+}
+.container > div.footer {
+  grid-area: footer;
+}
+
+#color {
+  height: 20px;
+  width: 200px;
+  background-color: rgb(255, 255, 255);
+  border-style: solid;
+  border-radius: 10px;
+}
+#webgl {
+  border-radius: 10px;
+}
+#title {
+  text-align: center;
+}

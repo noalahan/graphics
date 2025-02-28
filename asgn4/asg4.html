@@ -2,107 +2,277 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <style></style>
     <title>CSE 160 Assignment 4</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
   </head>
 
   <body onload="main()">
-    <h1>Assignment 4</h1>
+    <div id="title">
+    <h1>Assignment 4: The return of Pebbles (the pigeon)</h1>
     <h3>CSE 160 Noa Lahan</h3>
+  </div>
+  
+    <div class="container">
+      <div id="canvas">
+        <div id="performance"></div>
 
-    <div id = "performance"></div>
+        <canvas id="webgl" width="600" height="600">
+          Please use a browser that supports "canvas"
+        </canvas>
+      </div>
 
-    <canvas id="webgl" width="400" height="400">
-      Please use a browser that supports "canvas"
-    </canvas>
+      <div id="light">
+        <h1>Setting Controls</h1>
+        Camera Angle
+        <input
+          type="range"
+          min="-360"
+          max="360"
+          value="0"
+          class="slider"
+          id="angle"
+        />
+        <br />
 
-    <br />
-    Light <br />
-    X <input type="range" min="-250" max="250" value="0" class="slider" id="lx" /> <br />
-    Y <input type="range" min="-250" max="250" value="100" class="slider" id="ly" /> <br />
-    Z <input type="range" min="-250" max="250" value="100" class="slider" id="lz" /> <br />
-    
-    Camera Angle
-    <input type="range" min="-360" max="360" value="0" class="slider" id="angle" />
-    <br />
-    
-    Light Color
-    <input type="range" min="0" max="60" value="0" class="slider" id="lColor" />
-    <br />
-    
-    <p>
-      Light: 
-      <button type="button" id="lon">On</button>
-      <button type="button" id="loff">Off</button>
-    </p>
-    <p>
-      Normals: 
-      <button type="button" id="non">On</button>
-      <button type="button" id="noff">Off</button>
-    </p>
-    <p>
-      Light Animation: 
-      <button type="button" id="lAnimOn">On</button>
-      <button type="button" id="lAnimOff">Off</button>
-    </p>
-    <p>
-      Yellow Animation: 
-      <button type="button" id="yon">On</button>
-      <button type="button" id="yoff">Off</button>
-    </p>
-    <p>
-      Pink Animation:
-      <button type="button" id="pon">On</button>
-      <button type="button" id="poff">Off</button>
-    </p>
+        Light Position <br />
+        X
+        <input
+          type="range"
+          min="-250"
+          max="250"
+          value="0"
+          class="slider"
+          id="lx"
+        />
+        <br />
+        Y
+        <input
+          type="range"
+          min="-250"
+          max="250"
+          value="100"
+          class="slider"
+          id="ly"
+        />
+        <br />
+        Z
+        <input
+          type="range"
+          min="-250"
+          max="250"
+          value="100"
+          class="slider"
+          id="lz"
+        />
+        <br />
 
-    Walking Speed
-    <input type="range" min="1" max="15" value="7" class="slider" id="speed" />
-    <br />
+                Light Color
+        <input
+          type="range"
+          min="0"
+          max="60"
+          value="0"
+          class="slider"
+          id="lColor"
+        />
+        <br/>
+        <div id="color"></div>
 
-    <p>
-      Animation:
-      <button type="button" id="pose">Pose</button>
-      <button type="button" id="wOn">Walk</button>
-      <button type="button" id="wOff">Stop</button>
-      <button type="button" id="pOn">Sit</button>
-    </p>
+        <p>
+          Light:
+          <button type="button" id="lon">On</button>
+          <button type="button" id="loff">Off</button>
+        </p>
+        <p>
+          Light Animation:
+          <button type="button" id="lAnimOn">On</button>
+          <button type="button" id="lAnimOff">Off</button>
+        </p>
+        <p>
+          Normals:
+          <button type="button" id="non">On</button>
+          <button type="button" id="noff">Off</button>
+        </p>
+        <p>
+          Yellow Animation:
+          <button type="button" id="yon">On</button>
+          <button type="button" id="yoff">Off</button>
+        </p>
+        <p>
+          Pink Animation:
+          <button type="button" id="pon">On</button>
+          <button type="button" id="poff">Off</button>
+        </p>
+        <h3>Key board controls</h3>
+        W - forward <br/>
+        S - backward <br/>
+        A - left <br/>
+        D - right <br/>
+        Q - up <br/>
+        E - down <br/>
+        Use arrows to look around
+      </div>
 
-    Body height
-    <input type="range" min="-50" max="50" value="0" class="slider" id="height" />
-    Position
-    <input type="range" min="-50" max="50" value="0" class="slider" id="pos" />
-    <br />
+      <!-- pigeon -->
+      <div id="pigeon">
+        <h1>Pigeon Controls</h1>
+        <p>
+          Animation:
+          <button type="button" id="pose">Pose</button>
+          <button type="button" id="wOn">Walk</button>
+          <button type="button" id="wOff">Stop</button>
+          <button type="button" id="pOn">Sit</button>
+        </p>
+        ("sit" can also be activated with a shift click) </br>
+        Walking Speed
+        <input
+          type="range"
+          min="1"
+          max="15"
+          value="7"
+          class="slider"
+          id="speed"
+        />
+        <br />
 
-    Body
-    <input type="range" min="-45" max="45" value="0" class="slider" id="body" />
-    <br />
-    Neck
-    <input type="range" min="-10" max="45" value="0" class="slider" id="neck" />
-    <br />
-    Head
-    <input type="range" min="-20" max="20" value="0" class="slider" id="head" />
-    <br />
-    Left Wing
-    <input type="range" min="-20" max="20" value="0" class="slider" id="lWing" />
-    <br />
-    Right Wing
-    <input type="range" min="-20" max="20" value="0" class="slider" id="rWing" />
-    <br />
-    Left Leg
-    <input type="range" min="-30" max="20" value="0" class="slider" id="lLeg" />
-    Calf
-    <input type="range" min="-10" max="60" value="0" class="slider" id="lCalf" />
-    Foot
-    <input type="range" min="-25" max="25" value="0" class="slider" id="lFoot" />
-    <br />
-    Right Leg
-    <input type="range" min="-30" max="20" value="0" class="slider" id="rLeg" />
-    Calf
-    <input type="range" min="-10" max="60" value="0" class="slider" id="rCalf" />
-    Foot
-    <input type="range" min="-25" max="25" value="0" class="slider" id="rFoot" />
-    <br />
-    <br />
+        Body Y
+        <input
+          type="range"
+          min="-50"
+          max="50"
+          value="0"
+          class="slider"
+          id="height"
+        />
+        <br />
+        Body X
+        <input
+          type="range"
+          min="-50"
+          max="50"
+          value="0"
+          class="slider"
+          id="pos"
+        />
+        <br />
+
+        <h3>Rotation Controls</h3>
+        Body
+        <input
+          type="range"
+          min="-45"
+          max="45"
+          value="0"
+          class="slider"
+          id="body"
+        />
+        <br />
+        Neck
+        <input
+          type="range"
+          min="-10"
+          max="45"
+          value="0"
+          class="slider"
+          id="neck"
+        />
+        <br />
+        Head
+        <input
+          type="range"
+          min="-20"
+          max="20"
+          value="0"
+          class="slider"
+          id="head"
+        />
+        <br />
+        Left Wing
+        <input
+          type="range"
+          min="-20"
+          max="20"
+          value="0"
+          class="slider"
+          id="lWing"
+        />
+        <br />
+        Right Wing
+        <input
+          type="range"
+          min="-20"
+          max="20"
+          value="0"
+          class="slider"
+          id="rWing"
+        />
+        <h4>Left Leg</h4>
+        Thigh
+        <input
+          type="range"
+          min="-30"
+          max="20"
+          value="0"
+          class="slider"
+          id="lLeg"
+        />
+        <br/>
+        Calf
+        <input
+          type="range"
+          min="-10"
+          max="60"
+          value="0"
+          class="slider"
+          id="lCalf"
+        />
+        <br/>
+        Foot
+        <input
+          type="range"
+          min="-25"
+          max="25"
+          value="0"
+          class="slider"
+          id="lFoot"
+        />
+        <h4>Left Leg</h4>
+        Thigh
+        <input
+          type="range"
+          min="-30"
+          max="20"
+          value="0"
+          class="slider"
+          id="rLeg"
+        />
+        <br/>
+        Calf
+        <input
+          type="range"
+          min="-10"
+          max="60"
+          value="0"
+          class="slider"
+          id="rCalf"
+        />
+        <br/>
+        Foot
+        <input
+          type="range"
+          min="-25"
+          max="25"
+          value="0"
+          class="slider"
+          id="rFoot"
+        />
+      </div>
+    </div>
 
     <script src="../lib/webgl-utils.js"></script>
     <script src="../lib/webgl-debug.js"></script>
