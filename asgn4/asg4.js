@@ -129,7 +129,7 @@ let HEDGE = 2;
 var g_eye = new Vector([3, 0.5, 0]);
 var g_at = new Vector([-5, 0.5, 0]);
 var g_up = new Vector([0, 1, 0]);
-let g_globalAngle = 90;
+let g_globalAngle = 0;
 
 function setupWebGL() {
   // Retrieve <canvas> element
@@ -519,6 +519,8 @@ function main() {
   connectVariablesToGLSL();
   addActionsForHtmlUI();
 
+  pigeonActions();
+
   document.onkeydown = keydown;
   initTextures();
 
@@ -534,7 +536,7 @@ function main() {
  * Increment animated elements
  */
 function updateAnim() {
-  // from testing
+  pigeonAnim();
   if (g_yellowAnim) {
     g_yellowAngle = 45 * Math.sin(g_seconds);
   }
@@ -585,18 +587,20 @@ function keydown(event) {
     g_eye.setSub(sideDir);
     g_at.setSub(sideDir);
   } else if (event.keyCode == 81) {
-    // Q: look left
-    rotateCamera(change * 0.5, g_up);
+    // Q: move up
+    g_eye.y += change;
+    g_at.y += change;
+    // rotateCamera(change * 0.5, g_up);
   } else if (event.keyCode == 69) {
-    // E: look right
-    rotateCamera(-change * 0.5, g_up);
+    // E: move down
+    g_eye.y -= change;
+    g_at.y -= change;
+    // rotateCamera(-change * 0.5, g_up);
   } else if (event.keyCode == 38) {
     // up arrow: look up
-    // g_eye.y += change;
     g_at.y += change * 2;
   } else if (event.keyCode == 40) {
     // down arrow: look down
-    // g_eye.y -= change;
     g_at.y -= change * 2;
   } else if (event.keyCode == 37) {
     // left arrow: look left
@@ -657,6 +661,9 @@ function renderAllShapes() {
   // console.log("Light Position:", u_lightPos);
   // console.log("Camera Position:", g_eye.x);
 
+  // pigeon
+  renderPigeon();
+
   // light
   var light = new Cube();
   light.color = [g_lightColor[0], g_lightColor[1], g_lightColor[2], 1];
@@ -666,45 +673,36 @@ function renderAllShapes() {
   light.matrix.scale(-0.2, -0.2, -0.2);
   light.render();
 
-  //   from testing
-  // draw the body cube
   var red = new Cube();
   red.color = [1.0, 0.0, 0.0, 1.0];
   red.textureNum = 1;
   red.matrix.setTranslate(0, -0.5, 0);
   red.matrix.scale(0.6, 0.3, 0.6);
-  red.render();
+  // red.render();
 
-  // draw left arm
   var yellow = new Cube();
   yellow.color = [1, 1, 0, 1];
   yellow.textureNum = -2;
-  // if (g_normalOn) yellow.textureNum = -3;
   yellow.matrix.translate(0, -0.5, 0);
   yellow.matrix.rotate(-g_yellowAngle, 0, 0, 1);
   var yellowCoordinates = new Matrix4(yellow.matrix);
   yellow.matrix.translate(0, 0.5, 0);
   yellow.matrix.scale(0.25, 0.7, 0.5);
-  // yellow.normalMatrix.setInverseOf(yellow.matrix).transpose();
-  yellow.render();
+  // yellow.render();
 
-  // test box
   var pink = new Cube();
   pink.color = [1, 0, 1, 1];
-  // if (g_normalOn) pink.textureNum = -3;
   pink.matrix = yellowCoordinates;
   pink.matrix.translate(0, 0.8, 0);
   pink.matrix.rotate(-g_pinkAngle, 0, 0, 1);
   pink.matrix.translate(0, 0.2, 0);
   pink.matrix.scale(0.3, 0.3, 0.3);
-  pink.render();
+  // pink.render();
 
   // scene
   var sky = new Cube();
   sky.textureNum = SKY;
   sky.shiny = false;
-  // if (g_normalOn) sky.textureNum = -3;
-  // sky.matrix.rotate(-40, 0, 1, 0);
   sky.matrix.translate(0, 0, 0);
   sky.matrix.scale(-8, -8, -8);
   sky.render();
@@ -712,18 +710,15 @@ function renderAllShapes() {
   var floor = new Cube();
   floor.color = [35 / 255, 74 / 255, 8 / 255, 1];
   floor.textureNum = HEDGE;
-  // floor.matrix.rotate(-40, 0, 1, 0);
   floor.matrix.translate(0, -0.75, 0);
   floor.matrix.scale(8, 0.2, 8);
   floor.render();
 
   var sphere = new Sphere();
-  // if (g_normalOn) sphere.textureNum = HEDGE;
   sphere.matrix.scale(0.5, 0.5, 0.5);
   sphere.matrix.translate(-2, 0, 0);
   sphere.matrix.rotate(g_seconds * 100, 0, 1, 0);
-  // sphere.normalMatrix.setInverseOf(sphere.matrix).transpose();
-  sphere.render();
+  // sphere.render();
 }
 
 var g_startTime = performance.now() / 1000.0;

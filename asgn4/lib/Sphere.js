@@ -5,7 +5,7 @@ class Sphere {
     this.matrix = new Matrix4();
     this.normalMatrix = new Matrix4();
     this.textureNum = -1;
-    // this.verts32 = new Float32Array([]);
+    this.shiny = true;
   }
 
   render() {
@@ -14,6 +14,9 @@ class Sphere {
     // pass the texture number
     if (g_normalOn) this.textureNum = NORMAL;
     gl.uniform1i(u_whichTexture, this.textureNum);
+
+    // pass the shiny attribute
+    gl.uniform1i(u_isShiny, this.shiny);
 
     // Pass the color of a point to u_FragColor variable
     gl.uniform4f(u_FragColor, rgba[0], rgba[1], rgba[2], rgba[3]);
@@ -25,8 +28,8 @@ class Sphere {
     this.normalMatrix.setInverseOf(this.matrix).transpose();
     gl.uniformMatrix4fv(u_NormalMatrix, false, this.normalMatrix.elements);    
 
-    var d = Math.PI/15;
-    var dd = Math.PI/15;
+    var d = Math.PI/10;
+    var dd = Math.PI/10;
 
     for (var t = 0; t < Math.PI; t+=d){
         for (var r = 0; r < (2 * Math.PI); r += d){

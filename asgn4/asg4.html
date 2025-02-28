@@ -22,7 +22,7 @@
     Z <input type="range" min="-250" max="250" value="100" class="slider" id="lz" /> <br />
     
     Camera Angle
-    <input type="range" min="-360" max="360" value="90" class="slider" id="angle" />
+    <input type="range" min="-360" max="360" value="0" class="slider" id="angle" />
     <br />
     
     Light Color
@@ -55,12 +55,63 @@
       <button type="button" id="poff">Off</button>
     </p>
 
+    Walking Speed
+    <input type="range" min="1" max="15" value="7" class="slider" id="speed" />
+    <br />
+
+    <p>
+      Animation:
+      <button type="button" id="pose">Pose</button>
+      <button type="button" id="wOn">Walk</button>
+      <button type="button" id="wOff">Stop</button>
+      <button type="button" id="pOn">Sit</button>
+    </p>
+
+    Body height
+    <input type="range" min="-50" max="50" value="0" class="slider" id="height" />
+    Position
+    <input type="range" min="-50" max="50" value="0" class="slider" id="pos" />
+    <br />
+
+    Body
+    <input type="range" min="-45" max="45" value="0" class="slider" id="body" />
+    <br />
+    Neck
+    <input type="range" min="-10" max="45" value="0" class="slider" id="neck" />
+    <br />
+    Head
+    <input type="range" min="-20" max="20" value="0" class="slider" id="head" />
+    <br />
+    Left Wing
+    <input type="range" min="-20" max="20" value="0" class="slider" id="lWing" />
+    <br />
+    Right Wing
+    <input type="range" min="-20" max="20" value="0" class="slider" id="rWing" />
+    <br />
+    Left Leg
+    <input type="range" min="-30" max="20" value="0" class="slider" id="lLeg" />
+    Calf
+    <input type="range" min="-10" max="60" value="0" class="slider" id="lCalf" />
+    Foot
+    <input type="range" min="-25" max="25" value="0" class="slider" id="lFoot" />
+    <br />
+    Right Leg
+    <input type="range" min="-30" max="20" value="0" class="slider" id="rLeg" />
+    Calf
+    <input type="range" min="-10" max="60" value="0" class="slider" id="rCalf" />
+    Foot
+    <input type="range" min="-25" max="25" value="0" class="slider" id="rFoot" />
+    <br />
+    <br />
+
     <script src="../lib/webgl-utils.js"></script>
     <script src="../lib/webgl-debug.js"></script>
     <script src="../lib/cuon-utils.js"></script>
     <script src="../lib/cuon-matrix.js"></script>
     <script src="lib/Cube.js"></script>
     <script src="lib/cuon-vector.js"></script>
+    <script src="lib/Cylinder.js"></script>
+    <script src="lib/Pigeon.js"></script>
     <script src="lib/Sphere.js"></script>
     <script src="asg4.js"></script>
   </body>

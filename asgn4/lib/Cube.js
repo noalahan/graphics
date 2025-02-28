@@ -6,6 +6,7 @@ class Cube {
     this.normalMatrix = new Matrix4();
     this.textureNum = -1;
     this.shiny = true;
+    this.top = 1;
   }
 
   render() {
@@ -33,31 +34,32 @@ class Cube {
     var allverts = [];
     var alluvs = [];
     var allnorms = [];
+    let a = this.top;
 
     // front of cube
-    allverts = allverts.concat([-0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5]);
+    allverts = allverts.concat([-0.5, -0.5, -0.5, 0.5 * a, 0.5, -0.5, 0.5, -0.5, -0.5]);
     alluvs = alluvs.concat([0.25, 0.25, 0.5, 0.5, 0.5, 0.25]);
     allnorms = allnorms.concat([0, 0, -1, 0, 0, -1, 0, 0, -1]);
 
-    allverts = allverts.concat([-0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5]);
+    allverts = allverts.concat([-0.5, -0.5, -0.5, -0.5 * a, 0.5, -0.5, 0.5 * a, 0.5, -0.5]);
     alluvs = alluvs.concat([0.25, 0.25, 0.25, 0.5, 0.5, 0.5]);
     allnorms = allnorms.concat([0, 0, -1, 0, 0, -1, 0, 0, -1]);
     
     // back of cube
-    allverts = allverts.concat([-0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5]);
+    allverts = allverts.concat([-0.5, -0.5, 0.5, 0.5 * a, 0.5, 0.5, 0.5, -0.5, 0.5]);
     alluvs = alluvs.concat([1, 0.25, 0.75, 0.5, 0.75, 0.25]);
     allnorms = allnorms.concat([0, 0, 1, 0, 0, 1, 0, 0, 1]);
 
-    allverts = allverts.concat([-0.5, -0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5]);
+    allverts = allverts.concat([-0.5, -0.5, 0.5, -0.5 * a, 0.5, 0.5, 0.5 * a, 0.5, 0.5]);
     alluvs = alluvs.concat([1, 0.25, 1, 0.5, 0.75, 0.5]);
     allnorms = allnorms.concat([0, 0, 1, 0, 0, 1, 0, 0, 1]);
 
     // top of cube
-    allverts = allverts.concat([-0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5]);
+    allverts = allverts.concat([-0.5 * a, 0.5, -0.5, -0.5 * a, 0.5, 0.5, 0.5 * a, 0.5, 0.5]);
     alluvs = alluvs.concat([0.25, 0.5, 0.25, 0.75, 0.5, 0.75]);
     allnorms = allnorms.concat([0, 1, 0, 0, 1, 0, 0, 1, 0]);
 
-    allverts = allverts.concat([-0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5]);
+    allverts = allverts.concat([-0.5 * a, 0.5, -0.5, 0.5 * a, 0.5, 0.5, 0.5 * a, 0.5, -0.5]);
     alluvs = alluvs.concat([0.25, 0.5, 0.5, 0.75, 0.5, 0.5]);
     allnorms = allnorms.concat([0, 1, 0, 0, 1, 0, 0, 1, 0]);
 
@@ -71,20 +73,20 @@ class Cube {
     allnorms = allnorms.concat([0, -1, 0, 0, -1, 0, 0, -1, 0]);
 
     // left of cube
-    allverts = allverts.concat([0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5]);
+    allverts = allverts.concat([0.5, -0.5, -0.5, 0.5 * a, 0.5, -0.5, 0.5 * a, 0.5, 0.5]);
     alluvs = alluvs.concat([0.5, 0.25, 0.5, 0.5, 0.75, 0.5]);
     allnorms = allnorms.concat([1, 0, 0, 1, 0, 0, 1, 0, 0]);
 
-    allverts = allverts.concat([0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5]);
+    allverts = allverts.concat([0.5, -0.5, -0.5, 0.5 * a, 0.5, 0.5, 0.5, -0.5, 0.5]);
     alluvs = alluvs.concat([0.5, 0.25, 0.75, 0.5, 0.75, 0.25]);
     allnorms = allnorms.concat([1, 0, 0, 1, 0, 0, 1, 0, 0]);
 
     // right of cube
-    allverts = allverts.concat([-0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5]);
+    allverts = allverts.concat([-0.5, -0.5, -0.5, -0.5 * a, 0.5, -0.5, -0.5 * a, 0.5, 0.5]);
     alluvs = alluvs.concat([0.25, 0.25, 0.25, 0.5, 0, 0.5]);
     allnorms = allnorms.concat([-1, 0, 0, -1, 0, 0, -1, 0, 0]);
 
-    allverts = allverts.concat([-0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5]);
+    allverts = allverts.concat([-0.5, -0.5, -0.5, -0.5 * a, 0.5, 0.5, -0.5, -0.5, 0.5]);
     alluvs = alluvs.concat([0.25, 0.25, 0, 0.5, 0, 0.25]);
     allnorms = allnorms.concat([-1, 0, 0, -1, 0, 0, -1, 0, 0]);
 
