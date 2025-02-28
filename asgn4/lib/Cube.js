@@ -12,6 +12,7 @@ class Cube {
     var rgba = this.color;
 
     // pass the texture number
+    if (g_normalOn) this.textureNum = NORMAL;
     gl.uniform1i(u_whichTexture, this.textureNum);
 
     // pass the shiny attribute

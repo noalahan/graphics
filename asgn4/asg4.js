@@ -41,19 +41,19 @@ var FSHADER_SOURCE = `
 
   void main() {
     if (u_whichTexture == -3){
-      gl_FragColor = vec4((v_Normal+1.0)/2.0, 1.0);// use color
+      gl_FragColor = vec4((v_Normal+1.0)/2.0, 1.0);// use normal
     } else if (u_whichTexture == -2){
-      gl_FragColor = u_FragColor;                 // use color
+      gl_FragColor = u_FragColor;                  // use color
     } else if (u_whichTexture == -1){
-      gl_FragColor = vec4(v_UV, 1.0, 1.0);        // use UV debug
+      gl_FragColor = vec4(v_UV, 1.0, 1.0);         // use UV debug
     } else if (u_whichTexture == 0){
-      gl_FragColor = texture2D(u_Sampler0, v_UV); // use texture0
+      gl_FragColor = texture2D(u_Sampler0, v_UV);  // use texture0
     } else if (u_whichTexture == 1){
-      gl_FragColor = texture2D(u_Sampler1, v_UV); // use texture1
+      gl_FragColor = texture2D(u_Sampler1, v_UV);  // use texture1
     } else if (u_whichTexture == 2){
-      gl_FragColor = texture2D(u_Sampler2, v_UV); // use texture2
+      gl_FragColor = texture2D(u_Sampler2, v_UV);  // use texture2
     } else {
-      gl_FragColor = vec4(1, .2, .2, 1);          // error, put red(ish)
+      gl_FragColor = vec4(1, .2, .2, 1);           // error, put red(ish)
     }  
 
     if (u_lightOn){
@@ -88,8 +88,8 @@ var FSHADER_SOURCE = `
 
       // specular condition for shiny surfaces
       if (u_isShiny) {
-        // gl_FragColor = vec4(u_lightColor * (specular + diffuse) + ambient, 1.0);
-        gl_FragColor = vec4(u_lightColor + 0.0 * (specular + diffuse + ambient), 1.0);
+        gl_FragColor = vec4(u_lightColor * (specular + diffuse) + ambient, 1.0);
+        // gl_FragColor = vec4(u_lightColor + 0.0 * (specular + diffuse + ambient), 1.0);
       } else {
         gl_FragColor = vec4(u_lightColor * diffuse + ambient, 1.0);
       }
@@ -119,6 +119,7 @@ let u_cameraPos;
 let u_lightColor;
 
 // texture values
+let NORMAL = -3;
 let COLOR = -2;
 let SKY = 0;
 let CODE = 1;
@@ -396,7 +397,34 @@ function addActionsForHtmlUI() {
   document.getElementById("loff").onclick = function () {
     g_lightOn = false;
   };
-  document.getElementById("")
+  document.getElementById("lColor").addEventListener("mousemove", function () {
+    let a = this.value * 0.1;
+    if (a < 1) {        // red
+      g_lightColor[0] = 1;
+      g_lightColor[1] = 1 - a;
+      g_lightColor[2] = 1 - a;
+    } else if (a < 2) { // yellow
+      g_lightColor[0] = 1;
+      g_lightColor[1] = a - 1;
+      g_lightColor[2] = 0;
+    } else if (a < 3) { // green
+      g_lightColor[0] = 3 - a;
+      g_lightColor[1] = 1;
+      g_lightColor[2] = 0;
+    } else if (a < 4) { // cyan
+      g_lightColor[0] = 0;
+      g_lightColor[1] = 1;
+      g_lightColor[2] = a - 3;
+    } else if (a < 5) { // blue
+      g_lightColor[0] = 0;
+      g_lightColor[1] = 5 - a;
+      g_lightColor[2] = 1;
+    } else if (a < 6) { // purple
+      g_lightColor[0] = a - 5;
+      g_lightColor[1] = 0;
+      g_lightColor[2] = 1;
+    }
+  });
 }
 
 /**
@@ -631,11 +659,11 @@ function renderAllShapes() {
 
   // light
   var light = new Cube();
-  light.color = [1, 1, 0, 1];
+  light.color = [g_lightColor[0], g_lightColor[1], g_lightColor[2], 1];
   light.textureNum = COLOR;
   light.shiny = false;
   light.matrix.translate(g_lightPos[0], g_lightPos[1], g_lightPos[2]);
-  light.matrix.scale(-0.1, -0.1, -0.1);
+  light.matrix.scale(-0.2, -0.2, -0.2);
   light.render();
 
   //   from testing
@@ -651,7 +679,7 @@ function renderAllShapes() {
   var yellow = new Cube();
   yellow.color = [1, 1, 0, 1];
   yellow.textureNum = -2;
-  if (g_normalOn) yellow.textureNum = -3;
+  // if (g_normalOn) yellow.textureNum = -3;
   yellow.matrix.translate(0, -0.5, 0);
   yellow.matrix.rotate(-g_yellowAngle, 0, 0, 1);
   var yellowCoordinates = new Matrix4(yellow.matrix);
@@ -663,7 +691,7 @@ function renderAllShapes() {
   // test box
   var pink = new Cube();
   pink.color = [1, 0, 1, 1];
-  if (g_normalOn) pink.textureNum = -3;
+  // if (g_normalOn) pink.textureNum = -3;
   pink.matrix = yellowCoordinates;
   pink.matrix.translate(0, 0.8, 0);
   pink.matrix.rotate(-g_pinkAngle, 0, 0, 1);
@@ -675,7 +703,7 @@ function renderAllShapes() {
   var sky = new Cube();
   sky.textureNum = SKY;
   sky.shiny = false;
-  if (g_normalOn) sky.textureNum = -3;
+  // if (g_normalOn) sky.textureNum = -3;
   // sky.matrix.rotate(-40, 0, 1, 0);
   sky.matrix.translate(0, 0, 0);
   sky.matrix.scale(-8, -8, -8);
@@ -690,7 +718,7 @@ function renderAllShapes() {
   floor.render();
 
   var sphere = new Sphere();
-  if (g_normalOn) sphere.textureNum = HEDGE;
+  // if (g_normalOn) sphere.textureNum = HEDGE;
   sphere.matrix.scale(0.5, 0.5, 0.5);
   sphere.matrix.translate(-2, 0, 0);
   sphere.matrix.rotate(g_seconds * 100, 0, 1, 0);

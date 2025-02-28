@@ -12,6 +12,7 @@ class Sphere {
     var rgba = this.color;
 
     // pass the texture number
+    if (g_normalOn) this.textureNum = NORMAL;
     gl.uniform1i(u_whichTexture, this.textureNum);
 
     // Pass the color of a point to u_FragColor variable
