@@ -5,7 +5,7 @@ class Cylinder {
     this.matrix = new Matrix4();
     this.normalMatrix = new Matrix4();
     this.textureNum = -1;
-    this.segments = 15;
+    this.segments = 10;
     this.top = 1;
     this.bottom = 1;
   }
@@ -58,23 +58,19 @@ class Cylinder {
       // circles
       gl.uniform4f(u_FragColor, rgba[0], rgba[1], rgba[2], rgba[3]);
       v = v.concat([0, 0, .5, pt1[0]*a, pt1[1]*a, .5, pt2[0]*a, pt2[1]*a, .5]);
-      uv = uv.concat([0.25, 0.25, 0.25, 0.5, 0, 0.5]);
-      norm = norm.concat([0, 0, 1, 0, 0, 1, 0, 0, 1]); 
+      uv = uv.concat([0.5, 0.5, (pt1[0] + 1) / 2, (pt1[1] + 1) / 2, (pt2[0] + 1) / 2, (pt2[1] + 1) / 2]);     
+        norm = norm.concat([0, 0, 1, 0, 0, 1, 0, 0, 1]); 
 
       v = v.concat([0, 0, -.5, pt1[0]*b, pt1[1]*b, -.5, pt2[0]*b, pt2[1]*b, -.5]);
-      uv = uv.concat([0.25, 0.25, 0.25, 0.5, 0, 0.5]);
+      uv = uv.concat([0.5, 0.5, (pt1[0] + 1) / 2, (pt1[1] + 1) / 2, (pt2[0] + 1) / 2, (pt2[1] + 1) / 2]);
       norm = norm.concat([0, 0, -1, 0, 0, -1, 0, 0, -1]);
 
       v = v.concat([pt1[0]*a, pt1[1]*a, .5, pt1[0]*b, pt1[1]*b, -.5, pt2[0]*b, pt2[1]*b, -.5]);
-      uv = uv.concat([0.25, 0.25, 0.25, 0.5, 0, 0.5]);
-      norm = norm.concat([
-        pt1[0], pt1[1], 0, // Corrected normal direction
-        pt1[0], pt1[1], 0,
-        pt2[0], pt2[1], 0
-      ]);
+      uv = uv.concat([angle1 / 360, 1, angle1 / 360, 0, angle2 / 360, 0]);
+      norm = norm.concat([ pt1[0], pt1[1], 0, pt1[0], pt1[1], 0, pt2[0], pt2[1], 0]);
 
       v = v.concat([pt2[0]*b, pt2[1]*b, -.5, pt1[0]*a, pt1[1]*a, .5, pt2[0]*a, pt2[1]*a, .5]);
-      uv = uv.concat([0.25, 0.25, 0.25, 0.5, 0, 0.5]);
+      uv = uv.concat([angle2 / 360, 0, angle1 / 360, 1, angle2 / 360, 1]);
       norm = norm.concat([pt2[0], pt2[1], 0, pt1[0], pt1[1], 0, pt2[0], pt2[1], 0]);
     }
 

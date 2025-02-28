@@ -28,8 +28,8 @@ class Sphere {
     this.normalMatrix.setInverseOf(this.matrix).transpose();
     gl.uniformMatrix4fv(u_NormalMatrix, false, this.normalMatrix.elements);    
 
-    var d = Math.PI/10;
-    var dd = Math.PI/10;
+    var d = Math.PI/8;
+    var dd = Math.PI/8;
 
     for (var t = 0; t < Math.PI; t+=d){
         for (var r = 0; r < (2 * Math.PI); r += d){

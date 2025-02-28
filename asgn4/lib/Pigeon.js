@@ -291,7 +291,7 @@ function renderPigeon() {
 
   var lWing = new Cylinder();   // cylindar
   lWing.color = wingColor;
-//   lWing.textureNum = COLOR;
+  lWing.textureNum = COLOR;
   lWing.top = 0;
   lWing.matrix = new Matrix4(lWingCoor);
   lWing.matrix.translate(0.215, 0.05, 0.4);
@@ -325,17 +325,17 @@ function renderPigeon() {
 
   // tail
   var tailBase = new Cube();
-//   tailBase.color = bodyColor;
-tailBase.color = [1, 0, 0, 1];
+  tailBase.color = bodyColor;
+  tailBase.color = [1, 0, 0, 1];
   tailBase.textureNum = COLOR;
   tailBase.matrix = new Matrix4(baseCoor);
-  tailBase.matrix.translate(0, -0.29, 0.49);
+  tailBase.matrix.translate(0, -0.2, 0.49);
   tailBase.matrix.rotate(50, 1, 0, 0);
   tailBase.matrix.scale(0.85, 0.25, 0.51);
-//   tailBase.matrix.scale(0.25, 0.25, 0.25);
-//   tailBase.render();
+  tailBase.matrix.scale(0.25, 0.25, 0.25);
+  tailBase.render();
 
-//   g_globalAngle = 90;
+  g_globalAngle = 90;
 g_lightAnim = false;
 
   var tail = new Cube();
@@ -349,199 +349,199 @@ g_lightAnim = false;
   tail.matrix.rotate(30, 1, 0, 0);
   tail.render();
 
-  // neck
-  let z = -0.1;
-  chestCoor.translate(0, 0, z);
+//   // neck
+//   let z = -0.1;
+//   chestCoor.translate(0, 0, z);
 
-  var pink = new Cube();    // cylindar
-  pink.color = [0.631, 0.259, 0.624, 1];
-  pink.textureNum = COLOR;
-  pink.bottom = 0.7;
-  pink.top = 1.1;
-  pink.matrix = new Matrix4(chestCoor);
-  pink.matrix.rotate(-g_neckAngle, 1, 0, 0);
-  let neckCoor = new Matrix4(pink.matrix);
-  pink.matrix.translate(0, 0.25, 0.01 - z);
-  pink.matrix.rotate(-20, 1, 0, 0);
-  pink.matrix.scale(0.35, 0.2, 0.4);
-  pink.matrix.rotate(120, 1, 0, 0);
-//   pink.render();
+//   var pink = new Cube();    // cylindar
+//   pink.color = [0.631, 0.259, 0.624, 1];
+//   pink.textureNum = COLOR;
+//   pink.bottom = 0.7;
+//   pink.top = 1.1;
+//   pink.matrix = new Matrix4(chestCoor);
+//   pink.matrix.rotate(-g_neckAngle, 1, 0, 0);
+//   let neckCoor = new Matrix4(pink.matrix);
+//   pink.matrix.translate(0, 0.25, 0.01 - z);
+//   pink.matrix.rotate(-20, 1, 0, 0);
+//   pink.matrix.scale(0.35, 0.2, 0.4);
+//   pink.matrix.rotate(120, 1, 0, 0);
+// //   pink.render();
 
-  var backPink = new Cube();    // cylindar
-  backPink.color = [0.631, 0.259, 0.624, 1];
-  backPink.textureNum = COLOR;
-  backPink.top = 0.9;
-  backPink.bottom = 1.05;
-  backPink.matrix = new Matrix4(neckCoor);
-  backPink.matrix.translate(0, 0.26, 0.19);
-  backPink.matrix.rotate(-85, 1, 0, 0);
-  backPink.matrix.scale(0.35, 0.3, 0.1);
-//   backPink.render();
+//   var backPink = new Cube();    // cylindar
+//   backPink.color = [0.631, 0.259, 0.624, 1];
+//   backPink.textureNum = COLOR;
+//   backPink.top = 0.9;
+//   backPink.bottom = 1.05;
+//   backPink.matrix = new Matrix4(neckCoor);
+//   backPink.matrix.translate(0, 0.26, 0.19);
+//   backPink.matrix.rotate(-85, 1, 0, 0);
+//   backPink.matrix.scale(0.35, 0.3, 0.1);
+// //   backPink.render();
 
-  var green = new Cube();   // cylindar
-  // green.color = [0.314, 0.541, 0.357, 1];
-  green.color = [0.271, 0.588, 0.329, 1];
-  green.textureNum = COLOR;
-  green.bottom = 0.78;
-  green.top = 1.13;
-  green.matrix = new Matrix4(neckCoor);
-  green.matrix.translate(0, 0.35, 0.19);
-  green.matrix.rotate(g_greenAngle, 1, 0, 0);
-  green.matrix.scale(0.29, 0.15, 0.34);
-  green.matrix.rotate(100, 1, 0, 0);
-//   green.render();
+//   var green = new Cube();   // cylindar
+//   // green.color = [0.314, 0.541, 0.357, 1];
+//   green.color = [0.271, 0.588, 0.329, 1];
+//   green.textureNum = COLOR;
+//   green.bottom = 0.78;
+//   green.top = 1.13;
+//   green.matrix = new Matrix4(neckCoor);
+//   green.matrix.translate(0, 0.35, 0.19);
+//   green.matrix.rotate(g_greenAngle, 1, 0, 0);
+//   green.matrix.scale(0.29, 0.15, 0.34);
+//   green.matrix.rotate(100, 1, 0, 0);
+// //   green.render();
 
-  let headY = 0.2;
-  let headZ = 0.15;
-  let headCoor = new Matrix4(neckCoor);
-  headCoor.translate(0, headY + g_headY, headZ + g_headZ);
+//   let headY = 0.2;
+//   let headZ = 0.15;
+//   let headCoor = new Matrix4(neckCoor);
+//   headCoor.translate(0, headY + g_headY, headZ + g_headZ);
 
-  // head
-  var head = new Sphere();
-  head.color = headColor;
-  head.textureNum = COLOR;
-  head.matrix = new Matrix4(headCoor);
-  head.matrix.rotate(g_headAngle, 1, 0, 0);
-  let chinCoor = new Matrix4(head.matrix);
-  head.matrix.translate(0, 0.47 - headY, 0.24 - headZ);
-  head.matrix.scale(0.55, 0.55, 0.55);
-  head.matrix.rotate(25, 1, 0, 0);
-//   head.render();
+//   // head
+//   var head = new Sphere();
+//   head.color = headColor;
+//   head.textureNum = COLOR;
+//   head.matrix = new Matrix4(headCoor);
+//   head.matrix.rotate(g_headAngle, 1, 0, 0);
+//   let chinCoor = new Matrix4(head.matrix);
+//   head.matrix.translate(0, 0.47 - headY, 0.24 - headZ);
+//   head.matrix.scale(0.55, 0.55, 0.55);
+//   head.matrix.rotate(25, 1, 0, 0);
+// //   head.render();
 
-  var chin = new Cube();    // cylindar
-  chin.color = headColor;
-  chin.textureNum = COLOR;
-  chin.matrix = new Matrix4(chinCoor);
-  chin.matrix.translate(0, 0.42 - headY, 0.213 - headZ);
-  chin.matrix.rotate(0, 1, 0, 0);
-  chin.matrix.scale(0.28, 0.1, 0.3);
-  chin.matrix.rotate(100, 1, 0, 0);
-//   chin.render();
+//   var chin = new Cube();    // cylindar
+//   chin.color = headColor;
+//   chin.textureNum = COLOR;
+//   chin.matrix = new Matrix4(chinCoor);
+//   chin.matrix.translate(0, 0.42 - headY, 0.213 - headZ);
+//   chin.matrix.rotate(0, 1, 0, 0);
+//   chin.matrix.scale(0.28, 0.1, 0.3);
+//   chin.matrix.rotate(100, 1, 0, 0);
+// //   chin.render();
 
-  var beak = new Cube();    // cylindar
-  beak.color = blackColor;
-  beak.textureNum = COLOR;
-  beak.top = 0;
-  beak.matrix = new Matrix4(chinCoor);
-  beak.matrix.rotate(205, 1, 0, 0);
-  beak.matrix.translate(0, -0.29, 0.21);
-  beak.matrix.scale(0.08, 0.07, 0.1);
-//   beak.render();
+//   var beak = new Cube();    // cylindar
+//   beak.color = blackColor;
+//   beak.textureNum = COLOR;
+//   beak.top = 0;
+//   beak.matrix = new Matrix4(chinCoor);
+//   beak.matrix.rotate(205, 1, 0, 0);
+//   beak.matrix.translate(0, -0.29, 0.21);
+//   beak.matrix.scale(0.08, 0.07, 0.1);
+// //   beak.render();
 
-  var beakBase = new Sphere();
-  beakBase.color = bodyColor;
-  beakBase.textureNum = COLOR;
-  beakBase.matrix = new Matrix4(chinCoor);
-  beakBase.matrix.translate(0, 0.34, -0.015);
-  beakBase.matrix.rotate(25, 1, 0, 0);
-  beakBase.matrix.scale(0.17, 0.17, 0.1);
-//   beakBase.render();
+//   var beakBase = new Sphere();
+//   beakBase.color = bodyColor;
+//   beakBase.textureNum = COLOR;
+//   beakBase.matrix = new Matrix4(chinCoor);
+//   beakBase.matrix.translate(0, 0.34, -0.015);
+//   beakBase.matrix.rotate(25, 1, 0, 0);
+//   beakBase.matrix.scale(0.17, 0.17, 0.1);
+// //   beakBase.render();
 
-  // eyes
-  var lEye = new Sphere();
-  lEye.color = eyeColor;
-  lEye.textureNum = COLOR;
-  lEye.matrix = new Matrix4(chinCoor);
-  lEye.matrix.rotate(25, 0, 1, 1);
-  lEye.matrix.rotate(25, 1, 0, 0);
-  lEye.matrix.translate(0.185, 0.295, 0.01);
-  lEye.matrix.scale(0.1, 0.2, 0.2);
-//   lEye.render();
-  var lPupil = new Sphere();
-  lPupil.color = blackColor;
-  lPupil.textureNum = COLOR;
-  lPupil.matrix = lEye.matrix;
-  lPupil.matrix.translate(0.18, 0, 0);
-  lPupil.matrix.scale(0.5, 0.5, 0.5);
-//   lPupil.render();
+//   // eyes
+//   var lEye = new Sphere();
+//   lEye.color = eyeColor;
+//   lEye.textureNum = COLOR;
+//   lEye.matrix = new Matrix4(chinCoor);
+//   lEye.matrix.rotate(25, 0, 1, 1);
+//   lEye.matrix.rotate(25, 1, 0, 0);
+//   lEye.matrix.translate(0.185, 0.295, 0.01);
+//   lEye.matrix.scale(0.1, 0.2, 0.2);
+// //   lEye.render();
+//   var lPupil = new Sphere();
+//   lPupil.color = blackColor;
+//   lPupil.textureNum = COLOR;
+//   lPupil.matrix = lEye.matrix;
+//   lPupil.matrix.translate(0.18, 0, 0);
+//   lPupil.matrix.scale(0.5, 0.5, 0.5);
+// //   lPupil.render();
 
-  var rEye = new Sphere();
-  rEye.color = eyeColor;
-  rEye.textureNum = COLOR;
-  rEye.matrix = new Matrix4(chinCoor);
-  rEye.matrix.rotate(-25, 0, 1, 1);
-  rEye.matrix.rotate(25, 1, 0, 0);
-  rEye.matrix.translate(-0.185, 0.295, 0.01);
-  rEye.matrix.scale(0.1, 0.2, 0.2);
-//   rEye.render();
-  var rPupil = new Sphere();
-  rPupil.color = blackColor;
-  rPupil.textureNum = COLOR;
-  rPupil.matrix = rEye.matrix;
-  rPupil.matrix.translate(-0.18, 0, 0);
-  rPupil.matrix.scale(0.5, 0.5, 0.5);
-//   rPupil.render();
+//   var rEye = new Sphere();
+//   rEye.color = eyeColor;
+//   rEye.textureNum = COLOR;
+//   rEye.matrix = new Matrix4(chinCoor);
+//   rEye.matrix.rotate(-25, 0, 1, 1);
+//   rEye.matrix.rotate(25, 1, 0, 0);
+//   rEye.matrix.translate(-0.185, 0.295, 0.01);
+//   rEye.matrix.scale(0.1, 0.2, 0.2);
+// //   rEye.render();
+//   var rPupil = new Sphere();
+//   rPupil.color = blackColor;
+//   rPupil.textureNum = COLOR;
+//   rPupil.matrix = rEye.matrix;
+//   rPupil.matrix.translate(-0.18, 0, 0);
+//   rPupil.matrix.scale(0.5, 0.5, 0.5);
+// //   rPupil.render();
 
-  // legs
-  var lThigh = new Cube();  // cylindar
-  lThigh.color = legColor;
-  lThigh.textureNum = COLOR;
-  lThigh.matrix = new Matrix4(baseCoor);
-  lThigh.matrix.rotate(25, 1, 0, 0);
-  lThigh.matrix.translate(0.1, 0.1, 0.07);
-  lThigh.matrix.rotate(g_lLegAngle - 10, 1, 0, 0);
-  let lThighCoor = new Matrix4(lThigh.matrix);
-  lThigh.matrix.rotate(90, 1, 0, 0);
-  lThigh.matrix.translate(0, 0, 0.3);
-  lThigh.matrix.scale(0.06, 0.06, 0.37);
-//   lThigh.render();
+//   // legs
+//   var lThigh = new Cube();  // cylindar
+//   lThigh.color = legColor;
+//   lThigh.textureNum = COLOR;
+//   lThigh.matrix = new Matrix4(baseCoor);
+//   lThigh.matrix.rotate(25, 1, 0, 0);
+//   lThigh.matrix.translate(0.1, 0.1, 0.07);
+//   lThigh.matrix.rotate(g_lLegAngle - 10, 1, 0, 0);
+//   let lThighCoor = new Matrix4(lThigh.matrix);
+//   lThigh.matrix.rotate(90, 1, 0, 0);
+//   lThigh.matrix.translate(0, 0, 0.3);
+//   lThigh.matrix.scale(0.06, 0.06, 0.37);
+// //   lThigh.render();
 
-  var lCalf = new Cube();   // cylindar
-  lCalf.color = legColor;
-  lCalf.textureNum = COLOR;
-  lCalf.bottom = 0.7;
-  lCalf.matrix = new Matrix4(lThighCoor);
-  lCalf.matrix.translate(0, -0.47, 0);
-  lCalf.matrix.rotate(g_lCalfAngle - 40, 1, 0, 0);
-  let lCalfCoor = new Matrix4(lCalf.matrix);
-  lCalf.matrix.translate(0, 0, -0.07);
-  lCalf.matrix.scale(0.06, 0.06, 0.17);
-//   lCalf.render();
+//   var lCalf = new Cube();   // cylindar
+//   lCalf.color = legColor;
+//   lCalf.textureNum = COLOR;
+//   lCalf.bottom = 0.7;
+//   lCalf.matrix = new Matrix4(lThighCoor);
+//   lCalf.matrix.translate(0, -0.47, 0);
+//   lCalf.matrix.rotate(g_lCalfAngle - 40, 1, 0, 0);
+//   let lCalfCoor = new Matrix4(lCalf.matrix);
+//   lCalf.matrix.translate(0, 0, -0.07);
+//   lCalf.matrix.scale(0.06, 0.06, 0.17);
+// //   lCalf.render();
 
-  var lFoot = new Cube();
-  lFoot.color = legColor;
-  lFoot.textureNum = COLOR;
-  lFoot.top = 0.4;
-  lFoot.matrix = new Matrix4(lCalfCoor);
-  lFoot.matrix.translate(0, 0, -0.15);
-  lFoot.matrix.rotate(180, 1, 0, 0);
-  lFoot.matrix.rotate(g_lFootAngle - 40, 1, 0, 0);
-  lFoot.matrix.scale(0.15, 0.2, 0.03);
-//   lFoot.render();
+//   var lFoot = new Cube();
+//   lFoot.color = legColor;
+//   lFoot.textureNum = COLOR;
+//   lFoot.top = 0.4;
+//   lFoot.matrix = new Matrix4(lCalfCoor);
+//   lFoot.matrix.translate(0, 0, -0.15);
+//   lFoot.matrix.rotate(180, 1, 0, 0);
+//   lFoot.matrix.rotate(g_lFootAngle - 40, 1, 0, 0);
+//   lFoot.matrix.scale(0.15, 0.2, 0.03);
+// //   lFoot.render();
 
-  var rThigh = new Cube();  // cylindar
-  rThigh.color = legColor;
-  rThigh.textureNum = COLOR;
-  rThigh.matrix = new Matrix4(baseCoor);
-  rThigh.matrix.rotate(25, 1, 0, 0);
-  rThigh.matrix.translate(-0.1, 0.1, 0.07);
-  rThigh.matrix.rotate(g_rLegAngle - 10, 1, 0, 0);
-  let rThighCoor = new Matrix4(rThigh.matrix);
-  rThigh.matrix.rotate(90, 1, 0, 0);
-  rThigh.matrix.translate(0, 0, 0.3);
-  rThigh.matrix.scale(0.06, 0.06, 0.37);
-//   rThigh.render();
+//   var rThigh = new Cube();  // cylindar
+//   rThigh.color = legColor;
+//   rThigh.textureNum = COLOR;
+//   rThigh.matrix = new Matrix4(baseCoor);
+//   rThigh.matrix.rotate(25, 1, 0, 0);
+//   rThigh.matrix.translate(-0.1, 0.1, 0.07);
+//   rThigh.matrix.rotate(g_rLegAngle - 10, 1, 0, 0);
+//   let rThighCoor = new Matrix4(rThigh.matrix);
+//   rThigh.matrix.rotate(90, 1, 0, 0);
+//   rThigh.matrix.translate(0, 0, 0.3);
+//   rThigh.matrix.scale(0.06, 0.06, 0.37);
+// //   rThigh.render();
 
-  var rCalf = new Cube();   // cylindar
-  rCalf.color = legColor;
-  rCalf.textureNum = COLOR;
-  rCalf.bottom = 0.7;
-  rCalf.matrix = new Matrix4(rThighCoor);
-  rCalf.matrix.translate(0, -0.47, 0);
-  rCalf.matrix.rotate(g_rCalfAngle - 40, 1, 0, 0);
-  let rCalfCoor = new Matrix4(rCalf.matrix);
-  rCalf.matrix.translate(0, 0, -0.07);
-  rCalf.matrix.scale(0.06, 0.06, 0.17);
-//   rCalf.render();
+//   var rCalf = new Cube();   // cylindar
+//   rCalf.color = legColor;
+//   rCalf.textureNum = COLOR;
+//   rCalf.bottom = 0.7;
+//   rCalf.matrix = new Matrix4(rThighCoor);
+//   rCalf.matrix.translate(0, -0.47, 0);
+//   rCalf.matrix.rotate(g_rCalfAngle - 40, 1, 0, 0);
+//   let rCalfCoor = new Matrix4(rCalf.matrix);
+//   rCalf.matrix.translate(0, 0, -0.07);
+//   rCalf.matrix.scale(0.06, 0.06, 0.17);
+// //   rCalf.render();
 
-  var rFoot = new Cube();
-  rFoot.color = legColor;
-  rFoot.textureNum = COLOR;
-  rFoot.top = 0.4;
-  rFoot.matrix = new Matrix4(rCalfCoor);
-  rFoot.matrix.translate(0, 0, -0.15);
-  rFoot.matrix.rotate(180, 1, 0, 0);
-  rFoot.matrix.rotate(g_rFootAngle - 40, 1, 0, 0);
-  rFoot.matrix.scale(0.15, 0.2, 0.03);
-//   rFoot.render();
+//   var rFoot = new Cube();
+//   rFoot.color = legColor;
+//   rFoot.textureNum = COLOR;
+//   rFoot.top = 0.4;
+//   rFoot.matrix = new Matrix4(rCalfCoor);
+//   rFoot.matrix.translate(0, 0, -0.15);
+//   rFoot.matrix.rotate(180, 1, 0, 0);
+//   rFoot.matrix.rotate(g_rFootAngle - 40, 1, 0, 0);
+//   rFoot.matrix.scale(0.15, 0.2, 0.03);
+// //   rFoot.render();
 }
