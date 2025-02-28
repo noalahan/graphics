@@ -5,7 +5,7 @@ class Cylinder {
     this.matrix = new Matrix4();
     this.normalMatrix = new Matrix4();
     this.textureNum = -1;
-    this.segments = 7;
+    this.segments = 10;
     this.top = 1;
     this.bottom = 1;
   }
@@ -27,9 +27,7 @@ class Cylinder {
     gl.uniformMatrix4fv(u_ModelMatrix, false, this.matrix.elements);
 
     // Pass the normal matrix to u_NormalMatrix attribute
-    if (this.shiny) {
-      this.normalMatrix.setInverseOf(this.matrix).transpose();
-    }
+    this.normalMatrix.setInverseOf(this.matrix).transpose();
     gl.uniformMatrix4fv(u_NormalMatrix, false, this.normalMatrix.elements);
 
     // Draw

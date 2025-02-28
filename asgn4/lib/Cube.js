@@ -26,7 +26,7 @@ class Cube {
     gl.uniformMatrix4fv(u_ModelMatrix, false, this.matrix.elements);
 
     // Pass the normal matrix to u_NormalMatrix attribute
-    if (this.shiny) {
+    if (this.shiny){
       this.normalMatrix.setInverseOf(this.matrix).transpose();
     }
     gl.uniformMatrix4fv(u_NormalMatrix, false, this.normalMatrix.elements);

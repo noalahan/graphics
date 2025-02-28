@@ -237,7 +237,7 @@ function renderPigeon() {
   var base = new Sphere();
   base.color = bodyColor;
   base.textureNum = COLOR;
-  base.matrix.setTranslate(0, -0.1 + g_bodyHeight, 2 + g_bodyPos);
+  base.matrix.setTranslate(0, -0.1 + g_bodyHeight, 1.2 + g_bodyPos);
   base.matrix.rotate(g_bodyAngle, 1, 0, 0);
   let baseCoor = new Matrix4(base.matrix);
   base.matrix.scale(1.55, 1, 2);
@@ -294,7 +294,7 @@ function renderPigeon() {
   lWing.textureNum = COLOR;
   lWing.top = 0;
   lWing.matrix = new Matrix4(lWingCoor);
-  lWing.matrix.translate(0.215, 0.05, 0.4);
+  lWing.matrix.translate(0.21, 0.05, 0.41);
   lWing.matrix.rotate(13, 1, 0, 0);
   lWing.matrix.rotate(15, 0, 0, 1);
   lWing.matrix.scale(0.1, 0.34, 0.55);
@@ -317,7 +317,7 @@ function renderPigeon() {
   rWing.textureNum = COLOR;
   rWing.top = 0;
   rWing.matrix = new Matrix4(rWingCoor);
-  rWing.matrix.translate(-0.215, 0.05, 0.4);
+  rWing.matrix.translate(-0.21, 0.05, 0.41);
   rWing.matrix.rotate(13, 1, 0, 0);
   rWing.matrix.rotate(-15, 0, 0, 1);
   rWing.matrix.scale(0.1, 0.34, 0.55);
@@ -329,9 +329,9 @@ function renderPigeon() {
   tailBase.textureNum = COLOR;
   tailBase.top = 0.3
   tailBase.matrix = new Matrix4(baseCoor);
-  tailBase.matrix.translate(0, -0.33, 0.55);
+  tailBase.matrix.translate(0, -0.32, 0.54);
   tailBase.matrix.rotate(135, 1, 0, 0);
-  tailBase.matrix.scale(0.4, 0.15, 0.1);
+  tailBase.matrix.scale(0.42, 0.2, 0.09);
   tailBase.render();
 
   // g_globalAngle = 140;
