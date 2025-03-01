@@ -6,7 +6,7 @@ class Sphere {
     this.normalMatrix = new Matrix4();
     this.textureNum = -1;
     this.shiny = true;
-    this.quality = 8;
+    this.quality = 6;
   }
 
   render() {
