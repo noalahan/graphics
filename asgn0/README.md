@@ -1,4 +1,4 @@
-# Assignment 0
+# Assignment 0 - Paint
 
 ### Objectives: 
 Extend the matrix library provided by the textbook to support vector operations such as addition, subtraction, multiplication, cross product, dot product, etc. With this assignment, you will learn:

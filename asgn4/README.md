@@ -1,4 +1,4 @@
-# Assignment 4
+# Assignment 4 - Lighting
 
 ### Objectives
 To have a single point light that illuminates your objects.
