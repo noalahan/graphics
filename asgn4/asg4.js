@@ -44,7 +44,7 @@ var FSHADER_SOURCE = `
   uniform vec3 u_spotPos;
   // uniform bool u_spotOn;
   uniform vec3 u_spotDir;
-  // uniform int u_spotCutoff;
+  uniform float u_spotCutoff;
 
   void main() {
     if (u_whichTexture == -3){
@@ -108,8 +108,9 @@ var FSHADER_SOURCE = `
       vec3 D = normalize(u_spotPos - u_spotDir);
       float spotCos = dot(W, D);
       // if (spotCos <= u_spotCutoff && u_spotOn){
-
-      // }
+      if (spotCos <= u_spotCutoff){
+        spotCos += 1.0;
+      }
 
       gl_FragColor = vec4(u_lightColor * (specular + diffuse) + ambient *spotCos, 1.0);
     }
@@ -327,12 +328,12 @@ function connectVariablesToGLSL() {
   //   return false;
   // }
 
-  // // Get the storage location of u_spotCutoff
-  // u_spotCutoff = gl.getUniformLocation(gl.program, "u_spotCutoff");
-  // if (!u_spotCutoff) {
-  //   console.log("Failed to get the storage location of u_spotCutoff");
-  //   return false;
-  // }
+  // Get the storage location of u_spotCutoff
+  u_spotCutoff = gl.getUniformLocation(gl.program, "u_spotCutoff");
+  if (!u_spotCutoff) {
+    console.log("Failed to get the storage location of u_spotCutoff");
+    return false;
+  }
 
   // set an initial value for this matrix to identity
   var identityM = new Matrix4();
@@ -356,7 +357,7 @@ let g_lightColor = [1, 1, 1];
 let g_spotPos = [0, 2, 0];
 let g_spotOn = true;
 let g_spotDir = [0, 0, 0];
-let g_spotCutoff = 30;
+let g_spotCutoff = 30.0;
 /**
  * Sets all functions of elements defined in HTML
  */
@@ -700,7 +701,7 @@ function renderAllShapes() {
   // pass the spot status to u_spotOn attribute
   gl.uniform1i(u_spotOn, g_spotOn);
   // pass the spot angle to u_spotCutoff attribute
-  gl.uniform1i(u_spotCutoff, g_spotCutoff);
+  gl.uniform1f(u_spotCutoff, g_spotCutoff);
   
   // Clear <canvas>
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
