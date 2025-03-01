@@ -30,9 +30,14 @@
         <h1>Setting Controls</h1>
         Camera Angle
         <input type="range" min="-360" max="360" value="0" class="slider" id="angle"/>
-        <br />
 
-        <h3>Light Controls</h3>
+        <h3>Normals Controls <button type="button" id="non">On</button> <button type="button" id="noff">Off</button></h3>
+
+        <h3>Light Controls <button type="button" id="lon">On</button> <button type="button" id="loff">Off</button></h3>  
+        Light Animation:
+          <button type="button" id="lAnimOn">On</button>
+          <button type="button" id="lAnimOff">Off</button>
+        <br/>
         Position <br />
         X
         <input type="range" min="-350" max="350" value="0" class="slider" id="lx"/>
@@ -49,7 +54,7 @@
         <br/>
         <div id="lightcolor" class="color"></div>
 
-        <h3>Spotlight Controls</h3>
+        <h3>Spotlight Controls <button type="button" id="son">On</button> <button type="button" id="soff">Off</button></h3>
         Position </br>
         X
         <input type="range" min="-350" max="350" value="0" class="slider" id="sx"/>
@@ -78,18 +83,6 @@
         <br/>
         <div id="spotcolor" class="color"></div>
         
-        <br/>
-        Light:
-          <button type="button" id="lon">On</button>
-          <button type="button" id="loff">Off</button>
-        <br/>
-        Light Animation:
-          <button type="button" id="lAnimOn">On</button>
-          <button type="button" id="lAnimOff">Off</button>
-        <br/>
-        Normals:
-          <button type="button" id="non">On</button>
-          <button type="button" id="noff">Off</button>
       </div>
 
       <!-- pigeon -->

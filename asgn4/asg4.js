@@ -405,13 +405,13 @@ function addActionsForHtmlUI() {
   });
 
   // light selector
-  document.getElementById("lx").addEventListener("mousemove", function (ev) {
+  document.getElementById("lx").addEventListener("mousemove", function () {
     g_lightPos[0] = this.value / 100;
   });
-  document.getElementById("ly").addEventListener("mousemove", function (ev) {
+  document.getElementById("ly").addEventListener("mousemove", function () {
     g_lightPos[1] = this.value / 100;
   });
-  document.getElementById("lz").addEventListener("mousemove", function (ev) {
+  document.getElementById("lz").addEventListener("mousemove", function () {
     g_lightPos[2] = this.value / 100;
   });
   document.getElementById("lon").onclick = function () {
@@ -464,22 +464,28 @@ function addActionsForHtmlUI() {
   });
 
   // spotlight selector
-  document.getElementById("sx").addEventListener("mousemove", function (ev) {
+  document.getElementById("son").onclick = function () {
+    g_spotOn = true;
+  };
+  document.getElementById("soff").onclick = function () {
+    g_spotOn = false;
+  };
+  document.getElementById("sx").addEventListener("mousemove", function () {
     g_spotPos.x = this.value / 100;
   });
-  document.getElementById("sy").addEventListener("mousemove", function (ev) {
+  document.getElementById("sy").addEventListener("mousemove", function () {
     g_spotPos.y = this.value / 100;
   });
-  document.getElementById("sz").addEventListener("mousemove", function (ev) {
+  document.getElementById("sz").addEventListener("mousemove", function () {
     g_spotPos.z = this.value / 100;
   });
-  document.getElementById("sdx").addEventListener("mousemove", function (ev) {
+  document.getElementById("sdx").addEventListener("mousemove", function () {
     g_spotDir.x = this.value / 100;
   });
-  document.getElementById("sdy").addEventListener("mousemove", function (ev) {
+  document.getElementById("sdy").addEventListener("mousemove", function () {
     g_spotDir.y = this.value / 100;
   });
-  document.getElementById("sdz").addEventListener("mousemove", function (ev) {
+  document.getElementById("sdz").addEventListener("mousemove", function () {
     g_spotDir.z = this.value / 100;
   });
   document.getElementById("sStrength").addEventListener("mousemove", function () {
@@ -795,7 +801,7 @@ function renderAllShapes() {
     spot.matrix.rotate((g_spotDir.z / g_spotDir.magnitude()) * 90, 1, 0, 0);
   }
   spot.matrix.scale(0.2, 0.4, 0.2);
-  spot.render();
+  if (g_spotOn) spot.render();
 
   var red = new Cube();
   red.color = [1.0, 0.0, 0.0, 1.0];
