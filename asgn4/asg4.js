@@ -44,7 +44,8 @@ var FSHADER_SOURCE = `
   uniform vec3 u_spotPos;
   uniform bool u_spotOn;
   uniform vec3 u_spotDir;
-  uniform float u_spotCutoff;
+  uniform float u_spotStrength;
+  uniform vec3 u_spotColor;
 
   void main() {
     if (u_whichTexture == -3){
@@ -101,13 +102,13 @@ var FSHADER_SOURCE = `
       // spotlight
       float spotlight = 0.0;
       vec3 W = normalize(vec3(v_VertPos) - u_spotPos);
-      vec3 D = normalize(u_spotDir - u_spotPos);
+      vec3 D = normalize(u_spotDir);
       float u_spotExponent = 10.0;
-      if (dot(W, D) > u_spotCutoff && u_spotOn){         // if angle is within spotlight
-        spotlight = pow(dot(W, D), u_spotExponent) * 0.7;
+      if (dot(W, D) > 0.84 && u_spotOn){         // if angle is within spotlight
+        spotlight = pow(dot(W, D), u_spotExponent) * u_spotStrength;
       }
 
-      gl_FragColor = vec4(u_lightColor * (specular + diffuse) + ambient + spotlight, 1.0);
+      gl_FragColor = vec4(u_lightColor * (specular + diffuse) + ambient + spotlight * u_spotColor, 1.0);
     }
   }`;
 
@@ -138,7 +139,8 @@ let u_lightColor;
 let u_spotPos;
 let u_spotOn;
 let u_spotDir;
-let u_spotCutoff;
+let u_spotStrength;
+let u_spotColor;
 
 // texture values
 let NORMAL = -3;
@@ -323,10 +325,17 @@ function connectVariablesToGLSL() {
     return false;
   }
 
-  // Get the storage location of u_spotCutoff
-  u_spotCutoff = gl.getUniformLocation(gl.program, "u_spotCutoff");
-  if (!u_spotCutoff) {
-    console.log("Failed to get the storage location of u_spotCutoff");
+  // Get the storage location of u_spotStrength
+  u_spotStrength = gl.getUniformLocation(gl.program, "u_spotStrength");
+  if (!u_spotStrength) {
+    console.log("Failed to get the storage location of u_spotStrength");
+    return false;
+  }
+
+  // Get the storage location of u_spotColor
+  u_spotColor = gl.getUniformLocation(gl.program, "u_spotColor");
+  if (!u_spotColor) {
+    console.log("Failed to get the storage location of u_spotColor");
     return false;
   }
 
@@ -347,10 +356,12 @@ let g_lightPos = [0, 3, 0];
 let g_lightOn = true;
 let g_lightAnim = true;
 let g_lightColor = [1, 1, 1];
-let g_spotPos = [0, 2, 0];
+
+let g_spotPos = new Vector([0, 2, 0]);
 let g_spotOn = true;
-let g_spotDir = [0, 0, 0];
-let g_spotCutoff = 10.0;
+let g_spotDir = new Vector([0, -1, 0]);
+let g_spotStrength = 0.7;
+let g_spotColor = [1, 1, 1];
 /**
  * Sets all functions of elements defined in HTML
  */
@@ -395,22 +406,13 @@ function addActionsForHtmlUI() {
 
   // light selector
   document.getElementById("lx").addEventListener("mousemove", function (ev) {
-    if (ev.buttons == 1) {
-      g_lightPos[0] = this.value / 100;
-      // renderAllShapes();
-    }
+    g_lightPos[0] = this.value / 100;
   });
   document.getElementById("ly").addEventListener("mousemove", function (ev) {
-    if (ev.buttons == 1) {
-      g_lightPos[1] = this.value / 100;
-      // renderAllShapes();
-    }
+    g_lightPos[1] = this.value / 100;
   });
   document.getElementById("lz").addEventListener("mousemove", function (ev) {
-    if (ev.buttons == 1) {
-      g_lightPos[2] = this.value / 100;
-      // renderAllShapes();
-    }
+    g_lightPos[2] = this.value / 100;
   });
   document.getElementById("lon").onclick = function () {
     g_lightOn = true;
@@ -420,33 +422,110 @@ function addActionsForHtmlUI() {
   };
   document.getElementById("lColor").addEventListener("mousemove", function () {
     let a = this.value * 0.1;
-    if (a < 1) {        // red
+    if (a < 1) {
+      // red
       g_lightColor[0] = 1;
       g_lightColor[1] = 1 - a;
       g_lightColor[2] = 1 - a;
-    } else if (a < 2) { // yellow
+    } else if (a < 2) {
+      // yellow
       g_lightColor[0] = 1;
       g_lightColor[1] = a - 1;
       g_lightColor[2] = 0;
-    } else if (a < 3) { // green
+    } else if (a < 3) {
+      // green
       g_lightColor[0] = 3 - a;
       g_lightColor[1] = 1;
       g_lightColor[2] = 0;
-    } else if (a < 4) { // cyan
+    } else if (a < 4) {
+      // cyan
       g_lightColor[0] = 0;
       g_lightColor[1] = 1;
       g_lightColor[2] = a - 3;
-    } else if (a < 5) { // blue
+    } else if (a < 5) {
+      // blue
       g_lightColor[0] = 0;
       g_lightColor[1] = 5 - a;
       g_lightColor[2] = 1;
-    } else if (a < 6) { // purple
+    } else if (a < 6) {
+      // purple
       g_lightColor[0] = a - 5;
       g_lightColor[1] = 0;
       g_lightColor[2] = 1;
     }
-    document.getElementById("color").style.backgroundColor =
-      "rgb(" + g_lightColor[0] * 255 + "," + g_lightColor[1] * 255 + "," + g_lightColor[2] * 255 + ")";
+    document.getElementById("lightcolor").style.backgroundColor =
+      "rgb(" +
+      g_lightColor[0] * 255 +
+      "," +
+      g_lightColor[1] * 255 +
+      "," +
+      g_lightColor[2] * 255 +
+      ")";
+  });
+
+  // spotlight selector
+  document.getElementById("sx").addEventListener("mousemove", function (ev) {
+    g_spotPos.x = this.value / 100;
+  });
+  document.getElementById("sy").addEventListener("mousemove", function (ev) {
+    g_spotPos.y = this.value / 100;
+  });
+  document.getElementById("sz").addEventListener("mousemove", function (ev) {
+    g_spotPos.z = this.value / 100;
+  });
+  document.getElementById("sdx").addEventListener("mousemove", function (ev) {
+    g_spotDir.x = this.value / 100;
+  });
+  document.getElementById("sdy").addEventListener("mousemove", function (ev) {
+    g_spotDir.y = this.value / 100;
+  });
+  document.getElementById("sdz").addEventListener("mousemove", function (ev) {
+    g_spotDir.z = this.value / 100;
+  });
+  document.getElementById("sStrength").addEventListener("mousemove", function () {
+    g_spotStrength = this.value / 100;
+  })
+  document.getElementById("sColor").addEventListener("mousemove", function () {
+    let a = this.value * 0.1;
+    if (a < 1) {
+      // red
+      g_spotColor[0] = 1;
+      g_spotColor[1] = 1 - a;
+      g_spotColor[2] = 1 - a;
+    } else if (a < 2) {
+      // yellow
+      g_spotColor[0] = 1;
+      g_spotColor[1] = a - 1;
+      g_spotColor[2] = 0;
+    } else if (a < 3) {
+      // green
+      g_spotColor[0] = 3 - a;
+      g_spotColor[1] = 1;
+      g_spotColor[2] = 0;
+    } else if (a < 4) {
+      // cyan
+      g_spotColor[0] = 0;
+      g_spotColor[1] = 1;
+      g_spotColor[2] = a - 3;
+    } else if (a < 5) {
+      // blue
+      g_spotColor[0] = 0;
+      g_spotColor[1] = 5 - a;
+      g_spotColor[2] = 1;
+    } else if (a < 6) {
+      // purple
+      g_spotColor[0] = a - 5;
+      g_spotColor[1] = 0;
+      g_spotColor[2] = 1;
+    }
+    document.getElementById("spotcolor").style.backgroundColor =
+      "rgb(" +
+      g_spotColor[0] * 255 +
+      "," +
+      g_spotColor[1] * 255 +
+      "," +
+      g_spotColor[2] * 255 +
+      ")";
   });
 }
 
@@ -671,13 +750,15 @@ function renderAllShapes() {
   gl.uniform3f(u_lightColor, g_lightColor[0], g_lightColor[1], g_lightColor[2]);
 
   // pass the spot to u_spotPos attribute
-  gl.uniform3f(u_spotPos, g_spotPos[0], g_spotPos[1], g_spotPos[2]);
+  gl.uniform3f(u_spotPos, g_spotPos.x, g_spotPos.y, g_spotPos.z);
   // pass the spot direction to u_spotDir attribute
-  gl.uniform3f(u_spotDir, g_spotDir[0], g_spotDir[1], g_spotDir[2]);
+  gl.uniform3f(u_spotDir, g_spotDir.x, g_spotDir.y, g_spotDir.z);
   // pass the spot status to u_spotOn attribute
   gl.uniform1i(u_spotOn, g_spotOn);
-  // pass the spot angle to u_spotCutoff attribute
-  gl.uniform1f(u_spotCutoff, Math.abs(Math.cos(g_spotCutoff)));
+  // pass the spot angle to u_spotStrength attribute
+  gl.uniform1f(u_spotStrength, g_spotStrength);
+  // pass the spot color to u_spotColor attribute
+  gl.uniform3f(u_spotColor, g_spotColor[0], g_spotColor[1], g_spotColor[2]);
 
   // Clear <canvas>
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -702,10 +783,18 @@ function renderAllShapes() {
 
   // spotlight
   var spot = new Cube();
-  spot.color = [1, 1, 0, 1];
+  spot.color = [0, 0, 0, 1];
   spot.textureNum = COLOR;
-  spot.matrix.translate(g_spotPos[0], g_spotPos[1], g_spotPos[2]);
-  spot.matrix.scale(0.5, 0.5, 0.5);
+  spot.shiny = false;
+  spot.matrix.translate(g_spotPos.x, g_spotPos.y, g_spotPos.z);
+  if (g_spotDir.y < 0) {
+    spot.matrix.rotate((g_spotDir.x / g_spotDir.magnitude()) * 90, 0, 0, 1);
+    spot.matrix.rotate((-g_spotDir.z / g_spotDir.magnitude()) * 90, 1, 0, 0);
+  } else {
+    spot.matrix.rotate((-g_spotDir.x / g_spotDir.magnitude()) * 90, 0, 0, 1);
+    spot.matrix.rotate((g_spotDir.z / g_spotDir.magnitude()) * 90, 1, 0, 0);
+  }
+  spot.matrix.scale(0.2, 0.4, 0.2);
   spot.render();
 
   var red = new Cube();
@@ -778,7 +867,10 @@ function tick() {
   // check running time
   var duration = performance.now() - startTime;
   document.getElementById("performance").innerHTML =
-    "Performance -  ms:  " + Math.floor(duration) + " fps: " + Math.floor(10000 / duration);
+    "Performance -  ms:  " +
+    Math.floor(duration) +
+    " fps: " +
+    Math.floor(10000 / duration);
 
   // coordinate display
   //   document.getElementById("coor").innerHTML =

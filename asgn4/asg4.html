@@ -14,7 +14,7 @@
   <body onload="main()">
     <div id="title">
     <h1>Assignment 4: The return of Pebbles (the pigeon)</h1>
-    <h3>CSE 160 Noa Lahan</h3>
+    <h3>CSE 160 Noa Lahan - Use WSADQE to move and the arrow keys to rotate</h3>
   </div>
   
     <div class="container">
@@ -32,21 +32,52 @@
         <input type="range" min="-360" max="360" value="0" class="slider" id="angle"/>
         <br />
 
-        Light Position <br />
+        <h3>Light Controls</h3>
+        Position <br />
         X
         <input type="range" min="-350" max="350" value="0" class="slider" id="lx"/>
         <br />
         Y
-        <input type="range" min="-100" max="350" value="100" class="slider" id="ly"/>
+        <input type="range" min="-100" max="350" value="300" class="slider" id="ly"/>
         <br />
         Z
-        <input type="range" min="-350" max="350" value="100" class="slider" id="lz"/>
+        <input type="range" min="-350" max="350" value="0" class="slider" id="lz"/>
         <br />
 
-        Light Color
+        Color
         <input type="range" min="0" max="60" value="0" class="slider" id="lColor"/>
         <br/>
-        <div id="color"></div>
+        <div id="lightcolor" class="color"></div>
+
+        <h3>Spotlight Controls</h3>
+        Position </br>
+        X
+        <input type="range" min="-350" max="350" value="0" class="slider" id="sx"/>
+        <br />
+        Y
+        <input type="range" min="-100" max="350" value="200" class="slider" id="sy"/>
+        <br />
+        Z
+        <input type="range" min="-350" max="350" value="0" class="slider" id="sz"/>
+        <br />
+        Direction </br>
+        X
+        <input type="range" min="-100" max="100" value="0" class="slider" id="sdx"/>
+        <br />
+        Y
+        <input type="range" min="-100" max="100" value="-100" class="slider" id="sdy"/>
+        <br />
+        Z
+        <input type="range" min="-100" max="100" value="0" class="slider" id="sdz"/>
+        <br />
+        Strength
+        <input type="range" min="0" max="100" value="70" class="slider" id="sStrength"/>
+        <br/>
+        Color
+        <input type="range" min="0" max="60" value="0" class="slider" id="sColor"/>
+        <br/>
+        <div id="spotcolor" class="color"></div>
+        
         <br/>
         Light:
           <button type="button" id="lon">On</button>
@@ -59,15 +90,6 @@
         Normals:
           <button type="button" id="non">On</button>
           <button type="button" id="noff">Off</button>
-        
-        <h3>Key board controls</h3>
-        W - forward <br/>
-        S - backward <br/>
-        A - left <br/>
-        D - right <br/>
-        Q - up <br/>
-        E - down <br/>
-        Use arrows to look around
       </div>
 
       <!-- pigeon -->
