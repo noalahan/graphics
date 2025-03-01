@@ -41,9 +41,10 @@ var FSHADER_SOURCE = `
   uniform vec3 u_lightColor;
   varying vec4 v_VertPos;
   // spotlight
+  uniform vec3 u_spotPos;
   // uniform bool u_spotOn;
-  // uniform vec3 u_spotPos
-  // uniform vec3 u_spotDir;
+  uniform vec3 u_spotDir;
+  // uniform int u_spotCutoff;
 
   void main() {
     if (u_whichTexture == -3){
@@ -88,7 +89,7 @@ var FSHADER_SOURCE = `
       vec3 E = normalize(u_cameraPos - vec3(v_VertPos));
 
       // phong
-      float specular = pow(max(dot(E, R), 0.0), 10.0);
+      float specular = 0.0;
       vec3 diffuse = vec3(gl_FragColor) * nDotL * 0.7;
       vec3 ambient = vec3(gl_FragColor) * 0.3;
 
@@ -96,14 +97,21 @@ var FSHADER_SOURCE = `
       // uniform vec3 u_spotPos
       // uniform vec3 u_spotDir;
 
-
       // specular condition for shiny surfaces
       if (u_isShiny) {
-        gl_FragColor = vec4(u_lightColor * (specular + diffuse) + ambient, 1.0);
-        // gl_FragColor = vec4(u_lightColor + 0.0 * (specular + diffuse + ambient), 1.0);
-      } else {
-        gl_FragColor = vec4(u_lightColor * diffuse + ambient, 1.0);
+        specular = pow(max(dot(E, R), 0.0), 10.0);
       }
+
+      // spotlight
+      float spotlight = 0.0;
+      vec3 W = normalize(u_spotPos - vec3(v_VertPos));    
+      vec3 D = normalize(u_spotPos - u_spotDir);
+      float spotCos = dot(W, D);
+      // if (spotCos <= u_spotCutoff && u_spotOn){
+
+      // }
+
+      gl_FragColor = vec4(u_lightColor * (specular + diffuse) + ambient *spotCos, 1.0);
     }
   }`;
 
@@ -134,6 +142,7 @@ let u_lightColor;
 let u_spotPos;
 let u_spotOn;
 let u_spotDir;
+let u_spotCutoff;
 
 // texture values
 let NORMAL = -3;
@@ -304,19 +313,26 @@ function connectVariablesToGLSL() {
     return false;
   }
 
-  // Get the storage location of u_spotOn
-  u_spotOn = gl.getUniformLocation(gl.program, "u_spotOn");
-  if (!u_spotOn) {
-    console.log("Failed to get the storage location of u_spotOn");
-    return false;
-  }
+  // // Get the storage location of u_spotOn
+  // u_spotOn = gl.getUniformLocation(gl.program, "u_spotOn");
+  // if (!u_spotOn) {
+  //   console.log("Failed to get the storage location of u_spotOn");
+  //   return false;
+  // }
 
-  // Get the storage location of u_spotDir
-  u_spotDir = gl.getUniformLocation(gl.program, "u_spotDir");
-  if (!u_spotDir) {
-    console.log("Failed to get the storage location of u_spotDir");
-    return false;
-  }
+  // // Get the storage location of u_spotDir
+  // u_spotDir = gl.getUniformLocation(gl.program, "u_spotDir");
+  // if (!u_spotDir) {
+  //   console.log("Failed to get the storage location of u_spotDir");
+  //   return false;
+  // }
+
+  // // Get the storage location of u_spotCutoff
+  // u_spotCutoff = gl.getUniformLocation(gl.program, "u_spotCutoff");
+  // if (!u_spotCutoff) {
+  //   console.log("Failed to get the storage location of u_spotCutoff");
+  //   return false;
+  // }
 
   // set an initial value for this matrix to identity
   var identityM = new Matrix4();
@@ -340,6 +356,7 @@ let g_lightColor = [1, 1, 1];
 let g_spotPos = [0, 2, 0];
 let g_spotOn = true;
 let g_spotDir = [0, 0, 0];
+let g_spotCutoff = 30;
 /**
  * Sets all functions of elements defined in HTML
  */
@@ -682,6 +699,8 @@ function renderAllShapes() {
   gl.uniform3f(u_spotDir, g_spotDir[0], g_spotDir[1], g_spotDir[2]);
   // pass the spot status to u_spotOn attribute
   gl.uniform1i(u_spotOn, g_spotOn);
+  // pass the spot angle to u_spotCutoff attribute
+  gl.uniform1i(u_spotCutoff, g_spotCutoff);
   
   // Clear <canvas>
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
