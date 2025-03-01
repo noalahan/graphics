@@ -29,85 +29,37 @@
       <div id="light">
         <h1>Setting Controls</h1>
         Camera Angle
-        <input
-          type="range"
-          min="-360"
-          max="360"
-          value="0"
-          class="slider"
-          id="angle"
-        />
+        <input type="range" min="-360" max="360" value="0" class="slider" id="angle"/>
         <br />
 
         Light Position <br />
         X
-        <input
-          type="range"
-          min="-250"
-          max="250"
-          value="0"
-          class="slider"
-          id="lx"
-        />
+        <input type="range" min="-350" max="350" value="0" class="slider" id="lx"/>
         <br />
         Y
-        <input
-          type="range"
-          min="-250"
-          max="250"
-          value="100"
-          class="slider"
-          id="ly"
-        />
+        <input type="range" min="-100" max="350" value="100" class="slider" id="ly"/>
         <br />
         Z
-        <input
-          type="range"
-          min="-250"
-          max="250"
-          value="100"
-          class="slider"
-          id="lz"
-        />
+        <input type="range" min="-350" max="350" value="100" class="slider" id="lz"/>
         <br />
 
-                Light Color
-        <input
-          type="range"
-          min="0"
-          max="60"
-          value="0"
-          class="slider"
-          id="lColor"
-        />
+        Light Color
+        <input type="range" min="0" max="60" value="0" class="slider" id="lColor"/>
         <br/>
         <div id="color"></div>
-
-        <p>
-          Light:
+        <br/>
+        Light:
           <button type="button" id="lon">On</button>
           <button type="button" id="loff">Off</button>
-        </p>
-        <p>
-          Light Animation:
+        <br/>
+        Light Animation:
           <button type="button" id="lAnimOn">On</button>
           <button type="button" id="lAnimOff">Off</button>
-        </p>
-        <p>
-          Normals:
+        <br/>
+        Normals:
           <button type="button" id="non">On</button>
           <button type="button" id="noff">Off</button>
-        </p>
-        <p>
-          Yellow Animation:
-          <button type="button" id="yon">On</button>
-          <button type="button" id="yoff">Off</button>
-        </p>
-        <p>
-          Pink Animation:
-          <button type="button" id="pon">On</button>
-          <button type="button" id="poff">Off</button>
-        </p>
+        
         <h3>Key board controls</h3>
         W - forward <br/>
         S - backward <br/>
@@ -121,14 +73,12 @@
       <!-- pigeon -->
       <div id="pigeon">
         <h1>Pigeon Controls</h1>
-        <p>
-          Animation:
+        Animation:
           <button type="button" id="pose">Pose</button>
           <button type="button" id="wOn">Walk</button>
           <button type="button" id="wOff">Stop</button>
           <button type="button" id="pOn">Sit</button>
-        </p>
-        ("sit" can also be activated with a shift click) </br>
+        <p>("sit" can also be activated with a shift click)</p>
         Walking Speed
         <input
           type="range"

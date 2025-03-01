@@ -42,7 +42,7 @@ var FSHADER_SOURCE = `
   varying vec4 v_VertPos;
   // spotlight
   uniform vec3 u_spotPos;
-  // uniform bool u_spotOn;
+  uniform bool u_spotOn;
   uniform vec3 u_spotDir;
   uniform float u_spotCutoff;
 
@@ -93,10 +93,6 @@ var FSHADER_SOURCE = `
       vec3 diffuse = vec3(gl_FragColor) * nDotL * 0.7;
       vec3 ambient = vec3(gl_FragColor) * 0.3;
 
-      // uniform bool u_spotOn;
-      // uniform vec3 u_spotPos
-      // uniform vec3 u_spotDir;
-
       // specular condition for shiny surfaces
       if (u_isShiny) {
         specular = pow(max(dot(E, R), 0.0), 10.0);
@@ -104,15 +100,14 @@ var FSHADER_SOURCE = `
 
       // spotlight
       float spotlight = 0.0;
-      vec3 W = normalize(u_spotPos - vec3(v_VertPos));    
-      vec3 D = normalize(u_spotPos - u_spotDir);
-      float spotCos = dot(W, D);
-      // if (spotCos <= u_spotCutoff && u_spotOn){
-      if (spotCos <= u_spotCutoff){
-        spotCos += 1.0;
+      vec3 W = normalize(vec3(v_VertPos) - u_spotPos);
+      vec3 D = normalize(u_spotDir - u_spotPos);
+      float u_spotExponent = 10.0;
+      if (dot(W, D) > u_spotCutoff && u_spotOn){         // if angle is within spotlight
+        spotlight = pow(dot(W, D), u_spotExponent) * 0.7;
       }
 
-      gl_FragColor = vec4(u_lightColor * (specular + diffuse) + ambient *spotCos, 1.0);
+      gl_FragColor = vec4(u_lightColor * (specular + diffuse) + ambient + spotlight, 1.0);
     }
   }`;
 
@@ -314,19 +309,19 @@ function connectVariablesToGLSL() {
     return false;
   }
 
-  // // Get the storage location of u_spotOn
-  // u_spotOn = gl.getUniformLocation(gl.program, "u_spotOn");
-  // if (!u_spotOn) {
-  //   console.log("Failed to get the storage location of u_spotOn");
-  //   return false;
-  // }
+  // Get the storage location of u_spotOn
+  u_spotOn = gl.getUniformLocation(gl.program, "u_spotOn");
+  if (!u_spotOn) {
+    console.log("Failed to get the storage location of u_spotOn");
+    return false;
+  }
 
-  // // Get the storage location of u_spotDir
-  // u_spotDir = gl.getUniformLocation(gl.program, "u_spotDir");
-  // if (!u_spotDir) {
-  //   console.log("Failed to get the storage location of u_spotDir");
-  //   return false;
-  // }
+  // Get the storage location of u_spotDir
+  u_spotDir = gl.getUniformLocation(gl.program, "u_spotDir");
+  if (!u_spotDir) {
+    console.log("Failed to get the storage location of u_spotDir");
+    return false;
+  }
 
   // Get the storage location of u_spotCutoff
   u_spotCutoff = gl.getUniformLocation(gl.program, "u_spotCutoff");
@@ -343,8 +338,6 @@ function connectVariablesToGLSL() {
 // from testing
 let g_yellowAngle = 0;
 let g_pinkAngle = 0;
-let g_yellowAnim = true;
-let g_pinkAnim = true;
 
 // let mouseTrack = true;
 // let g_currentX = -10;
@@ -357,7 +350,7 @@ let g_lightColor = [1, 1, 1];
 let g_spotPos = [0, 2, 0];
 let g_spotOn = true;
 let g_spotDir = [0, 0, 0];
-let g_spotCutoff = 30.0;
+let g_spotCutoff = 10.0;
 /**
  * Sets all functions of elements defined in HTML
  */
@@ -368,18 +361,6 @@ function addActionsForHtmlUI() {
   };
   document.getElementById("noff").onclick = function () {
     g_normalOn = false;
-  };
-  document.getElementById("yon").onclick = function () {
-    g_yellowAnim = true;
-  };
-  document.getElementById("yoff").onclick = function () {
-    g_yellowAnim = false;
-  };
-  document.getElementById("pon").onclick = function () {
-    g_pinkAnim = true;
-  };
-  document.getElementById("poff").onclick = function () {
-    g_pinkAnim = false;
   };
   document.getElementById("lAnimOn").onclick = function () {
     g_lightAnim = true;
@@ -579,13 +560,8 @@ function main() {
  */
 function updateAnim() {
   pigeonAnim();
-  if (g_yellowAnim) {
-    g_yellowAngle = 45 * Math.sin(g_seconds);
-  }
-  if (g_pinkAnim) {
-    g_pinkAngle = 45 * Math.sin(3 * g_seconds);
-  }
-
+  g_yellowAngle = 45 * Math.sin(g_seconds);
+  g_pinkAngle = 45 * Math.sin(3 * g_seconds);
   if (g_lightAnim) {
     g_lightPos[0] = 2 * Math.cos(g_seconds);
     document.getElementById("lx").value = Math.cos(g_seconds) * 200;
@@ -701,8 +677,8 @@ function renderAllShapes() {
   // pass the spot status to u_spotOn attribute
   gl.uniform1i(u_spotOn, g_spotOn);
   // pass the spot angle to u_spotCutoff attribute
-  gl.uniform1f(u_spotCutoff, g_spotCutoff);
-  
+  gl.uniform1f(u_spotCutoff, Math.abs(Math.cos(g_spotCutoff)));
+
   // Clear <canvas>
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
