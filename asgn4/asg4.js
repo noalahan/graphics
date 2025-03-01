@@ -28,16 +28,22 @@ var FSHADER_SOURCE = `
   varying vec2 v_UV;
   varying vec3 v_Normal;
   uniform vec4 u_FragColor;
+  // texture selectors
   uniform sampler2D u_Sampler0;
   uniform sampler2D u_Sampler1;
   uniform sampler2D u_Sampler2;
   uniform int u_whichTexture;
+  // phong lighting
   uniform bool u_isShiny;
   uniform bool u_lightOn;
   uniform vec3 u_lightPos;
   uniform vec3 u_cameraPos;
   uniform vec3 u_lightColor;
   varying vec4 v_VertPos;
+  // spotlight
+  // uniform bool u_spotOn;
+  // uniform vec3 u_spotPos
+  // uniform vec3 u_spotDir;
 
   void main() {
     if (u_whichTexture == -3){
@@ -86,6 +92,11 @@ var FSHADER_SOURCE = `
       vec3 diffuse = vec3(gl_FragColor) * nDotL * 0.7;
       vec3 ambient = vec3(gl_FragColor) * 0.3;
 
+      // uniform bool u_spotOn;
+      // uniform vec3 u_spotPos
+      // uniform vec3 u_spotDir;
+
+
       // specular condition for shiny surfaces
       if (u_isShiny) {
         gl_FragColor = vec4(u_lightColor * (specular + diffuse) + ambient, 1.0);
@@ -107,16 +118,22 @@ let u_ModelMatrix;
 let u_GlobalRotateMatrix;
 let u_ViewMatrix;
 let u_ProjectionMatrix;
+// texture
 let u_FragColor;
 let u_Sampler0;
 let u_Sampler1;
 let u_Sampler2;
 let u_whichTexture;
+// phong light
 let u_isShiny;
 let u_lightOn;
 let u_lightPos;
 let u_cameraPos;
 let u_lightColor;
+// spotlight
+let u_spotPos;
+let u_spotOn;
+let u_spotDir;
 
 // texture values
 let NORMAL = -3;
@@ -124,7 +141,6 @@ let COLOR = -2;
 let SKY = 0;
 let CODE = 1;
 let HEDGE = 2;
-
 // camera
 var g_eye = new Vector([3, 0.5, 0]);
 var g_at = new Vector([-5, 0.5, 0]);
@@ -281,6 +297,27 @@ function connectVariablesToGLSL() {
     return false;
   }
 
+  // Get the storage location of u_spotPos
+  u_spotPos = gl.getUniformLocation(gl.program, "u_spotPos");
+  if (!u_spotPos) {
+    console.log("Failed to get the storage location of u_spotPos");
+    return false;
+  }
+
+  // Get the storage location of u_spotOn
+  u_spotOn = gl.getUniformLocation(gl.program, "u_spotOn");
+  if (!u_spotOn) {
+    console.log("Failed to get the storage location of u_spotOn");
+    return false;
+  }
+
+  // Get the storage location of u_spotDir
+  u_spotDir = gl.getUniformLocation(gl.program, "u_spotDir");
+  if (!u_spotDir) {
+    console.log("Failed to get the storage location of u_spotDir");
+    return false;
+  }
+
   // set an initial value for this matrix to identity
   var identityM = new Matrix4();
   gl.uniformMatrix4fv(u_ModelMatrix, false, identityM.elements);
@@ -300,6 +337,9 @@ let g_lightPos = [0, 3, 0];
 let g_lightOn = true;
 let g_lightAnim = true;
 let g_lightColor = [1, 1, 1];
+let g_spotPos = [0, 2, 0];
+let g_spotOn = true;
+let g_spotDir = [0, 0, 0];
 /**
  * Sets all functions of elements defined in HTML
  */
@@ -348,24 +388,6 @@ function addActionsForHtmlUI() {
   //       rotateCamera(deltaY * 0.005, right);
   //     }
   //   });
-  //   // mouse movement toggle
-  //   document.getElementById("mouse").onclick = function () {
-  //     if (mouseTrack) {
-  //       g_at.y = 0;
-  //     }
-  //     if (mouseTrack) {
-  //       this.style.backgroundColor = "#edebe8";
-  //     } else {
-  //       this.style.backgroundColor = "#f3a5c0";
-  //     }
-  //     mouseTrack = !mouseTrack;
-  //   };
-  //   // reset location
-  //   document.getElementById("reset").onclick = function () {
-  //     g_eye = new Vector([-10, 0.6, 0]);
-  //     g_at = new Vector([10, 0.6, 0]);
-  //     document.getElementById("title").innerHTML = "";
-  //   };
 
   //   rotation selector
   document.getElementById("angle").addEventListener("mousemove", function () {
@@ -654,6 +676,13 @@ function renderAllShapes() {
   // pass the light color to u_lightColor
   gl.uniform3f(u_lightColor, g_lightColor[0], g_lightColor[1], g_lightColor[2]);
 
+  // pass the spot to u_spotPos attribute
+  gl.uniform3f(u_spotPos, g_spotPos[0], g_spotPos[1], g_spotPos[2]);
+  // pass the spot direction to u_spotDir attribute
+  gl.uniform3f(u_spotDir, g_spotDir[0], g_spotDir[1], g_spotDir[2]);
+  // pass the spot status to u_spotOn attribute
+  gl.uniform1i(u_spotOn, g_spotOn);
+  
   // Clear <canvas>
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
@@ -674,6 +703,14 @@ function renderAllShapes() {
   light.matrix.translate(g_lightPos[0], g_lightPos[1], g_lightPos[2]);
   light.matrix.scale(-0.2, -0.2, -0.2);
   light.render();
+
+  // spotlight
+  var spot = new Cube();
+  spot.color = [1, 1, 0, 1];
+  spot.textureNum = COLOR;
+  spot.matrix.translate(g_spotPos[0], g_spotPos[1], g_spotPos[2]);
+  spot.matrix.scale(0.5, 0.5, 0.5);
+  spot.render();
 
   var red = new Cube();
   red.color = [1.0, 0.0, 0.0, 1.0];
