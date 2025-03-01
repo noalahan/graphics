@@ -5,7 +5,7 @@ class Cylinder {
     this.matrix = new Matrix4();
     this.normalMatrix = new Matrix4();
     this.textureNum = -1;
-    this.segments = 5;
+    this.segments = 8;
     this.top = 1;
     this.bottom = 1;
   }
