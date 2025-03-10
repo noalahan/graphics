@@ -219,7 +219,7 @@ function objectLoaders() {
   //   });
   // });
 
-  // doll
+  // doll: https://free3d.com/3d-model/doll-v3--666831.html
   const mtlLoader = new MTLLoader();
   mtlLoader.load("rsc/doll/doll.mtl", (mtl) => {
     mtl.preload();
@@ -227,11 +227,38 @@ function objectLoaders() {
     objLoader.setMaterials(mtl);
     objLoader.load("rsc/doll/doll.obj", (root) => {
       root.scale.set(0.2, 0.2, 0.2);
-      root.position.set(0, 0, 0);
+      root.position.set(0, 1, 0);
       root.rotation.set(-Math.PI / 2, 0, 0);
       scene.add(root);
     });
   });
+
+  // heart box: https://www.turbosquid.com/3d-models/heart-box-2024099
+  const baseMtl = new MTLLoader();
+  baseMtl.load("rsc/Heart_box/Heart box.mtl", (mtl) => {
+    mtl.preload();
+    const objLoader = new OBJLoader();
+    objLoader.setMaterials(mtl);
+    objLoader.load("rsc/Heart_box/Heart box.obj", (root) => {
+      root.scale.set(8, 3, 8);
+      // root.position.set(0, 0, 0);
+      // root.rotation.set(-Math.PI / 2, 0, 0);
+      scene.add(root);
+    });
+  })
+  const topMtl = new MTLLoader();
+  topMtl.load("rsc/Heart_box/Heart box.mtl", (mtl) => {
+    mtl.preload();
+    const objLoader = new OBJLoader();
+    objLoader.setMaterials(mtl);
+    objLoader.load("rsc/Heart_box/Heart box.obj", (root) => {
+      root.scale.set(8, 3, 8);
+      root.position.set(0, 16, -16);
+      root.rotation.set(-Math.PI / 2, 0, Math.PI);
+      scene.add(root);
+    });
+  })
+
 }
 
 function render(time) {
