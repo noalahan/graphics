@@ -11,7 +11,6 @@ let loader;
 
 let materials;
 let cubes;
-let planeTexture;
 main();
 function main() {
   // set up
@@ -20,7 +19,7 @@ function main() {
 
   // create objects
   shapes();
-  // objectLoaders();
+  objectLoaders();
 
   // render
   requestAnimationFrame(render);
@@ -194,27 +193,42 @@ function shapes() {
     scene.add(mesh);
   }
 
-  { // sky box
+  {
+    // sky box
     const skyLoader = new THREE.CubeTextureLoader();
-    const texture = skyLoader.load( [
-			'img/sky1.png',
-			'img/sky3.png',
-			'img/skyTop.png',
-			'img/skyBottom.png',
-			'img/sky4.png',
-			'img/sky2.png',
-		] );
-		scene.background = texture;
+    const texture = skyLoader.load([
+      "img/sky1.png",
+      "img/sky3.png",
+      "img/skyTop.png",
+      "img/skyBottom.png",
+      "img/sky4.png",
+      "img/sky2.png",
+    ]);
+    scene.background = texture;
   }
 }
 
 function objectLoaders() {
+  // const mtlLoader = new MTLLoader();
+  // mtlLoader.load("rsc/cottage/cottage_obj.mtl", (mtl) => {
+  //   mtl.preload();
+  //   const objLoader = new OBJLoader();
+  //   objLoader.setMaterials(mtl);
+  //   objLoader.load("rsc/cottage/cottage_obj.obj", (root) => {
+  //     scene.add(root);
+  //   });
+  // });
+
+  // doll
   const mtlLoader = new MTLLoader();
-  mtlLoader.load("rsc/cottage/cottage_obj.mtl", (mtl) => {
+  mtlLoader.load("rsc/doll/doll.mtl", (mtl) => {
     mtl.preload();
     const objLoader = new OBJLoader();
     objLoader.setMaterials(mtl);
-    objLoader.load("rsc/cottage/cottage_obj.obj", (root) => {
+    objLoader.load("rsc/doll/doll.obj", (root) => {
+      root.scale.set(0.2, 0.2, 0.2);
+      root.position.set(0, 0, 0);
+      root.rotation.set(-Math.PI / 2, 0, 0);
       scene.add(root);
     });
   });
