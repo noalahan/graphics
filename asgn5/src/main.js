@@ -37,7 +37,11 @@ function sceneSetup() {
   let h = window.innerHeight * 0.3;
   // set up canvas
   const canvas = document.querySelector("#c");
-  renderer = new THREE.WebGLRenderer({ antialias: true, canvas });
+  const renderer = new THREE.WebGLRenderer({
+    antialias: true,
+    canvas,
+    logarithmicDepthBuffer: true,
+  });
   renderer.setSize(w, h);
   renderer.setPixelRatio(window.devicePixelRatio);
 
