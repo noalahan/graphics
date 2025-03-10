@@ -2,6 +2,7 @@ import "./style.css";
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { OBJLoader } from "three/addons/loaders/OBJLoader.js";
+import { MTLLoader } from "three/addons/loaders/MTLLoader.js";
 
 let renderer;
 let camera;
@@ -21,7 +22,7 @@ function main() {
   textureSetup();
 
   // create objects
-  createCubes();
+  shapes();
   objectLoaders();
 
   // render
@@ -46,7 +47,7 @@ function sceneSetup() {
   const near = 0.1;
   const far = 100;
   camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-  camera.position.set(0, 5, 10);
+  camera.position.set(0, 10, 20);
 
   // resize canvas if window size changes
   window.addEventListener("resize", () => {
@@ -79,7 +80,7 @@ function lighting() {
   scene.add(light);
 }
 
-function textureSetup(){
+function textureSetup() {
   loadManager = new THREE.LoadingManager();
   loader = new THREE.TextureLoader();
 
@@ -100,7 +101,7 @@ function textureSetup(){
   }
 }
 
-function createCubes() {
+function shapes() {
   // create box
   const boxWidth = 1;
   const boxHeight = 1;
@@ -124,45 +125,40 @@ function createCubes() {
 }
 
 function objectLoaders() {
-  // obj loader
-  const objLoader = new OBJLoader();
-  objLoader.load(
-    "https://threejs.org/manual/examples/resources/models/windmill/windmill.obj",
-    (root) => {
+  const mtlLoader = new MTLLoader();
+  mtlLoader.load("rsc/cottage/cottage_obj.mtl", (mtl) => {
+    mtl.preload();
+    const objLoader = new OBJLoader();
+    objLoader.setMaterials(mtl);
+    objLoader.load("rsc/cottage/cottage_obj.obj", (root) => {
       scene.add(root);
-    }
-  );
+    });
+  });
+
+  // windmill
+  // // const objLoader = new OBJLoader();
+  // objLoader.load(
+  //   "https://threejs.org/manual/examples/resources/models/windmill/windmill.obj",
+  //   (root) => {
+  //     scene.add(root);
+  //   }
+  // );
 }
 
 function render(time) {
   time *= 0.001; // convert time to seconds
 
-  cubes.forEach((cube, ndx) => {
-    const speed = 1 + ndx * 0.1;
-    const rot = time * speed;
-    cube.rotation.x = rot;
-    cube.rotation.y = rot;
-  });
+  // shapes
+  {
+    cubes.forEach((cube, ndx) => {
+      const speed = 1 + ndx * 0.1;
+      const rot = time * speed;
+      cube.rotation.x = rot;
+      cube.rotation.y = rot;
+    });
+  }
 
   renderer.render(scene, camera);
 
   requestAnimationFrame(render);
 }
-
-// loadProgress();
-// function loadProgress() {
-//   const loadingElem = document.querySelector("#loading");
-//   const progressBarElem = loadingElem.querySelector(".progressbar");
-
-//   loadManager.onLoad = () => {
-//     loadingElem.style.display = "none";
-//     const cube = new THREE.Mesh(geometry, materials);
-//     scene.add(cube);
-//     cubes.push(cube); // add to our list of cubes to rotate
-//   };
-
-//   loadManager.onProgress = (urlOfLastItemLoaded, itemsLoaded, itemsTotal) => {
-//     const progress = itemsLoaded / itemsTotal;
-//     progressBarElem.style.transform = `scaleX(${progress})`;
-//   };
-// }
