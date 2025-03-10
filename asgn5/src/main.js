@@ -209,16 +209,6 @@ function shapes() {
 }
 
 function objectLoaders() {
-  // const mtlLoader = new MTLLoader();
-  // mtlLoader.load("rsc/cottage/cottage_obj.mtl", (mtl) => {
-  //   mtl.preload();
-  //   const objLoader = new OBJLoader();
-  //   objLoader.setMaterials(mtl);
-  //   objLoader.load("rsc/cottage/cottage_obj.obj", (root) => {
-  //     scene.add(root);
-  //   });
-  // });
-
   // doll: https://free3d.com/3d-model/doll-v3--666831.html
   const mtlLoader = new MTLLoader();
   mtlLoader.load("rsc/doll/doll.mtl", (mtl) => {
