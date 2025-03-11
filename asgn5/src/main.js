@@ -89,10 +89,13 @@ function lighting() {
   scene.add(dirLight.target);
 
   // point light (from position in all directions)
-  intensity = 150;
-  const pLight = new THREE.PointLight(color, intensity);
-  pLight.position.set(0, 10, 0);
-  // scene.add(pLight);
+  // sconces
+  const left = new THREE.PointLight(0xffff55, 15);
+  left.position.set(-4.6, 22.3, -15);
+  scene.add(left);
+  const right = new THREE.PointLight(0xffff55, 15);
+  right.position.set(4.6, 22.3, -15);
+  scene.add(right);
 
   // spot light
   // intensity = 150;
@@ -147,10 +150,10 @@ function shapes() {
 
     // floor
     const floor = new THREE.Mesh(
-      new THREE.BoxGeometry(19, 1, 3.2), // size
+      new THREE.BoxGeometry(21, 1, 3.2), // size
       new THREE.MeshPhongMaterial({ color: "#FFE882" }) // color
     );
-    floor.position.set(0, 20, -15);
+    floor.position.set(0, 19, -15);
     scene.add(floor);
 
     // bed base
@@ -158,59 +161,83 @@ function shapes() {
       new THREE.BoxGeometry(7, 1, 3.2), // size
       new THREE.MeshPhongMaterial({ color: "#8A2A01" }) // color
     );
-    base.position.set(0, 21, -15);
+    base.position.set(0, 20, -15);
     scene.add(base);
     // bed
     const bed = new THREE.Mesh(
       new THREE.BoxGeometry(5, 1, 3), // size
       new THREE.MeshPhongMaterial({ color: "#F0F6F6" }) // color
     );
-    bed.position.set(0, 22, -15);
+    bed.position.set(0, 21, -15);
     scene.add(bed);
     // blanket
     const blanket = new THREE.Mesh(
       new THREE.BoxGeometry(4, 1.2, 3.1), // size
       new THREE.MeshPhongMaterial({ color: "#9DDDE3" }) // color
     );
-    blanket.position.set(1, 22, -15);
+    blanket.position.set(1, 21, -15);
     scene.add(blanket);
     // pillow
     const pillow = new THREE.Mesh(
       new THREE.BoxGeometry(1, 0.2, 1.8), // size
       new THREE.MeshPhongMaterial({ color: "#9DDDE3" }) // color
     );
-    pillow.position.set(-1.8, 22.6, -15);
+    pillow.position.set(-1.8, 21.6, -15);
     scene.add(pillow);
 
     // sconces
     const left = new THREE.Mesh(
-      new THREE.SphereGeometry(0.5, 10, 10),
-      new THREE.MeshPhongMaterial({ color: "#FFF" })
+      new THREE.SphereGeometry(-0.8, 10, 10),
+      new THREE.MeshPhongMaterial({ color: "#ffff99", side: THREE.DoubleSide })
     );
-    left.position.set(-4.6, 23.3, -15);
+    left.position.set(-4.6, 22.3, -15);
     scene.add(left);
     const right = new THREE.Mesh(
-      new THREE.SphereGeometry(0.5, 10, 10),
-      new THREE.MeshPhongMaterial({ color: "#FFF" })
+      new THREE.SphereGeometry(-0.8, 10, 10),
+      new THREE.MeshPhongMaterial({ color: "#ffff99", side: THREE.DoubleSide })
     );
-    right.position.set(4.6, 23.3, -15);
+    right.position.set(4.6, 22.3, -15);
     scene.add(right);
     // bases
     const leftBase = new THREE.Mesh(
-      new THREE.BoxGeometry(0.2, 1, 2),
+      new THREE.BoxGeometry(0.4, 1, 2),
       new THREE.MeshPhongMaterial({ color: "#D6800F" })
     );
-    leftBase.position.set(-4.6, 22.9, -16);
+    leftBase.position.set(-4.6, 21.5, -16);
     scene.add(leftBase);
     const rightBase = new THREE.Mesh(
-      new THREE.BoxGeometry(0.2, 1, 2),
+      new THREE.BoxGeometry(0.4, 1, 2),
       new THREE.MeshPhongMaterial({ color: "#D6800F" })
     );
-    rightBase.position.set(4.6, 22.9, -16);
+    rightBase.position.set(4.6, 21.5, -16);
     scene.add(rightBase);
-
   }
 
+  {
+    // dining room
+    // floor
+    const floor = new THREE.Mesh(
+      new THREE.BoxGeometry(23, 1, 3.2), // size
+      new THREE.MeshPhongMaterial({ color: "#FFE882" }) // color
+    );
+    floor.position.set(0, 8.7, -15);
+    scene.add(floor);
+
+    // table
+    const table = new THREE.Mesh(
+      new THREE.CylinderGeometry(1.5, 1.5, 0.5, 16),
+      new THREE.MeshBasicMaterial({ color: 0xffff00 })
+    );
+    table.position.set(-6, 11.5, -15);
+    scene.add(table);
+    // base
+    const base = new THREE.Mesh(
+      new THREE.CylinderGeometry(1.5, 1.5, 0.5, 16),
+      new THREE.MeshBasicMaterial({ color: "#271033" })
+    );
+    base.position.set(-6, 12, -15);
+    scene.add(base);
+  }
   {
     // sphere
     const sphereRadius = 3;
