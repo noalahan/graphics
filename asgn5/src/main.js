@@ -10,14 +10,18 @@ let camera;
 let scene;
 let loader;
 
-// let materials;
-let renderTarget;
-let rtCamera;
-let rtScene;
-let rtCubes;
-let clockMaterial;
+let renderTarget1;
+let rtCamera1;
+let rtScene1;
+let clockFaceMtl;
 let hours;
 let minutes;
+
+let renderTarget2;
+let rtCamera2;
+let rtScene2;
+let pendulumMtl;
+let pendulum;
 
 let rightGate;
 let leftGate;
@@ -27,7 +31,9 @@ function main() {
   // set up
   sceneSetup();
   lighting();
-  renderToTexture();
+
+  clockTexture();
+  pendulumTexture();
 
   // create objects
   shapes();
@@ -155,91 +161,94 @@ function lighting() {
   }
 }
 
-function renderToTexture() {
-  const rtWidth = 512;
-  const rtHeight = 512;
-  renderTarget = new THREE.WebGLRenderTarget(rtWidth, rtHeight);
+function clockTexture() {
+  const rtWidth = 256;
+  const rtHeight = 256;
+  renderTarget1 = new THREE.WebGLRenderTarget(rtWidth, rtHeight);
 
   const rtFov = 75;
   const rtAspect = rtWidth / rtHeight;
   const rtNear = 0.1;
   const rtFar = 5;
-  rtCamera = new THREE.PerspectiveCamera(rtFov, rtAspect, rtNear, rtFar);
-  rtCamera.position.z = 2;
+  rtCamera1 = new THREE.PerspectiveCamera(rtFov, rtAspect, rtNear, rtFar);
+  rtCamera1.position.z = 2;
 
-  rtScene = new THREE.Scene();
-  rtScene.background = new THREE.Color("white");
+  rtScene1 = new THREE.Scene();
+  rtScene1.background = new THREE.Color("white");
+
+  const material = new THREE.MeshPhongMaterial({ color: "black" });
+  minutes = new THREE.Object3D();
+  rtScene1.add(minutes);
+  const long = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.3, 0.3), material);
+  long.position.set(0.6, 0, 0);
+  minutes.add(long);
+
+  hours = new THREE.Object3D();
+  rtScene1.add(hours);
+  const short = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.3, 0.3), material);
+  short.position.set(-0.4, 0, 0);
+  hours.add(short);
+
+  clockFaceMtl = new THREE.MeshPhongMaterial({
+    map: renderTarget1.texture,
+  });
+}
+
+function pendulumTexture() {
+  const rtWidth = 256;
+  const rtHeight = 256;
+  renderTarget2 = new THREE.WebGLRenderTarget(rtWidth * 1.8, rtHeight * 3);
+
+  const rtFov = 75;
+  const rtAspect = 1.8 / 3;
+  const rtNear = 0.1;
+  const rtFar = 5;
+  rtCamera2 = new THREE.PerspectiveCamera(rtFov, rtAspect, rtNear, rtFar);
+  rtCamera2.position.z = 2;
+
+  rtScene2 = new THREE.Scene();
+  rtScene2.background = new THREE.Color("#511900");
 
   {
     const color = 0xffffff;
     const intensity = 1;
     const light = new THREE.DirectionalLight(color, intensity);
     light.position.set(-1, 2, 4);
-    rtScene.add(light);
+    rtScene2.add(light);
   }
 
-  const material = new THREE.MeshPhongMaterial({ color: "black" });
-  minutes = new THREE.Object3D();
-  rtScene.add(minutes);
-  const long = new THREE.Mesh(
-    new THREE.BoxGeometry(1.2, 0.3, 0.3),
-    material
+  const box = new THREE.Mesh(
+    new THREE.BoxGeometry(1.8, 3, 3),
+    new THREE.MeshPhongMaterial({ color: "#F54E00", side: THREE.DoubleSide })
   );
-  long.position.set(0.6, 0, 0);
-  minutes.add(long);
+  box.position.set(0, 0, 1);
+  rtScene2.add(box);
 
-  hours = new THREE.Object3D();
-  rtScene.add(hours);
-  const short = new THREE.Mesh(
-    new THREE.BoxGeometry(0.8, 0.3, 0.3),
-    material
+  pendulum = new THREE.Object3D();
+  pendulum.position.set(0, 1.5, -0.3);
+  rtScene2.add(pendulum);
+
+  const pole = new THREE.Mesh(
+    new THREE.BoxGeometry(0.2, 2, 0.2),
+    new THREE.MeshPhongMaterial({ color: "yellow" })
   );
-  short.position.set(-0.4, 0, 0);
-  hours.add(short);
+  pole.position.y = -1;
+  pendulum.add(pole);
 
-  clockMaterial = new THREE.MeshPhongMaterial({
-    map: renderTarget.texture,
+  const ball = new THREE.Mesh(
+    new THREE.BoxGeometry(0.5, 0.5, 0.5),
+    new THREE.MeshPhongMaterial({ color: "yellow" })
+  )
+  ball.position.y = -2.2;
+  pendulum.add(ball);
+
+  pendulumMtl = new THREE.MeshPhongMaterial({
+    map: renderTarget2.texture,
   });
 }
 
 function shapes() {
   loader = new THREE.TextureLoader();
-
-  // {
-  //   // small cubes
-  //   materials = [
-  //     new THREE.MeshBasicMaterial({ map: loadColorTexture("img/hedge1.png") }),
-  //     new THREE.MeshBasicMaterial({ map: loadColorTexture("img/hedge2.png") }),
-  //     new THREE.MeshBasicMaterial({ map: loadColorTexture("img/hedge3.png") }),
-  //     new THREE.MeshBasicMaterial({ map: loadColorTexture("img/hedge4.png") }),
-  //     new THREE.MeshBasicMaterial({ map: loadColorTexture("img/hedge5.png") }),
-  //     new THREE.MeshBasicMaterial({ map: loadColorTexture("img/hedge6.png") }),
-  //   ];
-  //   function loadColorTexture(path) {
-  //     const texture = loader.load(path);
-  //     texture.colorSpace = THREE.SRGBColorSpace;
-  //     return texture;
-  //   }
-
-  //   // create box
-  //   const boxWidth = 1;
-  //   const boxHeight = 1;
-  //   const boxDepth = 1;
-  //   const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth);
-  //   cubes = [
-  //     makeInstance(geometry, 0x44aa88, 0),
-  //     makeInstance(geometry, 0x8844aa, -2),
-  //     makeInstance(geometry, 0xaa8844, 2),
-  //   ];
-  //   function makeInstance(geometry, color, x) {
-  //     // const material = new THREE.MeshPhongMaterial({ color });
-  //     // const material = new THREE.MeshBasicMaterial({ map: texture });
-  //     const cube = new THREE.Mesh(geometry, materials);
-  //     scene.add(cube);
-  //     cube.position.x = x;
-  //     return cube;
-  //   }
-  // }
 
   // bedroom
   {
@@ -499,15 +508,15 @@ function shapes() {
     // clock
     const clock = new THREE.Mesh(
       new THREE.CylinderGeometry(0.9, 0, 1, 16),
-      clockMaterial
+      clockFaceMtl
     );
     clock.position.set(2.7, 14.3, -14.6);
     clock.rotation.x = Math.PI / 2;
     scene.add(clock);
-    // window
+    // pendulum
     const weight = new THREE.Mesh(
       new THREE.BoxGeometry(1.8, 3, 1.8),
-      new THREE.MeshPhongMaterial({ color: "#511901" })
+      pendulumMtl
     );
     weight.position.set(2.7, 11.5, -15);
     scene.add(weight);
@@ -659,32 +668,25 @@ function objectLoaders() {
 function render(time) {
   time *= 0.001; // convert time to seconds
 
-  // shapes
-  // {
-  //   cubes.forEach((cube, ndx) => {
-  //     const speed = 1 + ndx * 0.1;
-  //     const rot = time * speed;
-  //     cube.rotation.x = rot;
-  //     cube.rotation.y = rot;
-  //   });
-  // }
+  // gate
   rightGate.rotation.y = 0.8 * Math.sin(time * 1.5); // Rotate around the new pivot point
   leftGate.rotation.y = -0.8 * Math.sin(time * 1.5); // Rotate around the new pivot point
 
-  // rotate all the cubes in the render target scene
-  // rtCubes.forEach((cube, ndx) => {
-  //   const speed = 1 + ndx * 0.1;
-  //   const rot = time * speed;
-  //   cube.rotation.x = rot;
-  //   // cube.rotation.y = rot;
-  // });
-
+  // clock face
   hours.rotation.z = -time * 0.3;
   minutes.rotation.z = -time;
 
   // draw render target scene to render target
-  renderer.setRenderTarget(renderTarget);
-  renderer.render(rtScene, rtCamera);
+  renderer.setRenderTarget(renderTarget1);
+  renderer.render(rtScene1, rtCamera1);
+  renderer.setRenderTarget(null);
+
+  // clock pendulum
+  pendulum.rotation.z = 0.2 * Math.sin(time * 3);
+
+  // draw render target scene to render target
+  renderer.setRenderTarget(renderTarget2);
+  renderer.render(rtScene2, rtCamera2);
   renderer.setRenderTarget(null);
 
   renderer.render(scene, camera);
