@@ -261,7 +261,7 @@ function shapes() {
 
     // window
     const window = new THREE.Mesh(
-      new THREE.CylinderGeometry(1.5, 1.5, 1, 16),
+      new THREE.CylinderGeometry(1.5, 0, 1, 16),
       new THREE.MeshPhongMaterial({ color: "skyblue" })
     );
     window.position.set(0, 25.5, -16.8);
@@ -392,6 +392,8 @@ function shapes() {
     );
     back.position.set(7, 12, -16);
     back.rotation.x = Math.PI / 2;
+    back.castShadow = true;
+    back.receiveShadow = true;
     scene.add(back);
     // bottom
     const base = new THREE.Mesh(
@@ -399,6 +401,8 @@ function shapes() {
       new THREE.MeshPhongMaterial({ color: "#C3DD7E" })
     );
     base.position.set(7, 10, -15);
+    base.castShadow = true;
+    base.receiveShadow = true;
     scene.add(base);
     // left arm
     const left = new THREE.Mesh(
@@ -407,6 +411,8 @@ function shapes() {
     );
     left.position.set(5.5, 11.3, -15);
     left.rotation.x = Math.PI / 2;
+    left.castShadow = true;
+    left.receiveShadow = true;
     scene.add(left);
     // right arm
     const right = new THREE.Mesh(
@@ -415,7 +421,42 @@ function shapes() {
     );
     right.position.set(8.5, 11.3, -15);
     right.rotation.x = Math.PI / 2;
+    right.castShadow = true;
+    right.receiveShadow = true;
     scene.add(right);
+
+    // clock
+    const body = new THREE.Mesh(
+      new THREE.BoxGeometry(2.5, 7, 2.5),
+      new THREE.MeshPhongMaterial({ color: "#8A2A01" })
+    );
+    body.position.set(2.7, 12, -15.5);
+    body.castShadow = true;
+    body.receiveShadow = true;
+    scene.add(body);
+    // clock
+    const clock = new THREE.Mesh(
+      new THREE.CylinderGeometry(.9, 0, 1, 16),
+      new THREE.MeshPhongMaterial({ color: "white" })
+    );
+    clock.position.set(2.7, 14.3, -14.6);
+    clock.rotation.x = Math.PI / 2;
+    scene.add(clock);
+    // window
+    const weight = new THREE.Mesh(
+      new THREE.BoxGeometry(1.8, 3, 1.8),
+      new THREE.MeshPhongMaterial({color: "#511901"})
+    );
+    weight.position.set(2.7, 11.5, -15);
+    scene.add(weight);
+
+    // window
+    const window = new THREE.Mesh(
+      new THREE.BoxGeometry(4, 3, 1),
+      new THREE.MeshPhongMaterial({color: "skyblue"})
+    );
+    window.position.set(7.5, 15.5, -17);
+    scene.add(window);
   }
 
   // ground plane
