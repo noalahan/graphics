@@ -1,3 +1,4 @@
+// base code from https://threejs.org/manual
 import "./style.css";
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
@@ -20,6 +21,8 @@ function main() {
   // create objects
   shapes();
   objectLoaders();
+  billboard("Polly Pocket", 5);
+  billboard("Noa Lahan", 3);
 
   // render
   requestAnimationFrame(render);
@@ -48,7 +51,7 @@ function sceneSetup() {
   const near = 0.1;
   const far = 100;
   camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-  camera.position.set(0, 20, 5);
+  camera.position.set(-5, 10, 30);
 
   // resize canvas if window size changes
   window.addEventListener("resize", () => {
@@ -61,7 +64,7 @@ function sceneSetup() {
 
   // create camera controls
   const controls = new OrbitControls(camera, canvas);
-  controls.target.set(0, 15, -10);
+  controls.target.set(-5, 5, -10);
   controls.update();
 
   // set up scene
@@ -436,7 +439,7 @@ function shapes() {
     scene.add(body);
     // clock
     const clock = new THREE.Mesh(
-      new THREE.CylinderGeometry(.9, 0, 1, 16),
+      new THREE.CylinderGeometry(0.9, 0, 1, 16),
       new THREE.MeshPhongMaterial({ color: "white" })
     );
     clock.position.set(2.7, 14.3, -14.6);
@@ -445,7 +448,7 @@ function shapes() {
     // window
     const weight = new THREE.Mesh(
       new THREE.BoxGeometry(1.8, 3, 1.8),
-      new THREE.MeshPhongMaterial({color: "#511901"})
+      new THREE.MeshPhongMaterial({ color: "#511901" })
     );
     weight.position.set(2.7, 11.5, -15);
     scene.add(weight);
@@ -453,7 +456,7 @@ function shapes() {
     // window
     const window = new THREE.Mesh(
       new THREE.BoxGeometry(4, 3, 1),
-      new THREE.MeshPhongMaterial({color: "skyblue"})
+      new THREE.MeshPhongMaterial({ color: "skyblue" })
     );
     window.position.set(7.5, 15.5, -17);
     scene.add(window);
@@ -577,4 +580,67 @@ function render(time) {
   renderer.render(scene, camera);
 
   requestAnimationFrame(render);
+}
+
+/**
+ * Creates a billboard label
+ * @param {String} text The lable text
+ * @param {int} height The label height
+ */
+function billboard(text, height) {
+  const canvas = makeLabelCanvas(80, text);
+  const texture = new THREE.CanvasTexture(canvas);
+  // because our canvas is likely not a power of 2
+  // in both dimensions set the filtering appropriately.
+  texture.minFilter = THREE.LinearFilter;
+  texture.wrapS = THREE.ClampToEdgeWrapping;
+  texture.wrapT = THREE.ClampToEdgeWrapping;
+
+  const labelMaterial = new THREE.MeshBasicMaterial({
+    map: texture,
+    side: THREE.DoubleSide,
+    transparent: true,
+  });
+  const labelGeometry = new THREE.PlaneGeometry(1, 1);
+  const label = new THREE.Mesh(labelGeometry, labelMaterial);
+
+  label.position.set(-15, height, 8);
+
+  // if units are meters then 0.01 here makes size
+  // of the label into centimeters.
+  const labelBaseScale = 0.01;
+  label.scale.x = canvas.width * labelBaseScale;
+  label.scale.y = canvas.height * labelBaseScale;
+
+  scene.add(label);
+}
+
+/**
+ * Creates a label canvas for billboard function
+ * @param {int} size Size of canvas
+ * @param {String} name Label text
+ * @returns 
+ */
+function makeLabelCanvas(size, name) {
+  const borderSize = 20;
+  const ctx = document.createElement("canvas").getContext("2d");
+  const font = `${size}px bold Arial`;
+  ctx.font = font;
+  // measure how long the name will be
+  const doubleBorderSize = borderSize * 2;
+  const width = ctx.measureText(name).width + doubleBorderSize;
+  const height = size + doubleBorderSize;
+  ctx.canvas.width = width;
+  ctx.canvas.height = height;
+
+  // need to set font again after resizing canvas
+  ctx.font = font;
+  ctx.textBaseline = "top";
+
+  ctx.fillStyle = "#D47E59";
+  ctx.fillRect(0, 0, width, height);
+  ctx.fillStyle = "black";
+  ctx.fillText(name, borderSize, borderSize);
+
+  return ctx.canvas;
 }
