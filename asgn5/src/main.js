@@ -21,8 +21,9 @@ function main() {
   // create objects
   shapes();
   objectLoaders();
-  billboard("Polly Pocket", 5);
-  billboard("Noa Lahan", 3);
+  billboard("Polly Pocket", 5, 12);
+  billboard("Noa Lahan - CSE 160 Asgn 5", 3, 8);
+  billboard("Extras: Billboard, Shadows, Render to Texture (clock)", 1.5, 6);
 
   // render
   requestAnimationFrame(render);
@@ -586,9 +587,10 @@ function render(time) {
  * Creates a billboard label
  * @param {String} text The lable text
  * @param {int} height The label height
+ * @param {int} size  Size of text
  */
-function billboard(text, height) {
-  const canvas = makeLabelCanvas(80, text);
+function billboard(text, height, size) {
+  const canvas = makeLabelCanvas(size * 10, text);
   const texture = new THREE.CanvasTexture(canvas);
   // because our canvas is likely not a power of 2
   // in both dimensions set the filtering appropriately.
@@ -596,13 +598,13 @@ function billboard(text, height) {
   texture.wrapS = THREE.ClampToEdgeWrapping;
   texture.wrapT = THREE.ClampToEdgeWrapping;
 
-  const labelMaterial = new THREE.MeshBasicMaterial({
+  const labelMaterial = new THREE.SpriteMaterial({
     map: texture,
     side: THREE.DoubleSide,
     transparent: true,
   });
   const labelGeometry = new THREE.PlaneGeometry(1, 1);
-  const label = new THREE.Mesh(labelGeometry, labelMaterial);
+  const label = new THREE.Sprite(labelMaterial);
 
   label.position.set(-15, height, 8);
 
@@ -637,7 +639,7 @@ function makeLabelCanvas(size, name) {
   ctx.font = font;
   ctx.textBaseline = "top";
 
-  ctx.fillStyle = "#D47E59";
+  ctx.fillStyle = "#C78254";
   ctx.fillRect(0, 0, width, height);
   ctx.fillStyle = "black";
   ctx.fillText(name, borderSize, borderSize);
