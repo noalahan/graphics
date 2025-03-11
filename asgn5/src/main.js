@@ -30,7 +30,7 @@ function main() {
  */
 function sceneSetup() {
   let w = window.innerWidth;
-  let h = window.innerHeight * 0.7;
+  let h = window.innerHeight;
   // set up canvas
   const canvas = document.querySelector("#c");
   renderer = new THREE.WebGLRenderer({
@@ -47,7 +47,7 @@ function sceneSetup() {
   const near = 0.1;
   const far = 100;
   camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-  camera.position.set(0, 10, 20);
+  camera.position.set(5, 30, 5);
 
   // resize canvas if window size changes
   window.addEventListener("resize", () => {
@@ -60,7 +60,7 @@ function sceneSetup() {
 
   // create camera controls
   const controls = new OrbitControls(camera, canvas);
-  controls.target.set(0, 5, 0);
+  controls.target.set(0, 20, -10);
   controls.update();
 
   // set up scene
@@ -83,7 +83,7 @@ function lighting() {
   const color = 0xffffff;
   intensity = 2;
   const dirLight = new THREE.DirectionalLight(color, intensity);
-  dirLight.position.set(0, 10, 0);
+  dirLight.position.set(0, 10, 5);
   scene.add(dirLight);
   dirLight.target.position.set(-5, 0, 0);
   scene.add(dirLight.target);
@@ -106,50 +106,109 @@ function lighting() {
 function shapes() {
   loader = new THREE.TextureLoader();
 
-  {
-    // small cubes
-    materials = [
-      new THREE.MeshBasicMaterial({ map: loadColorTexture("img/hedge1.png") }),
-      new THREE.MeshBasicMaterial({ map: loadColorTexture("img/hedge2.png") }),
-      new THREE.MeshBasicMaterial({ map: loadColorTexture("img/hedge3.png") }),
-      new THREE.MeshBasicMaterial({ map: loadColorTexture("img/hedge4.png") }),
-      new THREE.MeshBasicMaterial({ map: loadColorTexture("img/hedge5.png") }),
-      new THREE.MeshBasicMaterial({ map: loadColorTexture("img/hedge6.png") }),
-    ];
-    function loadColorTexture(path) {
-      const texture = loader.load(path);
-      texture.colorSpace = THREE.SRGBColorSpace;
-      return texture;
-    }
+  // {
+  //   // small cubes
+  //   materials = [
+  //     new THREE.MeshBasicMaterial({ map: loadColorTexture("img/hedge1.png") }),
+  //     new THREE.MeshBasicMaterial({ map: loadColorTexture("img/hedge2.png") }),
+  //     new THREE.MeshBasicMaterial({ map: loadColorTexture("img/hedge3.png") }),
+  //     new THREE.MeshBasicMaterial({ map: loadColorTexture("img/hedge4.png") }),
+  //     new THREE.MeshBasicMaterial({ map: loadColorTexture("img/hedge5.png") }),
+  //     new THREE.MeshBasicMaterial({ map: loadColorTexture("img/hedge6.png") }),
+  //   ];
+  //   function loadColorTexture(path) {
+  //     const texture = loader.load(path);
+  //     texture.colorSpace = THREE.SRGBColorSpace;
+  //     return texture;
+  //   }
 
-    // create box
-    const boxWidth = 1;
-    const boxHeight = 1;
-    const boxDepth = 1;
-    const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth);
-    cubes = [
-      makeInstance(geometry, 0x44aa88, 0),
-      makeInstance(geometry, 0x8844aa, -2),
-      makeInstance(geometry, 0xaa8844, 2),
-    ];
-    function makeInstance(geometry, color, x) {
-      // const material = new THREE.MeshPhongMaterial({ color });
-      // const material = new THREE.MeshBasicMaterial({ map: texture });
-      const cube = new THREE.Mesh(geometry, materials);
-      scene.add(cube);
-      cube.position.x = x;
-      return cube;
-    }
-  }
+  //   // create box
+  //   const boxWidth = 1;
+  //   const boxHeight = 1;
+  //   const boxDepth = 1;
+  //   const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth);
+  //   cubes = [
+  //     makeInstance(geometry, 0x44aa88, 0),
+  //     makeInstance(geometry, 0x8844aa, -2),
+  //     makeInstance(geometry, 0xaa8844, 2),
+  //   ];
+  //   function makeInstance(geometry, color, x) {
+  //     // const material = new THREE.MeshPhongMaterial({ color });
+  //     // const material = new THREE.MeshBasicMaterial({ map: texture });
+  //     const cube = new THREE.Mesh(geometry, materials);
+  //     scene.add(cube);
+  //     cube.position.x = x;
+  //     return cube;
+  //   }
+  // }
 
   {
-    // cube
-    const cubeSize = 4;
-    const cubeGeo = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
-    const cubeMat = new THREE.MeshPhongMaterial({ color: "#8AC" });
-    const mesh = new THREE.Mesh(cubeGeo, cubeMat);
-    mesh.position.set(cubeSize + 1, cubeSize / 2, 0);
-    scene.add(mesh);
+    // bedroom
+
+    // floor
+    const floor = new THREE.Mesh(
+      new THREE.BoxGeometry(19, 1, 3.2), // size
+      new THREE.MeshPhongMaterial({ color: "#FFE882" }) // color
+    );
+    floor.position.set(0, 20, -15);
+    scene.add(floor);
+
+    // bed base
+    const base = new THREE.Mesh(
+      new THREE.BoxGeometry(7, 1, 3.2), // size
+      new THREE.MeshPhongMaterial({ color: "#8A2A01" }) // color
+    );
+    base.position.set(0, 21, -15);
+    scene.add(base);
+    // bed
+    const bed = new THREE.Mesh(
+      new THREE.BoxGeometry(5, 1, 3), // size
+      new THREE.MeshPhongMaterial({ color: "#F0F6F6" }) // color
+    );
+    bed.position.set(0, 22, -15);
+    scene.add(bed);
+    // blanket
+    const blanket = new THREE.Mesh(
+      new THREE.BoxGeometry(4, 1.2, 3.1), // size
+      new THREE.MeshPhongMaterial({ color: "#9DDDE3" }) // color
+    );
+    blanket.position.set(1, 22, -15);
+    scene.add(blanket);
+    // pillow
+    const pillow = new THREE.Mesh(
+      new THREE.BoxGeometry(1, 0.2, 1.8), // size
+      new THREE.MeshPhongMaterial({ color: "#9DDDE3" }) // color
+    );
+    pillow.position.set(-1.8, 22.6, -15);
+    scene.add(pillow);
+
+    // sconces
+    const left = new THREE.Mesh(
+      new THREE.SphereGeometry(0.5, 10, 10),
+      new THREE.MeshPhongMaterial({ color: "#FFF" })
+    );
+    left.position.set(-4.6, 23.3, -15);
+    scene.add(left);
+    const right = new THREE.Mesh(
+      new THREE.SphereGeometry(0.5, 10, 10),
+      new THREE.MeshPhongMaterial({ color: "#FFF" })
+    );
+    right.position.set(4.6, 23.3, -15);
+    scene.add(right);
+    // bases
+    const leftBase = new THREE.Mesh(
+      new THREE.BoxGeometry(0.2, 1, 2),
+      new THREE.MeshPhongMaterial({ color: "#D6800F" })
+    );
+    leftBase.position.set(-4.6, 22.9, -16);
+    scene.add(leftBase);
+    const rightBase = new THREE.Mesh(
+      new THREE.BoxGeometry(0.2, 1, 2),
+      new THREE.MeshPhongMaterial({ color: "#D6800F" })
+    );
+    rightBase.position.set(4.6, 22.9, -16);
+    scene.add(rightBase);
+
   }
 
   {
@@ -223,46 +282,46 @@ function objectLoaders() {
     });
   });
 
-  // heart box: https://www.turbosquid.com/3d-models/heart-box-2024099
+  // heart
+  // edited blender model, original: https://www.turbosquid.com/3d-models/heart-box-2024099
   const baseMtl = new MTLLoader();
-  baseMtl.load("rsc/Heart_box/Heart box.mtl", (mtl) => {
+  baseMtl.load("rsc/Heart_box/heart.mtl", (mtl) => {
     mtl.preload();
     const objLoader = new OBJLoader();
     objLoader.setMaterials(mtl);
-    objLoader.load("rsc/Heart_box/Heart box.obj", (root) => {
-      root.scale.set(8, 3, 8);
-      // root.position.set(0, 0, 0);
+    objLoader.load("rsc/Heart_box/heart.obj", (root) => {
+      root.scale.set(8, 8, 8);
+      root.position.set(0, -1, 0);
       // root.rotation.set(-Math.PI / 2, 0, 0);
       scene.add(root);
     });
-  })
+  });
   const topMtl = new MTLLoader();
-  topMtl.load("rsc/Heart_box/Heart box.mtl", (mtl) => {
+  topMtl.load("rsc/Heart_box/top_heart.mtl", (mtl) => {
     mtl.preload();
     const objLoader = new OBJLoader();
     objLoader.setMaterials(mtl);
-    objLoader.load("rsc/Heart_box/Heart box.obj", (root) => {
-      root.scale.set(8, 3, 8);
-      root.position.set(0, 16, -16);
+    objLoader.load("rsc/Heart_box/top_heart.obj", (root) => {
+      root.scale.set(8, 8, 8);
+      root.position.set(0, 19, -19);
       root.rotation.set(-Math.PI / 2, 0, Math.PI);
       scene.add(root);
     });
-  })
-
+  });
 }
 
 function render(time) {
   time *= 0.001; // convert time to seconds
 
   // shapes
-  {
-    cubes.forEach((cube, ndx) => {
-      const speed = 1 + ndx * 0.1;
-      const rot = time * speed;
-      cube.rotation.x = rot;
-      cube.rotation.y = rot;
-    });
-  }
+  // {
+  //   cubes.forEach((cube, ndx) => {
+  //     const speed = 1 + ndx * 0.1;
+  //     const rot = time * speed;
+  //     cube.rotation.x = rot;
+  //     cube.rotation.y = rot;
+  //   });
+  // }
 
   renderer.render(scene, camera);
 
