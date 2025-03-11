@@ -47,7 +47,7 @@ function sceneSetup() {
   const near = 0.1;
   const far = 100;
   camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-  camera.position.set(5, 30, 5);
+  camera.position.set(0, 15, 5);
 
   // resize canvas if window size changes
   window.addEventListener("resize", () => {
@@ -60,7 +60,7 @@ function sceneSetup() {
 
   // create camera controls
   const controls = new OrbitControls(camera, canvas);
-  controls.target.set(0, 20, -10);
+  controls.target.set(0, 15, -10);
   controls.update();
 
   // set up scene
@@ -98,12 +98,13 @@ function lighting() {
   scene.add(right);
 
   // spot light
-  // intensity = 150;
-  // const spotLight = new THREE.SpotLight(color, intensity);
-  // spotLight.position.set(0, 10, 0);
-  // scene.add(spotLight);
-  // spotLight.target.position.set(-5, 0, 0);
-  // scene.add(spotLight.target);
+  const spotLight = new THREE.SpotLight(0xffff55, 50, 10, Math.PI/5, 0.1);
+  spotLight.position.set(-6, 16.7, -15);
+  scene.add(spotLight);
+  spotLight.target.position.set(-6, 15, -15);
+  scene.add(spotLight.target);  
+  
+  // scene.add( spotLight );
 }
 
 function shapes() {
@@ -145,8 +146,7 @@ function shapes() {
   //   }
   // }
 
-  {
-    // bedroom
+  {// bedroom
 
     // floor
     const floor = new THREE.Mesh(
@@ -213,8 +213,7 @@ function shapes() {
     scene.add(rightBase);
   }
 
-  {
-    // dining room
+  {// dining room
     // floor
     const floor = new THREE.Mesh(
       new THREE.BoxGeometry(23, 1, 3.2), // size
@@ -225,18 +224,89 @@ function shapes() {
 
     // table
     const table = new THREE.Mesh(
-      new THREE.CylinderGeometry(1.5, 1.5, 0.5, 16),
-      new THREE.MeshBasicMaterial({ color: 0xffff00 })
+      new THREE.CylinderGeometry(1.5, 1.5, 0.4, 16),
+      new THREE.MeshPhongMaterial({ color: "#F5878E" })
     );
-    table.position.set(-6, 11.5, -15);
+    table.position.set(-6, 11.9, -15);
     scene.add(table);
     // base
     const base = new THREE.Mesh(
-      new THREE.CylinderGeometry(1.5, 1.5, 0.5, 16),
-      new THREE.MeshBasicMaterial({ color: "#271033" })
+      new THREE.CylinderGeometry(0.3, 0.5, 3, 16),
+      new THREE.MeshPhongMaterial({ color: "#8A2A01" })
     );
-    base.position.set(-6, 12, -15);
+    base.position.set(-6, 10.5, -15);
     scene.add(base);
+
+    // left chairs
+    // seat
+    const leftBase = new THREE.Mesh(
+      new THREE.BoxGeometry(2, 1.5, 2),
+      new THREE.MeshPhongMaterial({ color: "#8A2A01" })
+    );
+    leftBase.position.set(-8.5, 9.9, -15);
+    scene.add(leftBase);
+    // back
+    const leftBack = new THREE.Mesh(
+      new THREE.BoxGeometry(0.3, 4.5, 2),
+      new THREE.MeshPhongMaterial({color: "#8A2A01"})
+    );
+    leftBack.position.set(-9.6, 11, -15);
+    scene.add(leftBack);
+    // pillow
+    const leftPillow = new THREE.Mesh(
+      new THREE.SphereGeometry(1.1, 16, 6),
+      new THREE.MeshPhongMaterial({ color: "#f5878e" })
+    );
+    leftPillow.position.set(-8.5, 10.8, -15);
+    leftPillow.scale.set(1, 0.2, 1);
+    scene.add(leftPillow);
+
+    // right chairs
+    // seat
+    const rightBase = new THREE.Mesh(
+      new THREE.BoxGeometry(2, 1.5, 2),
+      new THREE.MeshPhongMaterial({ color: "#8A2A01" })
+    );
+    rightBase.position.set(-3.5, 9.9, -15);
+    scene.add(rightBase);
+    // back
+    const rightBack = new THREE.Mesh(
+      new THREE.BoxGeometry(0.3, 4.5, 2),
+      new THREE.MeshPhongMaterial({color: "#8A2A01"})
+    );
+    rightBack.position.set(-2.4, 11, -15);
+    scene.add(rightBack);
+    // pillow
+    const rightPillow = new THREE.Mesh(
+      new THREE.SphereGeometry(1.1, 16, 6),
+      new THREE.MeshPhongMaterial({ color: "#f5878e" })
+    );
+    rightPillow.position.set(-3.5, 10.8, -15);
+    rightPillow.scale.set(1, 0.2, 1);
+    scene.add(rightPillow);
+
+    // light
+    const pole = new THREE.Mesh(
+      new THREE.BoxGeometry(0.2, 2.8, 0.2),
+      new THREE.MeshPhongMaterial({color: "#D6800F"})
+    );
+    pole.position.set(-6, 17.2, -15);
+    scene.add(pole);
+    // top
+    const top = new THREE.Mesh(
+      new THREE.CylinderGeometry(0, 1.7, 4, 16),
+      new THREE.MeshPhongMaterial({ color: "#6B2737" })
+    );
+    top.position.set(-6, 16.2, -15);
+    top.scale.set(1, 0.2, 1);
+    scene.add(top);
+    // light bulb
+    const light = new THREE.Mesh(
+      new THREE.SphereGeometry(-0.6, 10, 10),
+      new THREE.MeshPhongMaterial({ color: "#ffff99", side: THREE.DoubleSide })
+    );
+    light.position.set(-6, 15.5, -15);
+    scene.add(light);
   }
   {
     // sphere
