@@ -10,13 +10,24 @@ let camera;
 let scene;
 let loader;
 
-let materials;
-let cubes;
+// let materials;
+let renderTarget;
+let rtCamera;
+let rtScene;
+let rtCubes;
+let clockMaterial;
+let hours;
+let minutes;
+
+let rightGate;
+let leftGate;
+
 main();
 function main() {
   // set up
   sceneSetup();
   lighting();
+  renderToTexture();
 
   // create objects
   shapes();
@@ -52,7 +63,7 @@ function sceneSetup() {
   const near = 0.1;
   const far = 100;
   camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-  camera.position.set(-5, 10, 30);
+  camera.position.set(3, 13, 0);
 
   // resize canvas if window size changes
   window.addEventListener("resize", () => {
@@ -65,7 +76,7 @@ function sceneSetup() {
 
   // create camera controls
   const controls = new OrbitControls(camera, canvas);
-  controls.target.set(-5, 5, -10);
+  controls.target.set(3, 13, -10);
   controls.update();
 
   // set up scene
@@ -142,6 +153,53 @@ function lighting() {
     // const helper = new THREE.CameraHelper(spotlight.shadow.camera);
     // scene.add(helper);
   }
+}
+
+function renderToTexture() {
+  const rtWidth = 512;
+  const rtHeight = 512;
+  renderTarget = new THREE.WebGLRenderTarget(rtWidth, rtHeight);
+
+  const rtFov = 75;
+  const rtAspect = rtWidth / rtHeight;
+  const rtNear = 0.1;
+  const rtFar = 5;
+  rtCamera = new THREE.PerspectiveCamera(rtFov, rtAspect, rtNear, rtFar);
+  rtCamera.position.z = 2;
+
+  rtScene = new THREE.Scene();
+  rtScene.background = new THREE.Color("white");
+
+  {
+    const color = 0xffffff;
+    const intensity = 1;
+    const light = new THREE.DirectionalLight(color, intensity);
+    light.position.set(-1, 2, 4);
+    rtScene.add(light);
+  }
+
+  const material = new THREE.MeshPhongMaterial({ color: "black" });
+  minutes = new THREE.Object3D();
+  rtScene.add(minutes);
+  const long = new THREE.Mesh(
+    new THREE.BoxGeometry(1.2, 0.3, 0.3),
+    material
+  );
+  long.position.set(0.6, 0, 0);
+  minutes.add(long);
+
+  hours = new THREE.Object3D();
+  rtScene.add(hours);
+  const short = new THREE.Mesh(
+    new THREE.BoxGeometry(0.8, 0.3, 0.3),
+    material
+  );
+  short.position.set(-0.4, 0, 0);
+  hours.add(short);
+
+  clockMaterial = new THREE.MeshPhongMaterial({
+    map: renderTarget.texture,
+  });
 }
 
 function shapes() {
@@ -441,7 +499,7 @@ function shapes() {
     // clock
     const clock = new THREE.Mesh(
       new THREE.CylinderGeometry(0.9, 0, 1, 16),
-      new THREE.MeshPhongMaterial({ color: "white" })
+      clockMaterial
     );
     clock.position.set(2.7, 14.3, -14.6);
     clock.rotation.x = Math.PI / 2;
@@ -501,6 +559,39 @@ function shapes() {
       "img/sky2.png",
     ]);
     scene.background = texture;
+  }
+
+  // bottom heart
+  {
+    // right gate
+    rightGate = new THREE.Object3D();
+    rightGate.position.set(3, 3, 7);
+    scene.add(rightGate);
+
+    const lDoor = new THREE.Mesh(
+      new THREE.BoxGeometry(3.3, 3, 1),
+      new THREE.MeshPhongMaterial({ color: "white" })
+    );
+    lDoor.castShadow = true;
+    lDoor.receiveShadow = true;
+
+    lDoor.position.x = -1.2; // Move the cube up so its bottom edge is at (0,0,0)
+    rightGate.add(lDoor); // Add cube to pivot
+
+    // left gate
+    leftGate = new THREE.Object3D();
+    leftGate.position.set(-3, 3, 7);
+    scene.add(leftGate);
+
+    const rDoor = new THREE.Mesh(
+      new THREE.BoxGeometry(3.3, 3, 1),
+      new THREE.MeshPhongMaterial({ color: "white" })
+    );
+    rDoor.castShadow = true;
+    rDoor.receiveShadow = true;
+
+    rDoor.position.x = 1.2; // Move the cube up so its bottom edge is at (0,0,0)
+    leftGate.add(rDoor); // Add cube to pivot
   }
 }
 
@@ -577,6 +668,24 @@ function render(time) {
   //     cube.rotation.y = rot;
   //   });
   // }
+  rightGate.rotation.y = 0.8 * Math.sin(time * 1.5); // Rotate around the new pivot point
+  leftGate.rotation.y = -0.8 * Math.sin(time * 1.5); // Rotate around the new pivot point
+
+  // rotate all the cubes in the render target scene
+  // rtCubes.forEach((cube, ndx) => {
+  //   const speed = 1 + ndx * 0.1;
+  //   const rot = time * speed;
+  //   cube.rotation.x = rot;
+  //   // cube.rotation.y = rot;
+  // });
+
+  hours.rotation.z = -time * 0.3;
+  minutes.rotation.z = -time;
+
+  // draw render target scene to render target
+  renderer.setRenderTarget(renderTarget);
+  renderer.render(rtScene, rtCamera);
+  renderer.setRenderTarget(null);
 
   renderer.render(scene, camera);
 
@@ -621,7 +730,7 @@ function billboard(text, height, size) {
  * Creates a label canvas for billboard function
  * @param {int} size Size of canvas
  * @param {String} name Label text
- * @returns 
+ * @returns
  */
 function makeLabelCanvas(size, name) {
   const borderSize = 20;
