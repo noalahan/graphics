@@ -250,6 +250,7 @@ function pendulumTexture() {
 function shapes() {
   loader = new THREE.TextureLoader();
 
+  const brown = new THREE.MeshPhongMaterial({ color: "#8A2A01" });
   // bedroom
   {
     // floor
@@ -265,7 +266,7 @@ function shapes() {
     // bed base
     const base = new THREE.Mesh(
       new THREE.BoxGeometry(7, 1, 3.2), // size
-      new THREE.MeshPhongMaterial({ color: "#8A2A01" }) // color
+      brown
     );
     base.position.set(0, 20, -15);
     base.castShadow = true;
@@ -346,6 +347,7 @@ function shapes() {
 
   // dining room
   {
+    const pink = new THREE.MeshPhongMaterial({ color: "#F5878E" });
     // floor
     const floor = new THREE.Mesh(
       new THREE.BoxGeometry(23, 1, 3.2), // size
@@ -359,7 +361,7 @@ function shapes() {
     // table
     const table = new THREE.Mesh(
       new THREE.CylinderGeometry(1.5, 1.5, 0.4, 16),
-      new THREE.MeshPhongMaterial({ color: "#F5878E" })
+      pink
     );
     table.position.set(-6, 11.9, -15);
     table.castShadow = true;
@@ -367,7 +369,7 @@ function shapes() {
     // base
     const base = new THREE.Mesh(
       new THREE.CylinderGeometry(0.3, 0.5, 3, 16),
-      new THREE.MeshPhongMaterial({ color: "#8A2A01" })
+      brown
     );
     base.position.set(-6, 10.5, -15);
     base.castShadow = true;
@@ -376,19 +378,13 @@ function shapes() {
 
     // left chairs
     // seat
-    const leftBase = new THREE.Mesh(
-      new THREE.BoxGeometry(2, 1.5, 2),
-      new THREE.MeshPhongMaterial({ color: "#8A2A01" })
-    );
+    const leftBase = new THREE.Mesh(new THREE.BoxGeometry(2, 1.5, 2), brown);
     leftBase.position.set(-8.5, 9.9, -15);
     leftBase.castShadow = true;
     leftBase.receiveShadow = true;
     scene.add(leftBase);
     // back
-    const leftBack = new THREE.Mesh(
-      new THREE.BoxGeometry(0.3, 4.5, 2),
-      new THREE.MeshPhongMaterial({ color: "#8A2A01" })
-    );
+    const leftBack = new THREE.Mesh(new THREE.BoxGeometry(0.3, 4.5, 2), brown);
     leftBack.position.set(-9.6, 11, -15);
     leftBack.castShadow = true;
     // leftBack.receiveShadow = true;
@@ -396,7 +392,7 @@ function shapes() {
     // pillow
     const leftPillow = new THREE.Mesh(
       new THREE.SphereGeometry(1.1, 16, 6),
-      new THREE.MeshPhongMaterial({ color: "#f5878e" })
+      pink
     );
     leftPillow.position.set(-8.5, 10.8, -15);
     leftPillow.scale.set(1, 0.2, 1);
@@ -406,19 +402,13 @@ function shapes() {
 
     // right chairs
     // seat
-    const rightBase = new THREE.Mesh(
-      new THREE.BoxGeometry(2, 1.5, 2),
-      new THREE.MeshPhongMaterial({ color: "#8A2A01" })
-    );
+    const rightBase = new THREE.Mesh(new THREE.BoxGeometry(2, 1.5, 2), brown);
     rightBase.position.set(-3.5, 9.9, -15);
     rightBase.castShadow = true;
     rightBase.receiveShadow = true;
     scene.add(rightBase);
     // back
-    const rightBack = new THREE.Mesh(
-      new THREE.BoxGeometry(0.3, 4.5, 2),
-      new THREE.MeshPhongMaterial({ color: "#8A2A01" })
-    );
+    const rightBack = new THREE.Mesh(new THREE.BoxGeometry(0.3, 4.5, 2), brown);
     rightBack.position.set(-2.4, 11, -15);
     rightBack.castShadow = true;
     // rightBack.receiveShadow = true;
@@ -426,7 +416,7 @@ function shapes() {
     // pillow
     const rightPillow = new THREE.Mesh(
       new THREE.SphereGeometry(1.1, 16, 6),
-      new THREE.MeshPhongMaterial({ color: "#f5878e" })
+      pink
     );
     rightPillow.position.set(-3.5, 10.8, -15);
     rightPillow.scale.set(1, 0.2, 1);
@@ -461,9 +451,10 @@ function shapes() {
   // living room
   {
     // sofa
+    const green = new THREE.MeshPhongMaterial({ color: "#89C544" });
     const back = new THREE.Mesh(
       new THREE.CylinderGeometry(1.5, 1.5, 1, 16),
-      new THREE.MeshPhongMaterial({ color: "#C3DD7E" })
+      green
     );
     back.position.set(7, 12, -16);
     back.rotation.x = Math.PI / 2;
@@ -471,10 +462,7 @@ function shapes() {
     back.receiveShadow = true;
     scene.add(back);
     // bottom
-    const base = new THREE.Mesh(
-      new THREE.BoxGeometry(3.5, 1.8, 3),
-      new THREE.MeshPhongMaterial({ color: "#C3DD7E" })
-    );
+    const base = new THREE.Mesh(new THREE.BoxGeometry(3.5, 1.8, 3), green);
     base.position.set(7, 10, -15);
     base.castShadow = true;
     base.receiveShadow = true;
@@ -482,7 +470,7 @@ function shapes() {
     // left arm
     const left = new THREE.Mesh(
       new THREE.CylinderGeometry(0.6, 0.6, 3.1, 16),
-      new THREE.MeshPhongMaterial({ color: "#C3DD7E" })
+      green
     );
     left.position.set(5.5, 11.3, -15);
     left.rotation.x = Math.PI / 2;
@@ -492,7 +480,7 @@ function shapes() {
     // right arm
     const right = new THREE.Mesh(
       new THREE.CylinderGeometry(0.6, 0.6, 3.1, 16),
-      new THREE.MeshPhongMaterial({ color: "#C3DD7E" })
+      green
     );
     right.position.set(8.5, 11.3, -15);
     right.rotation.x = Math.PI / 2;
@@ -501,10 +489,7 @@ function shapes() {
     scene.add(right);
 
     // clock
-    const body = new THREE.Mesh(
-      new THREE.BoxGeometry(2.5, 7, 2.5),
-      new THREE.MeshPhongMaterial({ color: "#8A2A01" })
-    );
+    const body = new THREE.Mesh(new THREE.BoxGeometry(2.5, 7, 2.5), brown);
     body.position.set(2.7, 12, -15.5);
     body.castShadow = true;
     body.receiveShadow = true;
@@ -628,20 +613,38 @@ function shapes() {
 
   // garden
   {
-    let texture = loader.load('img/pool.png');
+    const texture = loader.load("img/pool.png");
     texture.colorSpace = THREE.SRGBColorSpace;
-    const pool = new THREE.Mesh(
-      new THREE.CylinderGeometry(4, 3, 1, 32),
-      [
-        new THREE.MeshPhongMaterial({color: "white"}),
-        new THREE.MeshPhongMaterial({map: texture}),
-        new THREE.MeshPhongMaterial({map: texture}),
-      ]
-    )
+    const pool = new THREE.Mesh(new THREE.CylinderGeometry(4, 3, 1, 32), [
+      new THREE.MeshPhongMaterial({ color: "white" }),
+      new THREE.MeshPhongMaterial({ map: texture }),
+      new THREE.MeshPhongMaterial({ map: texture }),
+    ]);
     pool.position.set(-5, 2, -5);
     pool.castShadow = true;
     pool.receiveShadow = true;
     scene.add(pool);
+
+    const green = new THREE.MeshPhongMaterial({ color: "#4B8943" });
+    const grass1 = new THREE.Mesh(
+      new THREE.CylinderGeometry(7, 0, 1, 32),
+      green
+    );
+    grass1.position.set(-5, 1, -5);
+    grass1.receiveShadow = true;
+    scene.add(grass1);
+    const grass2 = new THREE.Mesh(
+      new THREE.CylinderGeometry(7, 0, 1, 32),
+      green
+    );
+    grass2.position.set(5, 1, -5);
+    grass2.receiveShadow = true;
+    scene.add(grass2);
+    const grass3 = new THREE.Mesh(new THREE.BoxGeometry(10, 1, 10), green);
+    grass3.position.set(0, 1, 2);
+    grass3.rotation.y = Math.PI / 4;
+    grass3.receiveShadow = true;
+    scene.add(grass3);
   }
 
   // back logo
@@ -676,8 +679,8 @@ function objectLoaders() {
         }
       });
       root.scale.set(0.2, 0.2, 0.2);
-      root.position.set(0, 1.4, 0);
-      root.rotation.set(-Math.PI / 2, 0, 0);
+      root.position.set(5, 1.4, -3);
+      root.rotation.set(-Math.PI / 2, 0, -Math.PI/5);
       scene.add(root);
     });
   });
@@ -720,27 +723,6 @@ function objectLoaders() {
       scene.add(root);
     });
   });
-
-  // // top
-  // const heartMtl = new MTLLoader();
-  // heartMtl.load("rsc/Heart_box/heart.mtl", (mtl) => {
-  //   mtl.preload();
-  //   const objLoader = new OBJLoader();
-  //   objLoader.setMaterials(mtl);
-  //   objLoader.load("rsc/Heart_box/heart.obj", (root) => {
-  //     root.traverse((child) => {
-  //       if (child.isMesh) {
-  //         child.material.map.colorSpace = THREE.SRGBColorSpace;
-  //         // child.castShadow = true;
-  //         // child.receiveShadow = true;
-  //       }
-  //     });
-  //     root.scale.set(8, 8, 8);
-  //     root.position.set(0, -0.91, 0);
-  //     // root.rotation.set(-Math.PI / 2, 0, Math.PI);
-  //     scene.add(root);
-  //   });
-  // });
 }
 
 function render(time) {
