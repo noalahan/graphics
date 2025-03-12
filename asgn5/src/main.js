@@ -576,7 +576,7 @@ function shapes() {
     scene.background = texture;
   }
 
-  // bottom heart
+  // gate
   {
     const fence = loader.load("img/fence.png");
     const inner = loader.load("img/inner.png");
@@ -624,6 +624,18 @@ function shapes() {
     rDoor.receiveShadow = true;
     rDoor.position.x = 1.8;
     leftGate.add(rDoor);
+  }
+
+  // garden
+  {
+    const pool = new THREE.Mesh(
+      new THREE.CylinderGeometry(4, 3, 1, 32),
+      new THREE.MeshPhongMaterial({color: "white"})
+    )
+    pool.position.set(-5, 2, -5);
+    pool.castShadow = true;
+    pool.receiveShadow = true;
+    scene.add(pool);
   }
 
   // back logo
@@ -722,7 +734,7 @@ function objectLoaders() {
   //     // root.rotation.set(-Math.PI / 2, 0, Math.PI);
   //     scene.add(root);
   //   });
-  // }); 
+  // });
 }
 
 function render(time) {
