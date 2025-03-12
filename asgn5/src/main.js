@@ -69,7 +69,7 @@ function sceneSetup() {
   const near = 0.1;
   const far = 100;
   camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-  camera.position.set(3, 13, 0);
+  camera.position.set(0, 20, 20);
 
   // resize canvas if window size changes
   window.addEventListener("resize", () => {
@@ -82,7 +82,7 @@ function sceneSetup() {
 
   // create camera controls
   const controls = new OrbitControls(camera, canvas);
-  controls.target.set(3, 13, -10);
+  controls.target.set(0, 10, -10);
   controls.update();
 
   // set up scene
@@ -238,7 +238,7 @@ function pendulumTexture() {
   const ball = new THREE.Mesh(
     new THREE.BoxGeometry(0.5, 0.5, 0.5),
     new THREE.MeshPhongMaterial({ color: "yellow" })
-  )
+  );
   ball.position.y = -2.2;
   pendulum.add(ball);
 
@@ -331,12 +331,16 @@ function shapes() {
     scene.add(rightBase);
 
     // window
+    const texture = loader.load("img/topWindow.png");
+    texture.colorSpace = THREE.SRGBColorSpace;
     const window = new THREE.Mesh(
-      new THREE.CylinderGeometry(1.5, 0, 1, 16),
-      new THREE.MeshPhongMaterial({ color: "skyblue" })
+      new THREE.CylinderGeometry(1.5, 1.5, 1.68, 16),
+      new THREE.MeshPhongMaterial({ map: texture })
     );
-    window.position.set(0, 25.5, -16.8);
+    window.position.set(0, 25, -17.3);
     window.rotation.x = Math.PI / 2;
+    window.rotation.y = Math.PI / 2;
+    // window.receiveShadow = true;
     scene.add(window);
   }
 
@@ -510,7 +514,7 @@ function shapes() {
       new THREE.CylinderGeometry(0.9, 0, 1, 16),
       clockFaceMtl
     );
-    clock.position.set(2.7, 14.3, -14.6);
+    clock.position.set(2.7, 14.3, -14.74);
     clock.rotation.x = Math.PI / 2;
     scene.add(clock);
     // pendulum
@@ -518,15 +522,17 @@ function shapes() {
       new THREE.BoxGeometry(1.8, 3, 1.8),
       pendulumMtl
     );
-    weight.position.set(2.7, 11.5, -15);
+    weight.position.set(2.7, 11.5, -15.14);
     scene.add(weight);
 
     // window
+    const texture = loader.load("img/bottomWindow.png");
+    texture.colorSpace = THREE.SRGBColorSpace;
     const window = new THREE.Mesh(
-      new THREE.BoxGeometry(4, 3, 1),
-      new THREE.MeshPhongMaterial({ color: "skyblue" })
+      new THREE.BoxGeometry(4, 3, 1.8),
+      new THREE.MeshPhongMaterial({ map: texture })
     );
-    window.position.set(7.5, 15.5, -17);
+    window.position.set(7.5, 15.5, -17.35);
     scene.add(window);
   }
 
@@ -572,35 +578,68 @@ function shapes() {
 
   // bottom heart
   {
+    const fence = loader.load("img/fence.png");
+    const inner = loader.load("img/inner.png");
+    const left = loader.load("img/leftHeart.png");
+    const right = loader.load("img/rightHeart.png");
+
+    const rightMaterials = [
+      new THREE.MeshPhongMaterial({ color: "white" }),
+      new THREE.MeshPhongMaterial({ map: inner }),
+      new THREE.MeshPhongMaterial({ map: fence }),
+      new THREE.MeshPhongMaterial({ map: fence }),
+      new THREE.MeshPhongMaterial({ map: left }),
+      new THREE.MeshPhongMaterial({ map: right }),
+    ];
+
+    const leftMaterials = [
+      new THREE.MeshPhongMaterial({ map: inner }),
+      new THREE.MeshPhongMaterial({ color: "white" }),
+      new THREE.MeshPhongMaterial({ map: fence }),
+      new THREE.MeshPhongMaterial({ map: fence }),
+      new THREE.MeshPhongMaterial({ map: right }),
+      new THREE.MeshPhongMaterial({ map: left }),
+    ];
+
+    const geometry = new THREE.BoxGeometry(3.3, 3, 0.5);
+
     // right gate
     rightGate = new THREE.Object3D();
-    rightGate.position.set(3, 3, 7);
+    rightGate.position.set(3.5, 3.3, 7.5);
     scene.add(rightGate);
 
-    const lDoor = new THREE.Mesh(
-      new THREE.BoxGeometry(3.3, 3, 1),
-      new THREE.MeshPhongMaterial({ color: "white" })
-    );
+    const lDoor = new THREE.Mesh(geometry, rightMaterials);
     lDoor.castShadow = true;
     lDoor.receiveShadow = true;
-
-    lDoor.position.x = -1.2; // Move the cube up so its bottom edge is at (0,0,0)
-    rightGate.add(lDoor); // Add cube to pivot
+    lDoor.position.x = -1.8;
+    rightGate.add(lDoor);
 
     // left gate
     leftGate = new THREE.Object3D();
-    leftGate.position.set(-3, 3, 7);
+    leftGate.position.set(-3.5, 3.3, 7.5);
     scene.add(leftGate);
 
-    const rDoor = new THREE.Mesh(
-      new THREE.BoxGeometry(3.3, 3, 1),
-      new THREE.MeshPhongMaterial({ color: "white" })
-    );
+    const rDoor = new THREE.Mesh(geometry, leftMaterials);
     rDoor.castShadow = true;
     rDoor.receiveShadow = true;
+    rDoor.position.x = 1.8;
+    leftGate.add(rDoor);
+  }
 
-    rDoor.position.x = 1.2; // Move the cube up so its bottom edge is at (0,0,0)
-    leftGate.add(rDoor); // Add cube to pivot
+  // back logo
+  {
+    const texture = loader.load("img/logo.png");
+    texture.colorSpace = THREE.SRGBColorSpace;
+
+    const back = new THREE.Mesh(
+      new THREE.CylinderGeometry(4, 4, 0.5, 32),
+      new THREE.MeshPhongMaterial({ map: texture })
+    );
+    back.position.set(0, 16, -18.06);
+    back.rotation.x = Math.PI / 2;
+    back.rotation.y = -Math.PI / 2;
+    back.scale.set(1, 1, 1.3);
+    scene.add(back);
   }
 }
 
@@ -628,11 +667,11 @@ function objectLoaders() {
   // heart
   // edited blender model, original: https://www.turbosquid.com/3d-models/heart-box-2024099
   const baseMtl = new MTLLoader();
-  baseMtl.load("rsc/Heart_box/heart.mtl", (mtl) => {
+  baseMtl.load("rsc/Heart_box/bottom_heart.mtl", (mtl) => {
     mtl.preload();
     const objLoader = new OBJLoader();
     objLoader.setMaterials(mtl);
-    objLoader.load("rsc/Heart_box/heart.obj", (root) => {
+    objLoader.load("rsc/Heart_box/bottom_heart.obj", (root) => {
       root.traverse((child) => {
         if (child.isMesh) {
           child.castShadow = true; // Model will cast shadows
@@ -653,8 +692,8 @@ function objectLoaders() {
     objLoader.load("rsc/Heart_box/top_heart.obj", (root) => {
       root.traverse((child) => {
         if (child.isMesh) {
-          child.castShadow = true; // Model will cast shadows
-          child.receiveShadow = true; // Model will receive shadows
+          child.castShadow = true;
+          child.receiveShadow = true;
         }
       });
       root.scale.set(8, 8, 8);
@@ -663,6 +702,27 @@ function objectLoaders() {
       scene.add(root);
     });
   });
+
+  // // top
+  // const heartMtl = new MTLLoader();
+  // heartMtl.load("rsc/Heart_box/heart.mtl", (mtl) => {
+  //   mtl.preload();
+  //   const objLoader = new OBJLoader();
+  //   objLoader.setMaterials(mtl);
+  //   objLoader.load("rsc/Heart_box/heart.obj", (root) => {
+  //     root.traverse((child) => {
+  //       if (child.isMesh) {
+  //         child.material.map.colorSpace = THREE.SRGBColorSpace;
+  //         // child.castShadow = true;
+  //         // child.receiveShadow = true;
+  //       }
+  //     });
+  //     root.scale.set(8, 8, 8);
+  //     root.position.set(0, -0.91, 0);
+  //     // root.rotation.set(-Math.PI / 2, 0, Math.PI);
+  //     scene.add(root);
+  //   });
+  // }); 
 }
 
 function render(time) {

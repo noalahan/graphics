@@ -1,8 +1,8 @@
-# Blender MTL File: 'Heart box.blend'
-# Material Count: 1
+# Blender 4.3.2 MTL File: 'heart.blend'
+# www.blender.org
 
-newmtl Material
-Ns 360.999991
+newmtl Material.002
+Ns 361.000000
 Ka 1.000000 1.000000 1.000000
 Kd 0.800000 0.026302 0.205932
 Ks 0.500000 0.500000 0.500000
