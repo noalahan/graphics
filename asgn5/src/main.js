@@ -25,6 +25,8 @@ let pendulum;
 
 let rightGate;
 let leftGate;
+// let rightAngle;
+// let leftAngle;
 
 let cover;
 let open = false;
@@ -33,12 +35,6 @@ main();
 function main() {
   cover = new THREE.Object3D();
   cover.rotation.x = Math.PI / 2;
-
-  document.getElementById("c").addEventListener("click", function (event) {
-    if (event.shiftKey) {
-      open = !open;
-    }
-  });
 
   // set up
   sceneSetup();
@@ -54,6 +50,12 @@ function main() {
   billboard("Noa Lahan - CSE 160 Asgn 5", 4, 8);
   billboard("Shift click!", 2.5, 8);
   billboard("Extras: Billboard, Shadows, Render to Texture (clock)", 1, 6);
+
+  document.getElementById("c").addEventListener("click", function (event) {
+    if (event.shiftKey) {
+      open = !open;
+    }
+  });
 
   // render
   requestAnimationFrame(render);
@@ -764,15 +766,26 @@ function objectLoaders() {
 }
 
 let lastTime = 0;
+let startTime = 0;
+let justOpened = true;
 function render(time) {
   time *= 0.001; // convert time to seconds
+
   // gate
   if (cover.rotation.x <= 0) {
-    rightGate.rotation.y = 0.8 * Math.sin(time * 1.5); // Rotate around the new pivot point
-    leftGate.rotation.y = -0.8 * Math.sin(time * 1.5); // Rotate around the new pivot point
-  } else {
-    rightGate.rotation.y = 0;
-    leftGate.rotation.y = 0;
+    if (justOpened) {
+      startTime = time;
+      justOpened = false;
+    } else {
+      rightGate.rotation.y = 0.8 * Math.sin((startTime - time) * 1.5);
+      leftGate.rotation.y = -0.8 * Math.sin((startTime - time) * 1.5);
+    }
+  } else if (Math.abs(rightGate.rotation.y) > 0.01) {
+    justOpened = true;
+    let x = 1;
+    if (rightGate.rotation.y < 0) x = -1;
+    rightGate.rotation.y -= x * (time - lastTime);
+    leftGate.rotation.y += x * (time - lastTime);
   }
   // cover
   if (open && cover.rotation.x > 0) {
