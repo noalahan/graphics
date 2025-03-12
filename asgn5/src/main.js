@@ -26,8 +26,20 @@ let pendulum;
 let rightGate;
 let leftGate;
 
+let cover;
+let open = false;
+
 main();
 function main() {
+  cover = new THREE.Object3D();
+  cover.rotation.x = Math.PI / 2;
+
+  document.getElementById('c').addEventListener("click", function (event) {
+    if (event.shiftKey) {
+      open = !open;
+    }
+  });
+
   // set up
   sceneSetup();
   lighting();
@@ -38,9 +50,10 @@ function main() {
   // create objects
   shapes();
   objectLoaders();
-  billboard("Polly Pocket", 5, 12);
-  billboard("Noa Lahan - CSE 160 Asgn 5", 3, 8);
-  billboard("Extras: Billboard, Shadows, Render to Texture (clock)", 1.5, 6);
+  billboard("Polly Pocket", 6, 12);
+  billboard("Noa Lahan - CSE 160 Asgn 5", 4, 8);
+  billboard("Shift click!", 2.5, 8);
+  billboard("Extras: Billboard, Shadows, Render to Texture (clock)", 1, 6);
 
   // render
   requestAnimationFrame(render);
@@ -69,7 +82,7 @@ function sceneSetup() {
   const near = 0.1;
   const far = 100;
   camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-  camera.position.set(0, 20, 20);
+  camera.position.set(0, 20, 30);
 
   // resize canvas if window size changes
   window.addEventListener("resize", () => {
@@ -129,15 +142,15 @@ function lighting() {
   {
     // left sconce
     const left = new THREE.PointLight(0xffff55, 15);
-    left.position.set(-4.6, 22.3, -15);
-    scene.add(left);
+    left.position.set(-4.6, 17.3, -1);
+    cover.add(left);
     // const helperl = new THREE.PointLightHelper(left);
     // scene.add(helperl);
 
     // right sconce
     const right = new THREE.PointLight(0xffff55, 15);
-    right.position.set(4.6, 22.3, -15);
-    scene.add(right);
+    right.position.set(4.6, 17.3, -1);
+    cover.add(right);
     // const helperr = new THREE.PointLightHelper(right);
     // scene.add(helperr);
   }
@@ -145,10 +158,10 @@ function lighting() {
   // spot light
   {
     const spotlight = new THREE.SpotLight(0xffff55, 150, 10, Math.PI / 5, 0.1);
-    spotlight.position.set(-6, 16.7, -15);
-    scene.add(spotlight);
-    spotlight.target.position.set(-6, 15, -15);
-    scene.add(spotlight.target);
+    spotlight.position.set(-6, 11.7, -1);
+    cover.add(spotlight);
+    spotlight.target.position.set(-6, 10, -1);
+    cover.add(spotlight.target);
 
     // shadows
     spotlight.castShadow = true;
@@ -250,6 +263,35 @@ function pendulumTexture() {
 function shapes() {
   loader = new THREE.TextureLoader();
 
+  cover.position.set(0, 5, -14);
+  scene.add(cover);
+
+  const hinge = new THREE.Mesh(
+    new THREE.CylinderGeometry(1, 1, 18, 5),
+    new THREE.MeshPhongMaterial({ color: "#A80C23" })
+  );
+  hinge.rotation.z = Math.PI / 2;
+  cover.add(hinge);
+
+  // back logo
+  {
+    const texture = loader.load("img/logo.png");
+    texture.colorSpace = THREE.SRGBColorSpace;
+
+    const back = new THREE.Mesh(new THREE.CylinderGeometry(4, 4, 0.5, 32), [
+      new THREE.MeshPhongMaterial({ color: "yellow" }),
+      new THREE.MeshPhongMaterial({ map: texture }),
+      new THREE.MeshPhongMaterial({ map: texture }),
+    ]);
+    back.position.set(0, 11, -4.2);
+    back.rotation.x = Math.PI / 2;
+    back.rotation.y = Math.PI / 2;
+    back.scale.set(1, 1, 1.3);
+    back.castShadow = true;
+    // back.receiveShadow = true;
+    cover.add(back);
+  }
+
   const brown = new THREE.MeshPhongMaterial({ color: "#8A2A01" });
   // bedroom
   {
@@ -258,78 +300,78 @@ function shapes() {
       new THREE.BoxGeometry(21, 1, 3.2), // size
       new THREE.MeshPhongMaterial({ color: "#FFE882" }) // color
     );
-    floor.position.set(0, 19, -15);
+    floor.position.set(0, 14, -1);
     floor.castShadow = true;
     floor.receiveShadow = true;
-    scene.add(floor);
+    cover.add(floor);
 
     // bed base
     const base = new THREE.Mesh(
       new THREE.BoxGeometry(7, 1, 3.2), // size
       brown
     );
-    base.position.set(0, 20, -15);
+    base.position.set(0, 15, -1);
     base.castShadow = true;
     base.receiveShadow = true;
-    scene.add(base);
+    cover.add(base);
     // bed
     const bed = new THREE.Mesh(
       new THREE.BoxGeometry(5, 1, 3), // size
       new THREE.MeshPhongMaterial({ color: "#F0F6F6" }) // color
     );
-    bed.position.set(0, 21, -15);
+    bed.position.set(0, 16, -1);
     bed.castShadow = true;
     bed.receiveShadow = true;
-    scene.add(bed);
+    cover.add(bed);
     // blanket
     const blanket = new THREE.Mesh(
       new THREE.BoxGeometry(4, 1.2, 3.1), // size
       new THREE.MeshPhongMaterial({ color: "#9DDDE3" }) // color
     );
-    blanket.position.set(1, 21, -15);
+    blanket.position.set(1, 16, -1);
     blanket.castShadow = true;
     blanket.receiveShadow = true;
-    scene.add(blanket);
+    cover.add(blanket);
     // pillow
     const pillow = new THREE.Mesh(
       new THREE.BoxGeometry(1, 0.2, 1.8), // size
       new THREE.MeshPhongMaterial({ color: "#9DDDE3" }) // color
     );
-    pillow.position.set(-1.8, 21.6, -15);
+    pillow.position.set(-1.8, 16.6, -1);
     pillow.castShadow = true;
     // pillow.receiveShadow = true;
-    scene.add(pillow);
+    cover.add(pillow);
 
     // sconces
     const left = new THREE.Mesh(
       new THREE.SphereGeometry(-0.8, 10, 10),
       new THREE.MeshPhongMaterial({ color: "#ffff99", side: THREE.DoubleSide })
     );
-    left.position.set(-4.6, 22.3, -15);
-    scene.add(left);
+    left.position.set(-4.6, 17.3, -1);
+    cover.add(left);
     const right = new THREE.Mesh(
       new THREE.SphereGeometry(-0.8, 10, 10),
       new THREE.MeshPhongMaterial({ color: "#ffff99", side: THREE.DoubleSide })
     );
-    right.position.set(4.6, 22.3, -15);
-    scene.add(right);
+    right.position.set(4.6, 17.3, -1);
+    cover.add(right);
     // bases
     const leftBase = new THREE.Mesh(
       new THREE.BoxGeometry(0.4, 1, 2),
       new THREE.MeshPhongMaterial({ color: "#D6800F" })
     );
-    leftBase.position.set(-4.6, 21.5, -16);
+    leftBase.position.set(-4.6, 16.5, -2);
     // leftBase.castShadow = true;
     // leftBase.receiveShadow = true;
-    scene.add(leftBase);
+    cover.add(leftBase);
     const rightBase = new THREE.Mesh(
       new THREE.BoxGeometry(0.4, 1, 2),
       new THREE.MeshPhongMaterial({ color: "#D6800F" })
     );
-    rightBase.position.set(4.6, 21.5, -16);
+    rightBase.position.set(4.6, 16.5, -2);
     // rightBase.castShadow = true;
     // rightBase.receiveShadow = true;
-    scene.add(rightBase);
+    cover.add(rightBase);
 
     // window
     const texture = loader.load("img/topWindow.png");
@@ -338,11 +380,11 @@ function shapes() {
       new THREE.CylinderGeometry(1.5, 1.5, 1.68, 16),
       new THREE.MeshPhongMaterial({ map: texture })
     );
-    window.position.set(0, 25, -17.3);
+    window.position.set(0, 20, -3.3);
     window.rotation.x = Math.PI / 2;
     window.rotation.y = Math.PI / 2;
     // window.receiveShadow = true;
-    scene.add(window);
+    cover.add(window);
   }
 
   // dining room
@@ -353,99 +395,99 @@ function shapes() {
       new THREE.BoxGeometry(23, 1, 3.2), // size
       new THREE.MeshPhongMaterial({ color: "#FFE882" }) // color
     );
-    floor.position.set(0, 8.7, -15);
+    floor.position.set(0, 3.7, -1);
     floor.castShadow = true;
     floor.receiveShadow = true;
-    scene.add(floor);
+    cover.add(floor);
 
     // table
     const table = new THREE.Mesh(
       new THREE.CylinderGeometry(1.5, 1.5, 0.4, 16),
       pink
     );
-    table.position.set(-6, 11.9, -15);
+    table.position.set(-6, 6.9, -1);
     table.castShadow = true;
-    scene.add(table);
+    cover.add(table);
     // base
     const base = new THREE.Mesh(
       new THREE.CylinderGeometry(0.3, 0.5, 3, 16),
       brown
     );
-    base.position.set(-6, 10.5, -15);
+    base.position.set(-6, 5.5, -1);
     base.castShadow = true;
     base.receiveShadow = true;
-    scene.add(base);
+    cover.add(base);
 
     // left chairs
     // seat
     const leftBase = new THREE.Mesh(new THREE.BoxGeometry(2, 1.5, 2), brown);
-    leftBase.position.set(-8.5, 9.9, -15);
+    leftBase.position.set(-8.5, 4.9, -1);
     leftBase.castShadow = true;
     leftBase.receiveShadow = true;
-    scene.add(leftBase);
+    cover.add(leftBase);
     // back
     const leftBack = new THREE.Mesh(new THREE.BoxGeometry(0.3, 4.5, 2), brown);
-    leftBack.position.set(-9.6, 11, -15);
+    leftBack.position.set(-9.6, 6, -1);
     leftBack.castShadow = true;
     // leftBack.receiveShadow = true;
-    scene.add(leftBack);
+    cover.add(leftBack);
     // pillow
     const leftPillow = new THREE.Mesh(
       new THREE.SphereGeometry(1.1, 16, 6),
       pink
     );
-    leftPillow.position.set(-8.5, 10.8, -15);
+    leftPillow.position.set(-8.5, 5.8, -1);
     leftPillow.scale.set(1, 0.2, 1);
     // leftPillow.castShadow = true;
     leftPillow.receiveShadow = true;
-    scene.add(leftPillow);
+    cover.add(leftPillow);
 
     // right chairs
     // seat
     const rightBase = new THREE.Mesh(new THREE.BoxGeometry(2, 1.5, 2), brown);
-    rightBase.position.set(-3.5, 9.9, -15);
+    rightBase.position.set(-3.5, 4.9, -1);
     rightBase.castShadow = true;
     rightBase.receiveShadow = true;
-    scene.add(rightBase);
+    cover.add(rightBase);
     // back
     const rightBack = new THREE.Mesh(new THREE.BoxGeometry(0.3, 4.5, 2), brown);
-    rightBack.position.set(-2.4, 11, -15);
+    rightBack.position.set(-2.4, 6, -1);
     rightBack.castShadow = true;
     // rightBack.receiveShadow = true;
-    scene.add(rightBack);
+    cover.add(rightBack);
     // pillow
     const rightPillow = new THREE.Mesh(
       new THREE.SphereGeometry(1.1, 16, 6),
       pink
     );
-    rightPillow.position.set(-3.5, 10.8, -15);
+    rightPillow.position.set(-3.5, 5.8, -1);
     rightPillow.scale.set(1, 0.2, 1);
     // rightPillow.castShadow = true;
     rightPillow.receiveShadow = true;
-    scene.add(rightPillow);
+    cover.add(rightPillow);
 
     // light
     const pole = new THREE.Mesh(
       new THREE.BoxGeometry(0.2, 2.8, 0.2),
       new THREE.MeshPhongMaterial({ color: "#D6800F" })
     );
-    pole.position.set(-6, 17.2, -15);
-    scene.add(pole);
+    pole.position.set(-6, 12.2, -1);
+    cover.add(pole);
     // top
     const top = new THREE.Mesh(
       new THREE.CylinderGeometry(0, 1.7, 4, 16),
       new THREE.MeshPhongMaterial({ color: "#6B2737" })
     );
-    top.position.set(-6, 16.2, -15);
+    top.position.set(-6, 11.2, -1);
     top.scale.set(1, 0.2, 1);
-    scene.add(top);
+    cover.add(top);
     // light bulb
     const light = new THREE.Mesh(
       new THREE.SphereGeometry(-0.6, 10, 10),
       new THREE.MeshPhongMaterial({ color: "#ffff99", side: THREE.DoubleSide })
     );
-    light.position.set(-6, 15.5, -15);
-    scene.add(light);
+    light.position.set(-6, 10.5, -1);
+    cover.add(light);
   }
 
   // living room
@@ -456,59 +498,59 @@ function shapes() {
       new THREE.CylinderGeometry(1.5, 1.5, 1, 16),
       green
     );
-    back.position.set(7, 12, -16);
+    back.position.set(7, 7, -2);
     back.rotation.x = Math.PI / 2;
     back.castShadow = true;
     back.receiveShadow = true;
-    scene.add(back);
+    cover.add(back);
     // bottom
     const base = new THREE.Mesh(new THREE.BoxGeometry(3.5, 1.8, 3), green);
-    base.position.set(7, 10, -15);
+    base.position.set(7, 5, -1);
     base.castShadow = true;
     base.receiveShadow = true;
-    scene.add(base);
+    cover.add(base);
     // left arm
     const left = new THREE.Mesh(
       new THREE.CylinderGeometry(0.6, 0.6, 3.1, 16),
       green
     );
-    left.position.set(5.5, 11.3, -15);
+    left.position.set(5.5, 6.3, -1);
     left.rotation.x = Math.PI / 2;
     left.castShadow = true;
     left.receiveShadow = true;
-    scene.add(left);
+    cover.add(left);
     // right arm
     const right = new THREE.Mesh(
       new THREE.CylinderGeometry(0.6, 0.6, 3.1, 16),
       green
     );
-    right.position.set(8.5, 11.3, -15);
+    right.position.set(8.5, 6.3, -1);
     right.rotation.x = Math.PI / 2;
     right.castShadow = true;
     right.receiveShadow = true;
-    scene.add(right);
+    cover.add(right);
 
     // clock
     const body = new THREE.Mesh(new THREE.BoxGeometry(2.5, 7, 2.5), brown);
-    body.position.set(2.7, 12, -15.5);
+    body.position.set(2.7, 7, -1.5);
     body.castShadow = true;
     body.receiveShadow = true;
-    scene.add(body);
+    cover.add(body);
     // clock
     const clock = new THREE.Mesh(
       new THREE.CylinderGeometry(0.9, 0, 1, 16),
       clockFaceMtl
     );
-    clock.position.set(2.7, 14.3, -14.74);
+    clock.position.set(2.7, 9.3, -0.74);
     clock.rotation.x = Math.PI / 2;
-    scene.add(clock);
+    cover.add(clock);
     // pendulum
     const weight = new THREE.Mesh(
       new THREE.BoxGeometry(1.8, 3, 1.8),
       pendulumMtl
     );
-    weight.position.set(2.7, 11.5, -15.14);
-    scene.add(weight);
+    weight.position.set(2.7, 6.5, -1.14);
+    cover.add(weight);
 
     // window
     const texture = loader.load("img/bottomWindow.png");
@@ -517,8 +559,8 @@ function shapes() {
       new THREE.BoxGeometry(4, 3, 1.8),
       new THREE.MeshPhongMaterial({ map: texture })
     );
-    window.position.set(7.5, 15.5, -17.35);
-    scene.add(window);
+    window.position.set(7.5, 10.5, -3.34);
+    cover.add(window);
   }
 
   // ground plane
@@ -542,7 +584,7 @@ function shapes() {
     });
     const mesh = new THREE.Mesh(planeGeo, planeMat);
     mesh.rotation.x = Math.PI * -0.5;
-    mesh.position.set(0, 0, -5);
+    mesh.position.set(0, -0.31, -5);
     mesh.receiveShadow = true;
     scene.add(mesh);
   }
@@ -647,7 +689,7 @@ function shapes() {
     scene.add(grass3);
 
     // path
-    const pebbles = loader.load('img/path.png');
+    const pebbles = loader.load("img/path.png");
     pebbles.colorSpace = THREE.SRGBColorSpace;
     const path = new THREE.Mesh(
       new THREE.BoxGeometry(20, 1, 5),
@@ -657,22 +699,6 @@ function shapes() {
     path.rotation.y = Math.PI / 4;
     path.receiveShadow = true;
     scene.add(path);
-  }
-
-  // back logo
-  {
-    const texture = loader.load("img/logo.png");
-    texture.colorSpace = THREE.SRGBColorSpace;
-
-    const back = new THREE.Mesh(
-      new THREE.CylinderGeometry(4, 4, 0.5, 32),
-      new THREE.MeshPhongMaterial({ map: texture })
-    );
-    back.position.set(0, 16, -18.06);
-    back.rotation.x = Math.PI / 2;
-    back.rotation.y = -Math.PI / 2;
-    back.scale.set(1, 1, 1.3);
-    scene.add(back);
   }
 }
 
@@ -730,19 +756,32 @@ function objectLoaders() {
         }
       });
       root.scale.set(8, 8, 8);
-      root.position.set(0, 19, -19);
+      root.position.set(0, 14, -5);
       root.rotation.set(-Math.PI / 2, 0, Math.PI);
-      scene.add(root);
+      cover.add(root);
     });
   });
 }
 
+let lastTime = 0;
 function render(time) {
   time *= 0.001; // convert time to seconds
-
   // gate
-  rightGate.rotation.y = 0.8 * Math.sin(time * 1.5); // Rotate around the new pivot point
-  leftGate.rotation.y = -0.8 * Math.sin(time * 1.5); // Rotate around the new pivot point
+  if (cover.rotation.x <= 0) {
+    rightGate.rotation.y = 0.8 * Math.sin(time * 1.5); // Rotate around the new pivot point
+    leftGate.rotation.y = -0.8 * Math.sin(time * 1.5); // Rotate around the new pivot point
+  } else {
+    rightGate.rotation.y = 0;
+    leftGate.rotation.y = 0;
+  }
+  // cover
+  if (open && cover.rotation.x > 0) {
+    // cover.rotation.x -= time * 0.01;
+    cover.rotation.x -= time-lastTime;
+  }
+  if (!open && cover.rotation.x < Math.PI / 2) {
+    cover.rotation.x += time-lastTime;
+  }
 
   // clock face
   hours.rotation.z = -time * 0.3;
@@ -764,6 +803,7 @@ function render(time) {
   renderer.render(scene, camera);
 
   requestAnimationFrame(render);
+  lastTime = time;
 }
 
 /**
