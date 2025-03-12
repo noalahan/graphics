@@ -1,6 +1,6 @@
-// base code from https://threejs.org/manual
+// most base code from https://threejs.org/manual
 import "./style.css";
-import * as THREE from "three";
+import * as THREE from "/node_modules/three/build/three.module.js";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { OBJLoader } from "three/addons/loaders/OBJLoader.js";
 import { MTLLoader } from "three/addons/loaders/MTLLoader.js";
