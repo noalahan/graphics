@@ -1,5 +1,4 @@
 # Assignment 5 - Three.js
-Chosen project inspired by the polly pocket brand
 
 ### Objectives
 - Review all the topics covered in this course in a new library
