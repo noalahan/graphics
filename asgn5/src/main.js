@@ -645,6 +645,18 @@ function shapes() {
     grass3.rotation.y = Math.PI / 4;
     grass3.receiveShadow = true;
     scene.add(grass3);
+
+    // path
+    const pebbles = loader.load('img/path.png');
+    pebbles.colorSpace = THREE.SRGBColorSpace;
+    const path = new THREE.Mesh(
+      new THREE.BoxGeometry(20, 1, 5),
+      new THREE.MeshPhongMaterial({ map: pebbles })
+    );
+    path.position.set(3, 1.01, -2);
+    path.rotation.y = Math.PI / 4;
+    path.receiveShadow = true;
+    scene.add(path);
   }
 
   // back logo
@@ -680,7 +692,7 @@ function objectLoaders() {
       });
       root.scale.set(0.2, 0.2, 0.2);
       root.position.set(5, 1.4, -3);
-      root.rotation.set(-Math.PI / 2, 0, -Math.PI/5);
+      root.rotation.set(-Math.PI / 2, 0, -Math.PI / 5);
       scene.add(root);
     });
   });
