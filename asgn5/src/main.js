@@ -1,9 +1,9 @@
 // most base code from https://threejs.org/manual
 import "./style.css";
 import * as THREE from "/node_modules/three/build/three.module.js";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader.js";
-import { MTLLoader } from "three/examples/jsm/loaders/MTLLoader.js";
+import { OrbitControls } from "node_modules/three/examples/jsm/controls/OrbitControls.js";
+import { OBJLoader } from "node_modules/three/examples/jsm/loaders/OBJLoader.js";
+import { MTLLoader } from "node_modules/three/examples/jsm/loaders/MTLLoader.js";
 
 let renderer;
 let camera;
@@ -34,7 +34,7 @@ function main() {
   cover = new THREE.Object3D();
   cover.rotation.x = Math.PI / 2;
 
-  document.getElementById('c').addEventListener("click", function (event) {
+  document.getElementById("c").addEventListener("click", function (event) {
     if (event.shiftKey) {
       open = !open;
     }
@@ -777,10 +777,10 @@ function render(time) {
   // cover
   if (open && cover.rotation.x > 0) {
     // cover.rotation.x -= time * 0.01;
-    cover.rotation.x -= time-lastTime;
+    cover.rotation.x -= time - lastTime;
   }
   if (!open && cover.rotation.x < Math.PI / 2) {
-    cover.rotation.x += time-lastTime;
+    cover.rotation.x += time - lastTime;
   }
 
   // clock face
