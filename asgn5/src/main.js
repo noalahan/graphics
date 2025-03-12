@@ -628,9 +628,15 @@ function shapes() {
 
   // garden
   {
+    let texture = loader.load('img/pool.png');
+    texture.colorSpace = THREE.SRGBColorSpace;
     const pool = new THREE.Mesh(
       new THREE.CylinderGeometry(4, 3, 1, 32),
-      new THREE.MeshPhongMaterial({color: "white"})
+      [
+        new THREE.MeshPhongMaterial({color: "white"}),
+        new THREE.MeshPhongMaterial({map: texture}),
+        new THREE.MeshPhongMaterial({map: texture}),
+      ]
     )
     pool.position.set(-5, 2, -5);
     pool.castShadow = true;
