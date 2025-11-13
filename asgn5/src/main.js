@@ -47,14 +47,12 @@ function main() {
   shapes();
   objectLoaders();
   billboard("Polly Pocket", 6, 12);
-  billboard("Noa Lahan - CSE 160 Asgn 5", 4, 8);
-  billboard("Shift click!", 2.5, 8);
+  billboard("Noa Lahan", 4, 8);
+  billboard("Double click to open!", 2.5, 8);
   billboard("Extras: Billboard, Shadows, Render to Texture (clock)", 1, 6);
 
-  document.getElementById("c").addEventListener("click", function (event) {
-    if (event.shiftKey) {
-      open = !open;
-    }
+  document.getElementById("c").addEventListener("dblclick", function (event) {
+    open = !open;
   });
 
   // render
