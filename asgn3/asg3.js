@@ -671,6 +671,7 @@ function renderAllShapes() {
 
   if (Math.abs(g_eye.x) < 1 && Math.abs(g_eye.z) < 1 && !view) {
     document.getElementById("title").innerHTML = "You found love!";
+    document.getElementById("subtitle").innerHTML = "YAY"
   }
 
   // butterflies

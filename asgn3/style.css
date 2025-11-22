@@ -36,7 +36,6 @@ body {
 /* OPENING CARD */
 #opening {
   display: flex;
-  /* justify-content: center; */
   flex-direction: column;
   align-items: center;
 
@@ -45,8 +44,6 @@ body {
   top: 50%;
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
-
-  /* display: none; */
 }
 #opening h1 {
   font-size: 7rem;
@@ -79,8 +76,7 @@ p {
   /* display: grid; */
   grid-template-areas:
     "header header header"
-    "menu main info"
-    "footer footer footer";
+    "menu main info";
   grid-template-columns: 1fr 3fr 1fr;
   gap: 5px;
 }
@@ -102,12 +98,6 @@ p {
 #game > #info {
   font-size: 2rem;
 }
-#game > #footer {
-  grid-area: footer;
-  text-align: center;
-  font-size: 2rem;
-  color: #f6bdd1;
-}
 
 canvas {
   border-radius: 20px;
@@ -126,6 +116,17 @@ canvas {
   justify-content: space-between;
   text-align: center;
 }
+#info{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  gap: 10px;
+}
+#info p{
+  /* background-color: #1e1b18; */
+  font-size: 1.5rem;
+}
 #performance{
   font-size: 1.5rem;
 }
@@ -136,13 +137,12 @@ canvas {
   font-size: 1.5rem;
 }
 #return {
-  /* color: red; */
   display: none;
 }
 
 
 .slider {
-  -webkit-appearance: none;
+  appearance: none;
   width: 100%;
   height: 15px;
   border-radius: 10px;  
@@ -158,9 +158,10 @@ canvas {
   cursor: pointer;
 }
 
-@media screen and (max-width: 1248px) {
-  #opening{
-    /* background-color: aqua; */
+@media screen and (max-width: 1400px) {
+  canvas{
+    width: 60vw;
+    height: 40vw;
   }
 }
 @media screen and (max-width: 670px) {
