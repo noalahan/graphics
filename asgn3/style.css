@@ -157,3 +157,20 @@ canvas {
   background: #f3a5c0;
   cursor: pointer;
 }
+
+@media screen and (max-width: 1248px) {
+  #opening{
+    /* background-color: aqua; */
+  }
+}
+@media screen and (max-width: 670px) {
+  #opening h1{
+    font-size: 520%;
+  }
+  #opening h2{
+    font-size: 300%;
+  }
+  #opening p{
+    font-size: 200%;
+  }
+}
