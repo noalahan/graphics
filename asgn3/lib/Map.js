@@ -160,7 +160,7 @@ function editMap(i, dir) {
     let startY = Math.round(31 - (y * 2 + 15.5));
     let dirX = dir.x, dirY = dir.z;
     
-    console.log("start: "+startX+" "+startY);
+    // console.log("start: "+startX+" "+startY);
 
     let mapX, mapY, roundX, roundY, block;
     let hit = false;
@@ -180,15 +180,11 @@ function editMap(i, dir) {
                 hit = true;
                 if (!(i > 0 && block > 5)){
                     g_map[roundX][roundY] += i;
-                    console.log("break: "+roundX+" "+roundY);
+                    // console.log("break: "+roundX+" "+roundY);
                 }
             }
         }
         x += dirX;
         y += dirY;
-        // hit = true;
     }
-
-    // if ()
-    // console.log("g_map["+mapX+"]["+mapY+"]");
 }

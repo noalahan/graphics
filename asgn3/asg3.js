@@ -473,10 +473,13 @@ function main() {
   connectVariablesToGLSL();
   addActionsForHtmlUI();
 
-  document.onkeydown = keydown;
-  // document.onkeyup = () => {
-    
-  // };
+  document.onkeydown = (event) => {keydown(event.key)};
+  document.onkeyup = () => {
+    const keys = document.getElementsByClassName("key");
+    for (const k of keys) {
+      k.style.backgroundColor = "#edebe8";
+    }
+  };
   initTextures();
 
   // Specify the color for clearing <canvas>
@@ -511,7 +514,7 @@ var g_up = new Vector([0, 1, 0]);
  * Changes camera placement on key press
  * @param {*} event Key press event
  */
-function keydown(event) {
+function keydown(key) {
   let change = 0.1;
   // get front direction
   var frontDir = g_eye.direction(g_at);
@@ -523,35 +526,42 @@ function keydown(event) {
   sideDir.normalize();
   sideDir.mul(change);
 
-  if (event.keyCode == 87) {
+  if (key === "w") {
     // W: move forward
-    document.getElementById("W").style.backgroundColor = "red";
+    document.getElementById("W").style.backgroundColor = "#f3a5c0";
     g_eye.add(frontDir);
     g_at.add(frontDir);
-  } else if (event.keyCode == 65) {
+  } else if (key === "a") {
     // A: move left
+    document.getElementById("A").style.backgroundColor = "#f3a5c0";
     g_eye.add(sideDir);
     g_at.add(sideDir);
-  } else if (event.keyCode == 83) {
+  } else if (key === "s") {
     // S: move backward
+    document.getElementById("S").style.backgroundColor = "#f3a5c0";
     g_eye.setSub(frontDir);
     g_at.setSub(frontDir);
-  } else if (event.keyCode == 68) {
+  } else if (key === "d") {
     // D: move right
+    document.getElementById("D").style.backgroundColor = "#f3a5c0";
     g_eye.setSub(sideDir);
     g_at.setSub(sideDir);
-  } else if (event.keyCode == 81) {
+  } else if (key === "q") {
     // Q: look left
+    document.getElementById("Q").style.backgroundColor = "#f3a5c0";
     rotateCamera(change * 0.5, g_up);
-  } else if (event.keyCode == 69) {
+  } else if (key === "e") {
     // E: look right
+    document.getElementById("E").style.backgroundColor = "#f3a5c0";
     rotateCamera(-change * 0.5, g_up);
-  } else if (event.keyCode == 37) {
-    // left arrow: break cube
-    editMap(-1, frontDir);
-  } else if (event.keyCode == 39) {
-    // right arrow: build cube
+  } else if (key === "ArrowLeft") {
+    // left arrow: build cube
+    document.getElementById("L").style.backgroundColor = "#f3a5c0";
     editMap(1, frontDir);
+  } else if (key === "ArrowRight") {
+    // right arrow: break cube
+    document.getElementById("R").style.backgroundColor = "#f3a5c0";
+    editMap(-1, frontDir);
   }
 
   renderAllShapes();
