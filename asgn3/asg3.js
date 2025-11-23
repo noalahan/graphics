@@ -271,11 +271,6 @@ function addActionsForHtmlUI() {
     g_at = new Vector([10, 0.6, 0]);
     document.getElementById("title").innerHTML = "";
   };
-
-  // rotation selector
-  // document.getElementById("angle").addEventListener("mousemove", function () {
-  //   g_globalAngle = this.value;
-  // });
   // field of view selector
   document.getElementById("fov").addEventListener("mousemove", function () {
     g_fov = this.value;
@@ -479,6 +474,9 @@ function main() {
   addActionsForHtmlUI();
 
   document.onkeydown = keydown;
+  // document.onkeyup = () => {
+    
+  // };
   initTextures();
 
   // Specify the color for clearing <canvas>
@@ -506,9 +504,6 @@ function updateAnim() {
   g_height1 = 0.1 * Math.sin(g_seconds * 4);
 }
 
-// var g_eye = new Vector([-6.3, 0.6, 6]);
-// var g_at = new Vector([-4, 0.5, -10]);
-
 var g_eye = new Vector([-10, 0.6, 0]);
 var g_at = new Vector([10, 0.6, 0]);
 var g_up = new Vector([0, 1, 0]);
@@ -517,16 +512,12 @@ var g_up = new Vector([0, 1, 0]);
  * @param {*} event Key press event
  */
 function keydown(event) {
-  // console.log("g_eye(" + g_eye.x + ", " + g_eye.y + ", " + g_eye.z + ")");
-
   let change = 0.1;
   // get front direction
   var frontDir = g_eye.direction(g_at);
   frontDir.y = 0;
   frontDir.mul(change);
-  // console.log(
-  //   "dir(" + frontDir.x + ", " + frontDir.y + ", " + frontDir.z + ")"
-  // );
+
   // get side direction
   var sideDir = Vector.cross(g_up, frontDir);
   sideDir.normalize();
@@ -534,6 +525,7 @@ function keydown(event) {
 
   if (event.keyCode == 87) {
     // W: move forward
+    document.getElementById("W").style.backgroundColor = "red";
     g_eye.add(frontDir);
     g_at.add(frontDir);
   } else if (event.keyCode == 65) {
@@ -554,15 +546,6 @@ function keydown(event) {
   } else if (event.keyCode == 69) {
     // E: look right
     rotateCamera(-change * 0.5, g_up);
-
-    // } else if (event.keyCode == 38) {
-    //   // up arrow: move up
-    //   g_eye.y += change;
-    //   g_at.y += change;
-    // } else if (event.keyCode == 40) {
-    //   // down arrow: move down
-    //   g_eye.y -= change;
-    //   g_at.y -= change;
   } else if (event.keyCode == 37) {
     // left arrow: break cube
     editMap(-1, frontDir);
@@ -572,7 +555,6 @@ function keydown(event) {
   }
 
   renderAllShapes();
-  // console.log(event.keyCode);
 }
 
 let bfX = [];
@@ -671,7 +653,7 @@ function renderAllShapes() {
 
   if (Math.abs(g_eye.x) < 1 && Math.abs(g_eye.z) < 1 && !view) {
     document.getElementById("title").innerHTML = "You found love!";
-    document.getElementById("subtitle").innerHTML = "YAY"
+    document.getElementById("subtitle").innerHTML = "YAY";
   }
 
   // butterflies

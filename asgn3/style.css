@@ -48,14 +48,12 @@ body {
 #opening h1 {
   font-size: 7rem;
   color: #f6bdd1;
-  /* padding: 0; */
 }
 h2 {
   font-size: 4rem;
   color: #f3a5c0;
   text-align: center;
   margin: 5px;
-  /* padding: 0; */
 }
 p {
   font-size: 2.5rem;
@@ -71,13 +69,16 @@ p {
 }
 
 /* GAME VIEW */
+canvas {
+  width: 60vw;
+}
 #game {
   display: none;
   /* display: grid; */
   grid-template-areas:
     "header header header"
     "menu main info";
-  grid-template-columns: 1fr 3fr 1fr;
+  grid-template-columns: 1.2fr auto 1fr;
   gap: 5px;
 }
 #game > #header {
@@ -98,7 +99,6 @@ p {
 #game > #info {
   font-size: 2rem;
 }
-
 canvas {
   border-radius: 20px;
   border-style: solid;
@@ -107,71 +107,79 @@ canvas {
   color: #1e1b18;
   font-size: 150%;
 }
-#menu {
-  padding: 20px;
-  font-size: 2rem;
 
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  text-align: center;
-}
-#info{
+#menu, #info {
+  font-size: 2rem;
+  color: #edebe8;
+
   display: flex;
   flex-direction: column;
   justify-content: center;
   text-align: center;
-  gap: 10px;
+  gap: 20px;
 }
-#info p{
-  /* background-color: #1e1b18; */
-  font-size: 1.5rem;
-}
-#performance{
+#performance {
   font-size: 1.5rem;
 }
 #mouse {
   background-color: #f3a5c0;
 }
-#game p{
-  font-size: 1.5rem;
-}
 #return {
   display: none;
 }
-
-
 .slider {
   appearance: none;
   width: 100%;
   height: 15px;
-  border-radius: 10px;  
+  border-radius: 10px;
   background: #edebe8;
 }
-
 .slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
+  appearance: none;
   width: 25px;
   height: 25px;
-  border-radius: 50%; 
+  border-radius: 50%;
   background: #f3a5c0;
   cursor: pointer;
 }
 
-@media screen and (max-width: 1400px) {
-  canvas{
+#info{
+  gap: 10px;
+}
+#letters, #arrows{ 
+  display: grid;
+  grid-template-columns: repeat(3, 57px);
+  gap: 2px;
+  justify-content: center;
+}
+#arrows {
+  grid-template-columns: repeat(2, 57px);
+}
+#letters div,
+#arrows div {
+  border-radius: 5px;
+  text-decoration: none;
+  border-style: solid;
+  border-width: 2px 2px 4px 2px;
+  color: #1e1b18;
+  background-color: #edebe8;
+  padding: 5px;
+}
+
+@media screen and (max-width: 1240px) {
+  canvas {
     width: 60vw;
-    height: 40vw;
+    height: 60vw;
   }
 }
 @media screen and (max-width: 670px) {
-  #opening h1{
+  #opening h1 {
     font-size: 520%;
   }
-  #opening h2{
+  #opening h2 {
     font-size: 300%;
   }
-  #opening p{
+  #opening p {
     font-size: 200%;
   }
 }
