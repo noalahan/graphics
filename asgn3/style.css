@@ -22,6 +22,7 @@ body {
 
   border-style: solid;
   border-width: 2px 2px 4px 2px;
+  border-color: #1e1b18;
 
   color: #1e1b18;
   font-size: 2rem;
@@ -223,7 +224,19 @@ canvas {
 }
 
 @media screen and (max-width: 670px) {
+  #opening{
+    font-size: 80%;
+  }
+  #title{
+    font-size: 3rem;
+  }
+  #subtitle{
+    font-size: 1.5rem;
+  }
   #game{
     grid-template-columns: 1fr 1fr;
+  }
+  #menu{
+    gap: 8px;
   }
 }
