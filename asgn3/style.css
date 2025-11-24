@@ -187,7 +187,7 @@ canvas {
   }
 }
 
-@media screen and (max-width: 870px) {
+@media screen and (max-width: 970px) {
   canvas {
     width: 95vw;
   }
@@ -222,7 +222,7 @@ canvas {
   }
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 670px) {
   #game{
     grid-template-columns: 1fr 1fr;
   }
