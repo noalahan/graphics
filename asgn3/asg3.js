@@ -219,7 +219,7 @@ function connectVariablesToGLSL() {
 
 let g_globalAngle = -140;
 let g_fov = 65;
-let mouseTrack = true;
+let mouseTrack = false;
 let g_currentX = -10;
 let g_currentZ = 0;
 let view = false;
@@ -234,6 +234,7 @@ function addActionsForHtmlUI() {
     document.getElementById("game").style.display = "grid";
   };
 
+  // MENU
   // mouse movement
   let lastMouseX = null;
   let lastMouseY = null;
@@ -259,9 +260,9 @@ function addActionsForHtmlUI() {
       g_at.y = 0;
     }
     if (mouseTrack) {
-      this.style.backgroundColor = "#edebe8";
+      this.style.backgroundColor = "";
     } else {
-      this.style.backgroundColor = "#f3a5c0";
+      this.style.backgroundColor = "#F093B4";
     }
     mouseTrack = !mouseTrack;
   };
@@ -269,13 +270,14 @@ function addActionsForHtmlUI() {
   document.getElementById("reset").onclick = function () {
     g_eye = new Vector([-10, 0.6, 0]);
     g_at = new Vector([10, 0.6, 0]);
-    document.getElementById("title").innerHTML = "";
+    document.getElementById("title").innerHTML = "Valentine's Maze";
+    document.getElementById("subtitle").innerHTML =
+      "Solve the maze to find love!";
   };
   // field of view selector
   document.getElementById("fov").addEventListener("mousemove", function () {
     g_fov = this.value;
   });
-
   // top view toggle
   let eye = new Vector(),
     at = new Vector();
@@ -301,6 +303,40 @@ function addActionsForHtmlUI() {
     document.getElementById("top").style.display = "inline-block";
     this.style.display = "none";
   };
+
+  // KEYS
+  document.getElementById("Q").addEventListener("click", () => {
+    keydown("q");
+    resetKeys();
+  });
+  document.getElementById("W").addEventListener("click", () => {
+    keydown("w");
+    resetKeys();
+  });
+  document.getElementById("E").addEventListener("click", () => {
+    keydown("e");
+    resetKeys();
+  });
+  document.getElementById("A").addEventListener("click", () => {
+    keydown("a");
+    resetKeys();
+  });
+  document.getElementById("S").addEventListener("click", () => {
+    keydown("s");
+    resetKeys();
+  });
+  document.getElementById("D").addEventListener("click", () => {
+    keydown("d");
+    resetKeys();
+  });
+  document.getElementById("L").addEventListener("click", () => {
+    keydown("ArrowLeft");
+    resetKeys();
+  });
+  document.getElementById("R").addEventListener("click", () => {
+    keydown("ArrowRight");
+    resetKeys();
+  });
 }
 
 let COLOR = -2;
@@ -473,13 +509,11 @@ function main() {
   connectVariablesToGLSL();
   addActionsForHtmlUI();
 
-  document.onkeydown = (event) => {keydown(event.key)};
-  document.onkeyup = () => {
-    const keys = document.getElementsByClassName("key");
-    for (const k of keys) {
-      k.style.backgroundColor = "#edebe8";
-    }
+  document.onkeydown = (event) => {
+    keydown(event.key);
   };
+  document.onkeyup = resetKeys;
+
   initTextures();
 
   // Specify the color for clearing <canvas>
@@ -528,43 +562,49 @@ function keydown(key) {
 
   if (key === "w") {
     // W: move forward
-    document.getElementById("W").style.backgroundColor = "#f3a5c0";
+    document.getElementById("W").style.backgroundColor = "#F093B4";
     g_eye.add(frontDir);
     g_at.add(frontDir);
   } else if (key === "a") {
     // A: move left
-    document.getElementById("A").style.backgroundColor = "#f3a5c0";
+    document.getElementById("A").style.backgroundColor = "#F093B4";
     g_eye.add(sideDir);
     g_at.add(sideDir);
   } else if (key === "s") {
     // S: move backward
-    document.getElementById("S").style.backgroundColor = "#f3a5c0";
+    document.getElementById("S").style.backgroundColor = "#F093B4";
     g_eye.setSub(frontDir);
     g_at.setSub(frontDir);
   } else if (key === "d") {
     // D: move right
-    document.getElementById("D").style.backgroundColor = "#f3a5c0";
+    document.getElementById("D").style.backgroundColor = "#F093B4";
     g_eye.setSub(sideDir);
     g_at.setSub(sideDir);
   } else if (key === "q") {
     // Q: look left
-    document.getElementById("Q").style.backgroundColor = "#f3a5c0";
+    document.getElementById("Q").style.backgroundColor = "#F093B4";
     rotateCamera(change * 0.5, g_up);
   } else if (key === "e") {
     // E: look right
-    document.getElementById("E").style.backgroundColor = "#f3a5c0";
+    document.getElementById("E").style.backgroundColor = "#F093B4";
     rotateCamera(-change * 0.5, g_up);
   } else if (key === "ArrowLeft") {
     // left arrow: build cube
-    document.getElementById("L").style.backgroundColor = "#f3a5c0";
+    document.getElementById("L").style.backgroundColor = "#F093B4";
     editMap(1, frontDir);
   } else if (key === "ArrowRight") {
     // right arrow: break cube
-    document.getElementById("R").style.backgroundColor = "#f3a5c0";
+    document.getElementById("R").style.backgroundColor = "#F093B4";
     editMap(-1, frontDir);
   }
 
   renderAllShapes();
+}
+function resetKeys() {
+  const keys = document.getElementsByClassName("key");
+  for (const k of keys) {
+    k.style.backgroundColor = "";
+  }
 }
 
 let bfX = [];
@@ -667,10 +707,9 @@ function renderAllShapes() {
   }
 
   // butterflies
-  for (i = 0; i < 15; i++) {
+  for (i = 0; i < 12; i++) {
     drawButterfly(g_wings1, bfX[i], 1.5 + g_height1 * bfY[i], bfZ[i], bfRot[i]);
   }
-  // drawButterfly(g_wings1, 1, g_height1, 0);
 }
 
 /**
@@ -776,7 +815,7 @@ function tick() {
 
   // coordinate display
   document.getElementById("coor").innerHTML =
-    "Coordinates:\n" + g_currentX.toFixed(2) + ", " + g_currentZ.toFixed(2);
+    "Coordinates:</br>" + g_currentX.toFixed(2) + ", " + g_currentZ.toFixed(2);
 
   // Tell the browser to update again
   requestAnimationFrame(tick);

@@ -11,11 +11,11 @@ html {
   padding: 0;
 }
 body {
-  background-color: #bf1a2f;
+  background-color: #AC2032;
   font-family: "Montserrat", sans-serif;
 }
 .btn {
-  background-color: #edebe8;
+  background-color: #F5F5F5;
   padding: 5px;
   border-radius: 5px;
   text-decoration: none;
@@ -27,7 +27,7 @@ body {
   font-size: 2rem;
 }
 .btn:hover {
-  background-color: #f6bdd1; /* Green */
+  background-color: #F7D0DD;
 }
 .btn:active {
   transform: translateY(4px);
@@ -47,11 +47,11 @@ body {
 }
 #opening h1 {
   font-size: 7rem;
-  color: #f6bdd1;
+  color: #F7D0DD;
 }
 h2 {
   font-size: 4rem;
-  color: #f3a5c0;
+  color: #F093B4;
   text-align: center;
   margin: 5px;
 }
@@ -86,7 +86,7 @@ canvas {
   text-align: center;
 
   font-size: 3rem;
-  color: #f6bdd1;
+  color: #F7D0DD;
 }
 #game > #menu {
   grid-area: menu;
@@ -110,7 +110,7 @@ canvas {
 
 #menu, #info {
   font-size: 2rem;
-  color: #edebe8;
+  color: #F5F5F5;
 
   display: flex;
   flex-direction: column;
@@ -121,9 +121,6 @@ canvas {
 #performance {
   font-size: 1.5rem;
 }
-#mouse {
-  background-color: #f3a5c0;
-}
 #return {
   display: none;
 }
@@ -132,14 +129,14 @@ canvas {
   width: 100%;
   height: 15px;
   border-radius: 10px;
-  background: #edebe8;
+  background: #f5f5f5e6;
 }
 .slider::-webkit-slider-thumb {
   appearance: none;
   width: 25px;
   height: 25px;
   border-radius: 50%;
-  background: #f3a5c0;
+  background: #F093B4;
   cursor: pointer;
 }
 
@@ -157,12 +154,12 @@ canvas {
 }
 #letters div,
 #arrows div {
-  border-radius: 5px;
+  /* border-radius: 5px;
   text-decoration: none;
   border-style: solid;
   border-width: 2px 2px 4px 2px;
-  color: #1e1b18;
-  background-color: #edebe8;
+  color: #1e1b18; */
+  /* background-color: #F5F5F5; */
   padding: 5px;
 }
 
