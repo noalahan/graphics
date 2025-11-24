@@ -236,7 +236,17 @@ canvas {
   #game{
     grid-template-columns: 1fr 1fr;
   }
-  #menu{
+  #menu, #menu .btn{
+    font-size: 1.2rem;
     gap: 8px;
+  }
+  #coor{
+    display: none;
+  }
+  #info .btn{
+    font-size: 1.8rem;
+  }
+  #letters, #arrows{
+    grid-template-columns: repeat(3, 50px);
   }
 }
