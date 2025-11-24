@@ -11,11 +11,11 @@ html {
   padding: 0;
 }
 body {
-  background-color: #AC2032;
+  background-color: #ac2032;
   font-family: "Montserrat", sans-serif;
 }
 .btn {
-  background-color: #F5F5F5;
+  background-color: #f5f5f5;
   padding: 5px;
   border-radius: 5px;
   text-decoration: none;
@@ -27,7 +27,7 @@ body {
   font-size: 2rem;
 }
 .btn:hover {
-  background-color: #F7D0DD;
+  background-color: #f7d0dd;
 }
 .btn:active {
   transform: translateY(4px);
@@ -47,11 +47,11 @@ body {
 }
 #opening h1 {
   font-size: 7rem;
-  color: #F7D0DD;
+  color: #f7d0dd;
 }
 h2 {
   font-size: 4rem;
-  color: #F093B4;
+  color: #f093b4;
   text-align: center;
   margin: 5px;
 }
@@ -78,15 +78,18 @@ canvas {
   grid-template-areas:
     "header header header"
     "menu main info";
-  grid-template-columns: 1.2fr auto 1fr;
+  grid-template-columns: 1fr auto 1fr;
+  justify-content: center;
+  align-items: center;
   gap: 5px;
+  height: 100vh;
 }
 #game > #header {
   grid-area: header;
   text-align: center;
 
   font-size: 3rem;
-  color: #F7D0DD;
+  color: #f7d0dd;
 }
 #game > #menu {
   grid-area: menu;
@@ -97,7 +100,8 @@ canvas {
   place-self: center;
 }
 #game > #info {
-  font-size: 2rem;
+  grid-area: info;
+  /* font-size: 2rem; */
 }
 canvas {
   border-radius: 20px;
@@ -108,13 +112,15 @@ canvas {
   font-size: 150%;
 }
 
-#menu, #info {
+#menu,
+#info {
   font-size: 2rem;
-  color: #F5F5F5;
+  color: #f5f5f5;
 
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   text-align: center;
   gap: 20px;
 }
@@ -136,14 +142,15 @@ canvas {
   width: 25px;
   height: 25px;
   border-radius: 50%;
-  background: #F093B4;
+  background: #f093b4;
   cursor: pointer;
 }
 
-#info{
+#info {
   gap: 10px;
 }
-#letters, #arrows{ 
+#letters,
+#arrows {
   display: grid;
   grid-template-columns: repeat(3, 57px);
   gap: 2px;
@@ -152,24 +159,58 @@ canvas {
 #arrows {
   grid-template-columns: repeat(2, 57px);
 }
-#letters div,
-#arrows div {
-  /* border-radius: 5px;
-  text-decoration: none;
-  border-style: solid;
-  border-width: 2px 2px 4px 2px;
-  color: #1e1b18; */
-  /* background-color: #F5F5F5; */
-  padding: 5px;
-}
 
 @media screen and (max-width: 1240px) {
   canvas {
-    width: 60vw;
-    height: 60vw;
+    width: 65vw;
+    margin: 1vw;
+    /* height: 60vw; */
+  }
+  #game {
+    grid-template-columns: 3fr 1fr;
+    grid-template-areas:
+      "header header"
+      "main info"
+      "menu menu";
+  }
+  #menu {
+    flex-flow: row;
+    justify-content: center;
+  }
+  #info {
+    font-size: 1.5rem;
+    gap: 5px;
+  }
+  #performance {
+    /* width: 5vw; */
+    display: none;
   }
 }
-@media screen and (max-width: 670px) {
+
+@media screen and (max-width: 870px) {
+  canvas {
+    width: 95vw;
+  }
+  #game {
+    grid-template-columns: 1fr 2.5fr;
+    grid-template-areas:
+      "header header"
+      "main main"
+      "info menu";
+  }
+  #menu{
+    flex-wrap: wrap;
+    font-size: 1.5rem;
+  }
+  #menu .btn{
+    font-size: 1.5rem;
+  }
+  #info{
+    margin: 1vw;
+  }
+  #explanation{
+    display: none;
+  }
   #opening h1 {
     font-size: 520%;
   }
@@ -178,5 +219,11 @@ canvas {
   }
   #opening p {
     font-size: 200%;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  #game{
+    grid-template-columns: 1fr 1fr;
   }
 }
